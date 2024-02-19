@@ -3,17 +3,15 @@ package com.samuelokello.kazihub.presentation.shared.onboarding
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -84,18 +82,22 @@ fun GettingStartedScreen() {
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(57.dp)
+                        .height(57.dp),
                 ) {
-//                Row{
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                     Text(text = "Get Started")
-                    Icon(
-                        imageVector = Icons.Filled.ArrowForward,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 4.dp)
-                    )
-//                }
+//                    Icon(
+//                        imageVector = Icons.Filled.ArrowForward,
+//                        contentDescription = null,
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+////                            .padding(start = 4.dp)
+//                    )
+                    }
                 }
             }
         }
