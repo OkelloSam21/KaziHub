@@ -10,8 +10,6 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.samuelokello.kazihub.R
-import com.samuelokello.kazihub.presentation.shared.authentication.SignIn.SignInResult
-import com.samuelokello.kazihub.presentation.shared.authentication.SignIn.UserData
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.tasks.await
 

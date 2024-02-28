@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "495714618693",
+    "project_id": "kazihub-467be",
+    "storage_bucket": "kazihub-467be.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495714618693:android:20b0e5cc409b6aa6f9022c",
+        "android_client_info": {
+          "package_name": "com.samuelokello.kazihub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASuluEEwBnS8k9U6IUh62DKZEaBzmqUXg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
