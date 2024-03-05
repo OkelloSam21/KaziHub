@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.shared.landing
+package com.samuelokello.kazihub.presentation.shared.home
 
 import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
@@ -20,10 +20,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Message
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.rounded.FilterAlt
 import androidx.compose.material.icons.rounded.Menu
@@ -34,8 +30,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
@@ -67,7 +61,7 @@ fun HomeScreen() {
     HomeScreenContent()
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreenContent() {
@@ -116,64 +110,6 @@ fun HomeScreenContent() {
             )
         },
         modifier = Modifier.padding(bottom = 32.dp),
-
-        bottomBar = {
-            NavigationBar(
-                containerColor = MaterialTheme.colorScheme.onSecondary,
-                tonalElevation = 8.dp,
-                modifier = Modifier
-                    .clip(
-                        RoundedCornerShape(
-                            topStart = 16.dp,
-                            topEnd = 16.dp,
-                            bottomEnd = 0.dp,
-                            bottomStart = 0.dp
-                        )
-                    ),
-                content = {
-                    NavigationBarItem(
-                        icon = { Icon(imageVector = Icons.Filled.Home, contentDescription = null) },
-                        label = { Text("Home") },
-                        selected = selectedItem.intValue == 0,
-                        onClick = { selectedItem.intValue = 0 },
-                    )
-                    NavigationBarItem(
-                        icon = {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.Message,
-                                contentDescription = null
-                            )
-                        },
-                        label = { Text("Message") },
-                        selected = selectedItem.intValue == 1,
-                        onClick = { selectedItem.intValue = 1 },
-                    )
-                    NavigationBarItem(
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Filled.Person,
-                                contentDescription = null
-                            )
-                        },
-                        label = { Text("Profile") },
-                        selected = selectedItem.intValue == 2,
-                        onClick = { selectedItem.intValue = 2 },
-                    )
-                    NavigationBarItem(
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Filled.Settings,
-                                contentDescription = null
-                            )
-                        },
-                        label = { Text("Settings") },
-                        selected = selectedItem.intValue == 3,
-                        onClick = { selectedItem.intValue = 3 },
-                    )
-
-                }
-            )
-        }
     ) {
         Column(
             modifier = Modifier
@@ -239,14 +175,14 @@ fun HomeScreenContent() {
                 }
                 Spacer(modifier = Modifier.height(32.dp))
                 Column {
-                    Row (horizontalArrangement = Arrangement.SpaceBetween){
+                    Row(horizontalArrangement = Arrangement.SpaceBetween) {
                         Text(text = "Recent Posts", modifier = Modifier.weight(1f))
 
                         Spacer(modifier = Modifier.width(64.dp))
 
                         TextButton(
                             onClick = { /*TODO*/ }) {
-                            Text(text = "View All", style = MaterialTheme.typography.bodySmall)
+                            Text(text = "View All", style = MaterialTheme.typography.bodyLarge)
                         }
                     }
                     Spacer(modifier = Modifier.height(16.dp))
@@ -271,7 +207,9 @@ fun JobCard(
 ) {
     ElevatedCard(
         shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation( defaultElevation = 4.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 8.dp
+        ),
         modifier = Modifier
             .size(width = 200.dp, height = 150.dp)
     ) {
@@ -283,7 +221,7 @@ fun JobCard(
                     modifier = Modifier,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Column (modifier = Modifier.weight(1f)){
+                    Column(modifier = Modifier.weight(1f)) {
                         Image(
                             painter = painterResource(id = cardIcon),
                             contentDescription = null,
@@ -292,7 +230,7 @@ fun JobCard(
                                 .clip(shape = CircleShape),
                             contentScale = ContentScale.Crop,
                         )
-                        Text(text = "Google", style = MaterialTheme.typography.bodySmall)
+                        Text(text = "Google", style = MaterialTheme.typography.bodyLarge)
                     }
                     Spacer(modifier = Modifier.width(42.dp))
                     Icon(imageVector = Icons.Filled.Star, contentDescription = null)
@@ -319,31 +257,33 @@ fun RecentPost() {
         modifier = Modifier
             .fillMaxWidth()
             .height(80.dp),
-        colors = androidx.compose.material3.CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(32.dp)
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+        ),
+        content = {
+            Column(
+                modifier = Modifier.padding(16.dp)
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.icons8_google_48),
-                    contentDescription = null,
-                    modifier = Modifier.size(40.dp)
-                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(32.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.icons8_google_48),
+                        contentDescription = null,
+                        modifier = Modifier.size(40.dp)
+                    )
 
-                Column {
-                    Text(text = "UI/UX")
-                    Text(text = "full time")
+                    Column {
+                        Text(text = "UI/UX")
+                        Text(text = "full time")
+                    }
+
+                    Text(text = "ksh 1400")
                 }
-
-                Text(text = "ksh 1400")
             }
         }
-    }
+    )
 }
 
 
