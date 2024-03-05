@@ -10,20 +10,27 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.ramcosta.composedestinations.annotation.Destination
 import com.samuelokello.kazihub.R
 import com.samuelokello.kazihub.ui.theme.Verdigris
-
+@Destination
 @Composable
-fun GettingStartedScreen() {
+fun OnBoardingScreen() {
+    OnBoardingContent()
+}
+
+@Destination
+@Composable
+fun OnBoardingContent() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -53,17 +60,17 @@ fun GettingStartedScreen() {
             Column (
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding( bottom = 64.dp),
+                    .padding(bottom = 64.dp),
                 verticalArrangement = Arrangement.Top,
             ){
                 Text(
                     text = "Find a Perfect Job Match",
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.body2,
                     modifier = Modifier
                 )
                 Text(
                     text = "Finding your dream job is more easier and faster with Kazihub",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.body2,
                     modifier = Modifier
                 )
             }
@@ -76,8 +83,8 @@ fun GettingStartedScreen() {
                 Button(
                     onClick = { /*TODO*/ },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Verdigris,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
+                        backgroundColor = Verdigris,
+                        contentColor = MaterialTheme.colors.onPrimary
                     ),
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
