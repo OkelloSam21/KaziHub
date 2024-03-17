@@ -1,6 +1,7 @@
 package com.samuelokello.kazihub.presentation.shared.authentication.SignIn
 
 import androidx.lifecycle.ViewModel
+import com.samuelokello.kazihub.presentation.shared.authentication.SignIn.Google.SignInResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -19,14 +20,6 @@ class SignInViewModel : ViewModel() {
         }
     }
 
-    fun resetState() {
-        _state.update { SignInState() }
-    }
-
-    fun onSignInClicked() {
-
-    }
-
     fun onEvent(event: SignInEvent) {
         when (event) {
             is SignInEvent.OnEmailChanged -> {
@@ -43,6 +36,12 @@ class SignInViewModel : ViewModel() {
 
             is SignInEvent.OnSignInClicked -> {
                 validate()
+                _state.update {
+                    it.copy(
+                        isLoading = true,
+                        navigateToHome = it.signInSuccess
+                    )
+                }
             }
         }
     }
