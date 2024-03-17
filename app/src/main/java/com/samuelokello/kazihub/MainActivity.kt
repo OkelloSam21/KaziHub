@@ -22,6 +22,7 @@ import com.samuelokello.kazihub.presentation.destinations.SettingsScreenDestinat
 import com.samuelokello.kazihub.presentation.shared.components.StandardScaffold
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 
+
 class MainActivity : ComponentActivity() {
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -24,8 +24,8 @@ sealed class BottomNavItem(var title: String, var icon: Int, var destination: De
         destination = ProfileScreenDestination
     )
     data object Settings: BottomNavItem(
-        title = "Settings",
-        icon = R.drawable.settings_2,
+        title = "Notifications",
+        icon = R.drawable.baseline_notifications_none_24,
         destination = SettingsScreenDestination
     )
 }

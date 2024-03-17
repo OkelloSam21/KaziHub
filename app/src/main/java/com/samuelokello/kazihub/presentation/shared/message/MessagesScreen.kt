@@ -1,23 +1,23 @@
-package com.samuelokello.kazihub.presentation.shared.setting
+package com.samuelokello.kazihub.presentation.shared.message
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination
 @Composable
-fun SettingsScreen() {
-    SettingsScreenContent()
+fun MessagesScreen() {
+    MessageScreenContent()
 }
 
 @Composable
-fun SettingsScreenContent() {
+fun MessageScreenContent() {
     Column (
         Modifier.fillMaxSize()
     ){
-        Text(text = "Settings")
+        Text(text = "Messages")
     }
 }
