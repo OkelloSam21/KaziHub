@@ -32,6 +32,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.R
 import com.samuelokello.kazihub.presentation.destinations.SignUpScreenDestination
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
+import com.samuelokello.kazihub.utils.UserRole
 
 
 @Destination
@@ -42,18 +43,17 @@ fun UserTYpeScreen(navigator: DestinationsNavigator) {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            UserTypeContent { navigator.navigate(SignUpScreenDestination) }
+            UserTypeContent { userRole -> navigator.navigate(SignUpScreenDestination(userRole = userRole)) }
         }
     }
 }
 
 @Composable
 fun UserTypeContent(
-    onClick: () -> Unit
+    onClick: (UserRole) -> Unit
 ) {
     Column (
         Modifier.fillMaxSize(),
-//        verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         Column (
@@ -85,15 +85,17 @@ fun UserTypeContent(
             UserTypeCard(
                 image = R.drawable.undraw_software_engineer_re_tnjc,
                 title = "I am a Job Provider",
+                userRole = UserRole.EMPLOYER,
                 onClick = {
-                    onClick()
+                    onClick(UserRole.EMPLOYER)
                 }
             )
             Spacer(modifier = Modifier.width(32.dp))
             UserTypeCard(
                 image = R.drawable.worker,
                 title = "I am a Job Seeker",
-                onClick = { onClick() }
+                userRole = UserRole.WORKER,
+                onClick = { onClick(UserRole.WORKER)}
             )
         }
     }
@@ -103,13 +105,14 @@ fun UserTypeContent(
 fun UserTypeCard(
     @DrawableRes image: Int,
     title: String,
-    onClick: () -> Unit
+    userRole: UserRole,
+    onClick: (UserRole) -> Unit
 ) {
     Card (
         modifier = Modifier
             .padding(start = 8.dp)
             .size(200.dp, 250.dp)
-            .clickable { onClick() }
+            .clickable { onClick(userRole) }
         .background(MaterialTheme.colorScheme.surface),
     ){
         Column (
