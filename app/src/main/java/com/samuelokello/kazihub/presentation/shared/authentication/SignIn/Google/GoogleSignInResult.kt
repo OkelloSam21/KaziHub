@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.shared.authentication.SignIn
+package com.samuelokello.kazihub.presentation.shared.authentication.SignIn.Google
 
 data class SignInResult(
     val data: UserData?,

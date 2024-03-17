@@ -29,16 +29,38 @@ class SignInViewModel : ViewModel() {
 
     fun onEvent(event: SignInEvent) {
         when (event) {
-            is SignInEvent.onEmailChanged -> {
+            is SignInEvent.OnEmailChanged -> {
                 _state.update {
                     it.copy(email = event.email)
                 }
             }
 
-            is SignInEvent.onPasswordChanged -> {
+            is SignInEvent.OnPasswordChanged -> {
                 _state.update {
                     it.copy(password = event.password)
                 }
+            }
+
+            is SignInEvent.OnSignInClicked -> {
+                validate()
+            }
+        }
+    }
+
+    private fun validate() {
+        if (state.value.email.isEmpty() || state.value.password.isEmpty()) {
+            _state.update {
+                it.copy(
+                    signInError = "Please fill in all fields"
+                )
+            }
+            return
+        } else {
+            _state.update {
+                it.copy(
+                    signInError = null,
+                    signInSuccess = true
+                )
             }
         }
     }

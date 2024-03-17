@@ -2,5 +2,28 @@
     <string name="app_name">KaziHub</string>
     <string name="web_client_id">495714618693-04l4a2o6taut0m8rgal719fn2urctr6f.apps.googleusercontent.com</string>
 
-    <string name="find_your_dream_job"></string>
+    <string name="find_your_dream_job">Find your dream job</string>
+
+    <string name="title_1">Electrician</string>
+    <string name="budget_1">5000</string>
+
+    <string name="title_2">Electrician</string>
+    <string name="budget_2">5000</string>
+
+    <string name="title_3">Electrician</string>
+    <string name="budget_3">5000</string>
+
+    <string name="title_4">UI/Ux designer</string>
+    <string name="budget_4">3000</string>
+
+    <string name="title_5">UI/Ux designer</string>
+
+    <string name="title_6">Product designer</string>
+    <string name="budget_6">3000</string>
+
+    <string name="home">Home</string>
+    <string name = "message">Messages</string>
+    <string name = "profile">Profile</string>
+    <string name = "settings">Settings</string>
+
 </resources>
