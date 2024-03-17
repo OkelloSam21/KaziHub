@@ -2,6 +2,7 @@ package com.samuelokello.kazihub.presentation.shared.user_type
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,35 +14,42 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.R
-import com.samuelokello.kazihub.presentation.destinations.HomeScreenDestination
+import com.samuelokello.kazihub.presentation.destinations.SignUpScreenDestination
+import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 
-@RootNavGraph(start = true)
+
 @Destination
 @Composable
 fun UserTYpeScreen(navigator: DestinationsNavigator) {
-    UserTypeContent(
-        navigator = navigator
-    )
+    KaziHubTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            UserTypeContent { navigator.navigate(SignUpScreenDestination) }
+        }
+    }
 }
 
 @Composable
 fun UserTypeContent(
-    navigator: DestinationsNavigator
+    onClick: () -> Unit
 ) {
     Column (
         Modifier.fillMaxSize(),
@@ -56,10 +64,14 @@ fun UserTypeContent(
                 contentDescription = "Kazi Hub Logo"
             )
         }
+
+        Spacer(modifier = Modifier.height(32.dp))
+
         Column {
             Text(
                 text = "Select your user type",
-                style = MaterialTheme.typography.titleLarge.copy(fontSize = 18.sp, fontWeight = FontWeight.ExtraBold),
+                style = MaterialTheme.typography.bodyLarge
+                .copy(fontSize = 18.sp, fontFamily = FontFamily(Font(R.font.poppins_bold))),
                 modifier = Modifier.padding(top = 16.dp)
             )
         }
@@ -71,19 +83,17 @@ fun UserTypeContent(
             horizontalArrangement = Arrangement.Center
         ){
             UserTypeCard(
-                image = R.drawable.employer,
+                image = R.drawable.undraw_software_engineer_re_tnjc,
                 title = "I am a Job Provider",
                 onClick = {
-                    navigator.navigate(HomeScreenDestination.route)
+                    onClick()
                 }
             )
             Spacer(modifier = Modifier.width(32.dp))
             UserTypeCard(
                 image = R.drawable.worker,
                 title = "I am a Job Seeker",
-                onClick = {
-                    navigator.navigate(HomeScreenDestination.route)
-                }
+                onClick = { onClick() }
             )
         }
     }
@@ -95,12 +105,12 @@ fun UserTypeCard(
     title: String,
     onClick: () -> Unit
 ) {
-    ElevatedCard (
+    Card (
         modifier = Modifier
             .padding(start = 8.dp)
             .size(200.dp, 250.dp)
-            .clickable { onClick() },
-
+            .clickable { onClick() }
+        .background(MaterialTheme.colorScheme.surface),
     ){
         Column (
             verticalArrangement = Arrangement.Center,
