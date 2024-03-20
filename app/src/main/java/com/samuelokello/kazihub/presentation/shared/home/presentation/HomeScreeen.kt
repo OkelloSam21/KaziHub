@@ -20,7 +20,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Message
@@ -48,7 +47,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -63,11 +61,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.samuelokello.kazihub.R
-import com.samuelokello.kazihub.presentation.shared.search.JobList
-import com.samuelokello.kazihub.presentation.shared.search.SearchViewModel
 import kotlinx.coroutines.launch
 
 //@RootNavGraph(start = true)
@@ -81,19 +76,18 @@ fun HomeScreen() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreenContent() {
-    val searchViewModel: SearchViewModel = viewModel()
+//    val searchViewModel: SearchViewModel = viewModel()
     val drawerState =
         androidx.compose.material3.rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val onActive by remember { mutableStateOf(false) }
-    val searchQuery by remember { searchViewModel::searchQuery }
-    val searchResult by searchViewModel.searchResult.collectAsState()
+    val searchQuery by remember { mutableStateOf("")}
+//    val searchResult by searchViewModel.searchResult.collectAsState()
     var selectedItemIndex by remember { mutableIntStateOf(0) }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-
                 DrawerHeader(
                     userImage = R.drawable.baseline_person_24,
                     userName = "John Doe",
@@ -192,7 +186,7 @@ fun HomeScreenContent() {
                 ) {
                     SearchBar(
                         query = searchQuery,
-                        onQueryChange = { newValue -> searchViewModel.onSearchQueryChange(newValue) },
+                        onQueryChange = {  },
                         onSearch = {},
                         active = onActive,
                         onActiveChange = {},
@@ -210,14 +204,14 @@ fun HomeScreenContent() {
                                 contentPadding = PaddingValues(20.dp),
                                 modifier = Modifier.fillMaxSize()
                             ) {
-                                items(searchResult) { job ->
-                                    JobList(job = job)
-                                    Divider(
-                                        Modifier.fillMaxWidth(),
-                                        color = Color.Gray,
-                                        thickness = 0.5.dp
-                                    )
-                                }
+//                                items(searchResult) { job ->
+////                                    JobList(job)
+//                                    HorizontalDivider(
+//                                        Modifier.fillMaxWidth(),
+//                                        thickness = 0.5.dp,
+//                                        color = Color.Gray
+//                                    )
+//                                }
                             }
                         }
                     }

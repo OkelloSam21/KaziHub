@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -25,6 +24,7 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -56,10 +56,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.R
-import com.samuelokello.kazihub.presentation.destinations.SignInScreenDestination
 import com.samuelokello.kazihub.presentation.shared.authentication.sign_up.SignUpEvent
 import com.samuelokello.kazihub.presentation.shared.authentication.sign_up.SignUpState
 import com.samuelokello.kazihub.presentation.shared.authentication.sign_up.SignUpViewModel
+import com.samuelokello.kazihub.presentation.shared.destinations.SignInScreenDestination
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import com.samuelokello.kazihub.ui.theme.primaryLight
 import com.samuelokello.kazihub.utils.UserRole
@@ -71,7 +71,7 @@ fun SignUpScreen(userRole: UserRole, navigator: DestinationsNavigator) {
     KaziHubTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = androidx.compose.material.MaterialTheme.colors.background
+            color = MaterialTheme.colorScheme.background
         ) {
             val viewModel: SignUpViewModel = viewModel()
             val state by viewModel.state.collectAsState()
