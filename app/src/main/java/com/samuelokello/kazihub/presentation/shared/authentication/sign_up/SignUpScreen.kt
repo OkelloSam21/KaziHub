@@ -1,9 +1,12 @@
 package com.samuelokello.kazihub.presentation.shared.authentication.SignIn
 
 import android.os.Build
+import android.util.Log
+import android.util.Patterns
 import android.widget.Toast
 import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +25,7 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -34,6 +38,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,7 +57,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.R
@@ -68,19 +73,25 @@ import com.samuelokello.kazihub.utils.UserRole
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @Composable
 fun SignUpScreen(userRole: UserRole, navigator: DestinationsNavigator) {
+
+    val viewModel: SignUpViewModel = hiltViewModel()
+    val state by viewModel.state.collectAsState()
+
+    viewModel.onEvent(SignUpEvent.OnUserRoleChanged(userRole))
+
     KaziHubTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            val viewModel: SignUpViewModel = viewModel()
-            val state by viewModel.state.collectAsState()
+            Log.d("SignUpScreen", "SignUpScreen: ${userRole.name}")
 
             SignUpContent(
                 state = state,
                 onEvent = viewModel::onEvent,
                 onClick = {navigator.navigate(SignInScreenDestination)},
-                navigateToSIgnIn = {navigator.navigate(SignInScreenDestination)}
+                navigateToSIgnIn = {navigator.navigate(SignInScreenDestination)},
+                userRole = userRole
             )
         }
     }
@@ -91,17 +102,28 @@ private fun SignUpContent(
     state: SignUpState,
     onEvent: (SignUpEvent) -> Unit,
     onClick: () -> Unit,
-    navigateToSIgnIn: () -> Unit
+    navigateToSIgnIn: () -> Unit,
+    userRole: UserRole
 ) {
     val isPasswordVisible = remember { mutableStateOf(false) }
     val context = LocalContext.current
+
+    val isPasswordValid by derivedStateOf { (state.password ?: "").length > 8   }
 
     if (state.isLoading) {
         Dialog(
             onDismissRequest = {},
             DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
         ) {
-            Surface { Card {CircularProgressIndicator(modifier = Modifier.padding(48.dp)) } }
+            Surface { Card(colors= CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.background,
+                contentColor = primaryLight
+            )) {CircularProgressIndicator(modifier = Modifier
+                .padding(48.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.background,
+                    shape = RoundedCornerShape(8.dp)
+                )) } }
         }
     }
 
@@ -124,11 +146,7 @@ private fun SignUpContent(
         }
     }
 
-    LaunchedEffect(state.navigateToSignIn) {
-        if (state.navigateToSignIn) {
-            navigateToSIgnIn()
-        }
-    }
+    LaunchedEffect(state.navigateToSignIn) {if (state.navigateToSignIn) navigateToSIgnIn()}
 
     Column(
         modifier = Modifier
@@ -256,10 +274,12 @@ private fun SignUpContent(
                             state.firstName,
                             state.lastName,
                             state.password,
-                            state.role.toString()
+                            role = userRole.name
                         )
                     )
+                    Log.d("SignUpScreen", "SignUpContent: $userRole")
                 },
+                enabled = isPasswordValid,
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -347,7 +367,6 @@ private fun SignUpContent(
                         text = "Sign In",
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier,
-//                            .padding(bottom = 64.dp)
                     )
                 }
             }
