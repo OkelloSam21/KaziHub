@@ -45,7 +45,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.R
-import com.samuelokello.kazihub.ui.theme.Verdigris
+import com.samuelokello.kazihub.ui.theme.primaryLight
 
 @Destination
 @Composable
@@ -155,7 +155,7 @@ fun ProfileScreenContent(navigator: DestinationsNavigator) {
                 OutlinedButton(
                     onClick = { /*TODO*/ },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Verdigris,
+                        containerColor = primaryLight,
                         contentColor = Color.White,
                     ),
                     modifier = Modifier

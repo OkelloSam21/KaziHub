@@ -49,7 +49,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.R
-import com.samuelokello.kazihub.presentation.destinations.HomeScreenDestination
+import com.samuelokello.kazihub.presentation.shared.destinations.HomeScreenDestination
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import com.samuelokello.kazihub.ui.theme.primaryLight
 

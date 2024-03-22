@@ -23,14 +23,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.R
-import com.samuelokello.kazihub.presentation.destinations.SignUpScreenDestination
+import com.samuelokello.kazihub.presentation.shared.destinations.SignUpScreenDestination
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import com.samuelokello.kazihub.utils.UserRole
 
@@ -70,8 +67,8 @@ fun UserTypeContent(
         Column {
             Text(
                 text = "Select your user type",
-                style = MaterialTheme.typography.bodyLarge
-                .copy(fontSize = 18.sp, fontFamily = FontFamily(Font(R.font.poppins_bold))),
+                style = MaterialTheme.typography.bodyLarge,
+//                .copy(fontSize = 18.sp, fontFamily = FontFamily(Font(R.font.poppins_bold))),
                 modifier = Modifier.padding(top = 16.dp)
             )
         }

@@ -7,7 +7,6 @@ data class SignUpState (
     val userName: String = "",
     val firstName: String = "",
     val lastName: String = "",
-    val role: String = "",
     val password: String = "",
     val navigateToHome: Boolean = false,
     val isLoading: Boolean = false,
