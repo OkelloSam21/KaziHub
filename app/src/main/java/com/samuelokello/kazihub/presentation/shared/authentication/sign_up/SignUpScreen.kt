@@ -2,7 +2,6 @@ package com.samuelokello.kazihub.presentation.shared.authentication.SignIn
 
 import android.os.Build
 import android.util.Log
-import android.util.Patterns
 import android.widget.Toast
 import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.Image
@@ -23,7 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -36,9 +35,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,6 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
@@ -89,8 +88,8 @@ fun SignUpScreen(userRole: UserRole, navigator: DestinationsNavigator) {
             SignUpContent(
                 state = state,
                 onEvent = viewModel::onEvent,
-                onClick = {navigator.navigate(SignInScreenDestination)},
-                navigateToSIgnIn = {navigator.navigate(SignInScreenDestination)},
+                onClick = { navigator.navigate(SignInScreenDestination) },
+                navigateToSIgnIn = { navigator.navigate(SignInScreenDestination) },
                 userRole = userRole
             )
         }
@@ -106,69 +105,67 @@ private fun SignUpContent(
     userRole: UserRole
 ) {
     val isPasswordVisible = remember { mutableStateOf(false) }
-    val context = LocalContext.current
+//    val isPasswordValid by remember { derivedStateOf { (state.password?: "").length > 8 } }
 
-    val isPasswordValid by derivedStateOf { (state.password ?: "").length > 8   }
+    HandleLoading(state)
+    HandleError(state)
+    HandleSuccess(state)
+    HandleNavigation(state, navigateToSIgnIn)
 
-    if (state.isLoading) {
-        Dialog(
-            onDismissRequest = {},
-            DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
-        ) {
-            Surface { Card(colors= CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.background,
-                contentColor = primaryLight
-            )) {CircularProgressIndicator(modifier = Modifier
-                .padding(48.dp)
-                .background(
-                    color = MaterialTheme.colorScheme.background,
-                    shape = RoundedCornerShape(8.dp)
-                )) } }
-        }
-    }
+    SignUpForm(
+        state = state,
+        isPasswordVisible = isPasswordVisible,
+//        isPasswordValid = isPasswordValid,
+        onEvent = onEvent,
+        onClick = onClick,
+        userRole = userRole
+    )
 
-    LaunchedEffect(key1 = state.signUpError) {
-        state.signUpError?.let { error ->
-            Toast.makeText(
-                context,
-                error,
-                Toast.LENGTH_LONG
-            ).show()
-        }
-    }
-    LaunchedEffect(key1 = state.signUpSuccess) {
-        if (state.signUpSuccess) {
-            Toast.makeText(
-                context,
-                "Sign Up successful",
-                Toast.LENGTH_LONG
-            ).show()
-        }
-    }
+}
 
-    LaunchedEffect(state.navigateToSignIn) {if (state.navigateToSignIn) navigateToSIgnIn()}
+@Composable
+fun HandleLoading(state: SignUpState) {if (state.isLoading) { ShowLoadingDialog() } }
 
+@Composable
+fun HandleError(state: SignUpState) { if (state.signUpError != null) { ShowErrorToast(state.signUpError) } }
+
+@Composable
+fun HandleSuccess(state: SignUpState) { if (state.signUpSuccess) { ShowSuccessToast("Sign Up successful") } }
+
+@Composable
+fun HandleNavigation(state: SignUpState, navigateToSignIn: () -> Unit) { if (state.navigateToSignIn) { navigateToSignIn() } }
+
+
+@Composable
+fun SignUpForm(
+    state: SignUpState,
+    isPasswordVisible: MutableState<Boolean>,
+//    isPasswordValid: Boolean,
+    onEvent: (SignUpEvent) -> Unit,
+    onClick: () -> Unit,
+    userRole: UserRole
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(20.dp),
     ) {
-        Column (
+        Column(
             modifier = Modifier
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.SpaceAround
-        ){
+        ) {
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
-                text = "Register Account",
+                text = stringResource(R.string.register_account),
                 style = MaterialTheme.typography.titleLarge.copy(fontFamily = FontFamily(Font(R.font.poppins_bold)))
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Fill your details or continue with social media",
+                text = stringResource(id = R.string.fill_your_details_or_continue_with_social_media),
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontFamily = FontFamily(Font(R.font.poppins_medium)),
                     color = Color.Gray
@@ -279,12 +276,13 @@ private fun SignUpContent(
                     )
                     Log.d("SignUpScreen", "SignUpContent: $userRole")
                 },
-                enabled = isPasswordValid,
-                shape = RoundedCornerShape(10.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(54.dp),
-                colors = ButtonColors(
+//                enabled = isPasswordValid,
+                shape = RoundedCornerShape(10.dp),
+
+                colors = ButtonDefaults.buttonColors(
                     containerColor = primaryLight,
                     contentColor = Color.White,
                     disabledContainerColor = Color.Gray,
@@ -300,10 +298,10 @@ private fun SignUpContent(
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            Row (
+            Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
-            ){
+            ) {
                 HorizontalDivider(
                     modifier = Modifier
                         .weight(1f)
@@ -372,4 +370,42 @@ private fun SignUpContent(
             }
         }
     }
+}
+
+@Composable
+fun ShowLoadingDialog() {
+    Dialog(
+        onDismissRequest = {},
+        DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+    ) {
+        Surface {
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    contentColor = primaryLight
+                )
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .padding(48.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.background,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ShowErrorToast(error: String) {
+    val context = LocalContext.current
+    Toast.makeText(context, error, Toast.LENGTH_LONG).show()
+}
+
+@Composable
+fun ShowSuccessToast(message: String) {
+    val context = LocalContext.current
+    Toast.makeText(context, message, Toast.LENGTH_LONG).show()
 }

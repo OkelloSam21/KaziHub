@@ -122,6 +122,14 @@ class SignUpViewModel
                     }
                 }
             }
+
+//            SignUpEvent.OnSignInClicked -> {
+//                _state.update {
+//                    it.copy(
+//                        navigateToSignIn = true
+//                    )
+//                }
+//            }
         }
     }
 

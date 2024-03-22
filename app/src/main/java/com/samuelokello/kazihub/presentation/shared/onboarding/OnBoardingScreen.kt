@@ -83,13 +83,7 @@ fun OnBoardingContent(
             ){
                 Text(
                     text = "Find a Perfect Job Match",
-                    style = MaterialTheme.typography.titleLarge.copy(
-//                        fontSize = 32.sp,
-//                        fontWeight = FontWeight.Bold,
-//                        fontFamily = FontFamily(Font(R.font.poppins)),
-//                        lineHeight = 32.sp,
-//                        letterSpacing = 0.18.sp
-                    ),
+                    style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier
                 )
 
@@ -97,13 +91,7 @@ fun OnBoardingContent(
 
                 Text(
                     text = "Finding your dream job is more easier and faster with Kazihub",
-                    style = MaterialTheme.typography.titleLarge.copy(
-//                        fontWeight = FontWeight.Bold,
-//                        fontFamily = FontFamily(Font(R.font.poppins)),
-//                        lineHeight = 32.sp,
-//                        letterSpacing = 0.18.sp,
-                        color = Color.Gray
-                    ),
+                    style = MaterialTheme.typography.titleLarge.copy(color = Color.Gray),
                     modifier = Modifier
                 )
             }

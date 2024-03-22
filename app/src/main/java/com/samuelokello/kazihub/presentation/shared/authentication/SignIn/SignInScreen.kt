@@ -2,6 +2,7 @@ package com.samuelokello.kazihub.presentation.shared.authentication.SignIn
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +21,9 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -45,7 +49,9 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.R
@@ -59,16 +65,15 @@ fun SignInScreen(navigator: DestinationsNavigator) {
     KaziHubTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = androidx.compose.material.MaterialTheme.colors.background
+            color = MaterialTheme.colorScheme.background
         ) {
-            val viewModel: SignInViewModel = viewModel()
+            val viewModel: SignInViewModel = hiltViewModel()
             val state by viewModel.state.collectAsState()
 
             SignInContent(
                 state = state,
-                onSignInClick = { },
                 onEvent = viewModel::onEvent,
-                navigateToHome = { navigator.navigate(HomeScreenDestination)},
+                navigateToHome = { navigator.navigate(HomeScreenDestination) },
                 navigateToSignUp = { navigator.popBackStack() }
             )
         }
@@ -78,37 +83,46 @@ fun SignInScreen(navigator: DestinationsNavigator) {
 @Composable
 private fun SignInContent(
     state: SignInState,
-    onSignInClick: () -> Unit,
     onEvent: (SignInEvent) -> Unit,
-    navigateToHome:() -> Unit,
-    navigateToSignUp:() -> Unit
+    navigateToHome: () -> Unit,
+    navigateToSignUp: () -> Unit
 ) {
     val context = LocalContext.current
     val isPasswordVisible = remember { mutableStateOf(false) }
+//    val isPasswordValid by derivedStateOf { (state.password ?: "").length > 8 }
 
-    LaunchedEffect(key1 = state.signInError) {
-        state.signInError?.let { error ->
-            Toast.makeText(
-                context,
-                error,
-                Toast.LENGTH_LONG
-            ).show()
+    if (state.isLoading) {
+        Dialog(
+            onDismissRequest = {},
+            DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+        ) {
+            Surface {
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        contentColor = primaryLight
+                    )
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .padding(48.dp)
+                            .background(
+                                color = MaterialTheme.colorScheme.background,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                    )
+                }
+            }
         }
-    }
-    LaunchedEffect(state.navigateToHome) {
-        if (state.navigateToHome) {
-            Toast.makeText(
-                context,
-                "Sign in successful",
-                Toast.LENGTH_LONG
-            ).show()
-        }
-        navigateToHome()
+        Toast.makeText(context, "Sign in successful", Toast.LENGTH_LONG).show()
     }
 
-    LaunchedEffect (state.navigateToSignUp) {
-        navigateToSignUp()
-    }
+    LaunchedEffect(key1 = state.signInError) { state.signInError?.let { error -> Toast.makeText(context, error, Toast.LENGTH_LONG).show() } }
+
+    LaunchedEffect(state.navigateToHome) { if (state.navigateToHome) navigateToHome() }
+
+    LaunchedEffect(state.navigateToSignUp) { if (state.navigateToSignUp)navigateToSignUp() }
+
 
     Column(
         modifier = Modifier
@@ -144,11 +158,11 @@ private fun SignInContent(
             Spacer(modifier = Modifier.height(32.dp))
 
             OutlinedTextField(
-                value = state.email,
-                onValueChange = { email ->
-                    onEvent(SignInEvent.OnEmailChanged(email))
+                value = state.userName,
+                onValueChange = { userName ->
+                    onEvent(SignInEvent.OnEmailChanged(userName))
                 },
-                label = { Text(text = "Email") },
+                label = { Text(text = "User Name") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 singleLine = true,
                 shape = RoundedCornerShape(10.dp),
@@ -190,14 +204,17 @@ private fun SignInContent(
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
-                    onEvent(SignInEvent.OnSignInClicked(
-                        state.email,
-                        state.password
-                    ))
+                    onEvent(
+                        SignInEvent.OnSignInClicked(
+                            state.userName,
+                            state.password
+                        )
+                    )
                 },
                 shape = RoundedCornerShape(10.dp),
+//                enabled = isPasswordValid && state.userName.isNotEmpty(),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor =  primaryLight,
+                    containerColor = primaryLight,
                     contentColor = Color.White,
                     disabledContentColor = Color.Gray,
                     disabledContainerColor = Color.Black
@@ -214,10 +231,10 @@ private fun SignInContent(
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            Row (
+            Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
-            ){
+            ) {
                 HorizontalDivider(
                     modifier = Modifier
                         .weight(1f)
@@ -227,7 +244,7 @@ private fun SignInContent(
                     color = Color.Gray
                 )
                 Text(
-                    text = "Or Connect with",
+                    text = stringResource(R.string.or_connect_with),
                     style = MaterialTheme.typography.bodyLarge
                 )
                 HorizontalDivider(
@@ -276,7 +293,7 @@ private fun SignInContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = "New User ? ")
-                TextButton(onClick = { navigateToSignUp() }) {
+                TextButton(onClick = { onEvent(SignInEvent.OnCreateAccountClicked) }) {
                     Text(
                         text = "Create Account",
                         style = MaterialTheme.typography.bodyLarge,

@@ -8,6 +8,7 @@ sealed interface SignUpEvent {
     data class LastNameChanged(val lastName: String): SignUpEvent
     data class OnPasswordChanged(val password: String): SignUpEvent
     data class OnUserRoleChanged(val role: UserRole): SignUpEvent
+//    data object OnSignInClicked: SignUpEvent
     data class OnSignUpClicked(
         val userName: String,
         val firstName: String,
