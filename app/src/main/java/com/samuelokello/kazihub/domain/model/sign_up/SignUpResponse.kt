@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.data.model.sign_up
+package com.samuelokello.kazihub.domain.model.sign_up
 
 
 import com.google.gson.annotations.SerializedName

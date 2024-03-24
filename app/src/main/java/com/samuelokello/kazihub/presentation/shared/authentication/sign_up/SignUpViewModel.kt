@@ -3,30 +3,28 @@ package com.samuelokello.kazihub.presentation.shared.authentication.sign_up
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresExtension
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.samuelokello.kazihub.data.model.sign_up.SignUpRequest
-import com.samuelokello.kazihub.data.repository.AuthRepository
+import com.samuelokello.kazihub.data.repository.KaziHubRepository
+import com.samuelokello.kazihub.domain.model.sign_up.SignUpRequest
 import com.samuelokello.kazihub.utils.Resource
 import com.samuelokello.kazihub.utils.UserRole
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel
 @Inject constructor(
-    private val repository: AuthRepository,
+    private val repository: KaziHubRepository,
     savedStateHandle: SavedStateHandle
     ) : ViewModel() {
 
-    private val _state = MutableStateFlow(SignUpState())
-    val state = _state.asStateFlow()
+    var state = mutableStateOf(SignUpState())
+        private set
 
     private var userRole: UserRole
     init {
@@ -39,19 +37,11 @@ class SignUpViewModel
     }
 
     private fun showLoading() {
-        _state.update {
-            it.copy(
-                isLoading = true
-            )
-        }
+        state.value.copy(isLoading = true).also { state.value = it }
     }
 
     private fun hideLoading() {
-        _state.update {
-            it.copy(
-                isLoading = false
-            )
-        }
+        state.value.copy(isLoading = false).also { state.value = it }
     }
 
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
@@ -61,27 +51,19 @@ class SignUpViewModel
                 userRole = event.role
             }
             is SignUpEvent.OnUserNameChanged -> {
-                _state.update {
-                    it.copy(userName = event.userName)
-                }
+                state.value.copy(userName = event.userName).also { state.value = it }
             }
 
             is SignUpEvent.FirstNameChanged -> {
-                _state.update {
-                    it.copy(firstName = event.firstName)
-                }
+                state.value.copy(firstName = event.firstName).also { state.value = it }
             }
 
             is SignUpEvent.LastNameChanged -> {
-                _state.update {
-                    it.copy(lastName = event.lastName)
-                }
+                state.value.copy(lastName = event.lastName).also { state.value = it }
             }
 
             is SignUpEvent.OnPasswordChanged -> {
-                _state.update {
-                    it.copy(password = event.password)
-                }
+                state.value.copy(password = event.password).also { state.value = it }
             }
 
             is SignUpEvent.OnSignUpClicked -> {
@@ -101,23 +83,20 @@ class SignUpViewModel
                     validate()
                     when(val response = repository.signUp(signUpState)) {
                         is Resource.Success -> {
-                            _state.update {
-                                it.copy(
-                                    navigateToSignIn = true,
-                                    signUpSuccess = true,
-                                    signUpError = null,
-                                )
-                            }
+                            state.value.copy(
+                                navigateToSignIn = true,
+                                signUpSuccess = true,
+                                signUpError = null
+                            ).also { state.value = it }
                             hideLoading()
                             Log.d("SignUpViewModel", "onEvent: ${response.data}")
                         }
 
                         is Resource.Error -> {
-                            _state.update {
-                                it.copy(
-                                    signUpError = response.message ?: "An error occurred"
-                                )
-                            }
+                            state.value.copy(
+                                signUpError = response.message ?: "An error occurred"
+                            ).also { state.value = it }
+                            hideLoading()
                         }
                     }
                 }
@@ -136,19 +115,14 @@ class SignUpViewModel
     private fun validate() {
 
         if (state.value.userName.isEmpty() || state.value.firstName.isEmpty() || state.value.lastName.isEmpty() || state.value.password.isEmpty()) {
-            _state.update {
-                it.copy(
-                    signUpError = "All fields are required"
-                )
-            }
+            state.value.copy(
+                signUpError = "All fields are required"
+            ).also { state.value = it }
         }
         else {
-            _state.update {
-                it.copy(
-                    signUpError = null,
-                    signUpSuccess = true
-                )
-            }
+            state.value.copy(
+                signUpError = null
+            ).also { state.value = it }
         }
     }
 }
