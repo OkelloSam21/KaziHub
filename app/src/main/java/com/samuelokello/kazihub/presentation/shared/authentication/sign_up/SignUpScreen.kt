@@ -2,10 +2,8 @@ package com.samuelokello.kazihub.presentation.shared.authentication.SignIn
 
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,9 +21,6 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,7 +31,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,7 +38,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
@@ -54,16 +47,17 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.R
+import com.samuelokello.kazihub.presentation.destinations.SignInScreenDestination
+import com.samuelokello.kazihub.presentation.shared.authentication.common.HandleError
+import com.samuelokello.kazihub.presentation.shared.authentication.common.HandleLoading
+import com.samuelokello.kazihub.presentation.shared.authentication.common.HandleSuccess
 import com.samuelokello.kazihub.presentation.shared.authentication.sign_up.SignUpEvent
 import com.samuelokello.kazihub.presentation.shared.authentication.sign_up.SignUpState
 import com.samuelokello.kazihub.presentation.shared.authentication.sign_up.SignUpViewModel
-import com.samuelokello.kazihub.presentation.shared.destinations.SignInScreenDestination
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import com.samuelokello.kazihub.ui.theme.primaryLight
 import com.samuelokello.kazihub.utils.UserRole
@@ -74,7 +68,7 @@ import com.samuelokello.kazihub.utils.UserRole
 fun SignUpScreen(userRole: UserRole, navigator: DestinationsNavigator) {
 
     val viewModel: SignUpViewModel = hiltViewModel()
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.state
 
     viewModel.onEvent(SignUpEvent.OnUserRoleChanged(userRole))
 
@@ -88,7 +82,6 @@ fun SignUpScreen(userRole: UserRole, navigator: DestinationsNavigator) {
             SignUpContent(
                 state = state,
                 onEvent = viewModel::onEvent,
-                onClick = { navigator.navigate(SignInScreenDestination) },
                 navigateToSIgnIn = { navigator.navigate(SignInScreenDestination) },
                 userRole = userRole
             )
@@ -100,49 +93,41 @@ fun SignUpScreen(userRole: UserRole, navigator: DestinationsNavigator) {
 private fun SignUpContent(
     state: SignUpState,
     onEvent: (SignUpEvent) -> Unit,
-    onClick: () -> Unit,
     navigateToSIgnIn: () -> Unit,
     userRole: UserRole
 ) {
     val isPasswordVisible = remember { mutableStateOf(false) }
-//    val isPasswordValid by remember { derivedStateOf { (state.password?: "").length > 8 } }
+    val isFormValid =
+    state.userName.isNotBlank() &&
+    state.firstName.isNotBlank() &&
+    state.lastName.isNotBlank() &&
+    state.password.length > 8
+
 
     HandleLoading(state)
     HandleError(state)
-    HandleSuccess(state)
+    HandleSuccess(state,"Sign Up Successful")
     HandleNavigation(state, navigateToSIgnIn)
 
     SignUpForm(
         state = state,
         isPasswordVisible = isPasswordVisible,
-//        isPasswordValid = isPasswordValid,
+        isFormValid = isFormValid,
         onEvent = onEvent,
-        onClick = onClick,
+        navigateToSIgnIn = navigateToSIgnIn,
         userRole = userRole
+
     )
 
 }
 
 @Composable
-fun HandleLoading(state: SignUpState) {if (state.isLoading) { ShowLoadingDialog() } }
-
-@Composable
-fun HandleError(state: SignUpState) { if (state.signUpError != null) { ShowErrorToast(state.signUpError) } }
-
-@Composable
-fun HandleSuccess(state: SignUpState) { if (state.signUpSuccess) { ShowSuccessToast("Sign Up successful") } }
-
-@Composable
-fun HandleNavigation(state: SignUpState, navigateToSignIn: () -> Unit) { if (state.navigateToSignIn) { navigateToSignIn() } }
-
-
-@Composable
 fun SignUpForm(
     state: SignUpState,
     isPasswordVisible: MutableState<Boolean>,
-//    isPasswordValid: Boolean,
+    isFormValid: Boolean,
     onEvent: (SignUpEvent) -> Unit,
-    onClick: () -> Unit,
+    navigateToSIgnIn: () -> Unit,
     userRole: UserRole
 ) {
     Column(
@@ -265,6 +250,12 @@ fun SignUpForm(
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
+                    Log.d("SignUpScreen", "UserName: ${state.userName}")
+                    Log.d("SignUpScreen", "FirstName: ${state.firstName}")
+                    Log.d("SignUpScreen", "LastName: ${state.lastName}")
+                    Log.d("SignUpScreen", "Password: ${state.password}")
+                    Log.d("SignUpScreen", "IsFormValid: $isFormValid")
+                    if (isFormValid) {
                     onEvent(
                         SignUpEvent.OnSignUpClicked(
                             state.userName,
@@ -273,15 +264,14 @@ fun SignUpForm(
                             state.password,
                             role = userRole.name
                         )
-                    )
+                    )}
                     Log.d("SignUpScreen", "SignUpContent: $userRole")
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(54.dp),
-//                enabled = isPasswordValid,
+//                enabled = isFormValid,
                 shape = RoundedCornerShape(10.dp),
-
                 colors = ButtonDefaults.buttonColors(
                     containerColor = primaryLight,
                     contentColor = Color.White,
@@ -360,7 +350,7 @@ fun SignUpForm(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = "Already have an Account ? ")
-                TextButton(onClick = { onClick() }) {
+                TextButton(onClick = { navigateToSIgnIn() }) {
                     Text(
                         text = "Sign In",
                         style = MaterialTheme.typography.bodyLarge,
@@ -373,39 +363,9 @@ fun SignUpForm(
 }
 
 @Composable
-fun ShowLoadingDialog() {
-    Dialog(
-        onDismissRequest = {},
-        DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
-    ) {
-        Surface {
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    contentColor = primaryLight
-                )
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .padding(48.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.background,
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                )
-            }
-        }
+fun HandleNavigation(state: SignUpState, navigate: () -> Unit) {
+    if (state.navigateToSignIn) {
+        navigate()
     }
 }
 
-@Composable
-fun ShowErrorToast(error: String) {
-    val context = LocalContext.current
-    Toast.makeText(context, error, Toast.LENGTH_LONG).show()
-}
-
-@Composable
-fun ShowSuccessToast(message: String) {
-    val context = LocalContext.current
-    Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-}
