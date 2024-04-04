@@ -4,7 +4,7 @@ data class SignInState(
     val isSignInSuccessful: Boolean = false,
     val signInError: String? = null,
     val signInSuccess: Boolean = false,
-    val email: String = "",
+    val userName: String = "",
     val password: String = "",
     val navigateToHome: Boolean = false,
     val isLoading: Boolean = false,
