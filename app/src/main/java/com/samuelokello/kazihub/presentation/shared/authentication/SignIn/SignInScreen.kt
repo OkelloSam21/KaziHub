@@ -157,9 +157,9 @@ fun SignInForm(state: SignInState, isPasswordVisible: MutableState<Boolean>, onE
         Spacer(modifier = Modifier.height(32.dp))
 
         OutlinedTextField(
-            value = state.email,
+            value = state.userName,
             onValueChange = { email ->
-                onEvent(SignInEvent.OnEmailChanged(email))
+                onEvent(SignInEvent.OnUserName(email))
             },
             label = { Text(text = "User Name") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -206,7 +206,7 @@ fun SignInForm(state: SignInState, isPasswordVisible: MutableState<Boolean>, onE
             onClick = {
                 onEvent(
                     SignInEvent.OnSignInClicked(
-                        state.email,
+                        state.userName,
                         state.password
                     )
                 )
