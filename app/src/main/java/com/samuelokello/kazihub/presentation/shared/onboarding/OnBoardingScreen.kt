@@ -21,16 +21,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.R
-import com.samuelokello.kazihub.presentation.destinations.UserTYpeScreenDestination
+import com.samuelokello.kazihub.presentation.shared.destinations.UserTYpeScreenDestination
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import com.samuelokello.kazihub.ui.theme.primaryLight
 
@@ -87,13 +83,7 @@ fun OnBoardingContent(
             ){
                 Text(
                     text = "Find a Perfect Job Match",
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontSize = 32.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily(Font(R.font.poppins)),
-                        lineHeight = 32.sp,
-                        letterSpacing = 0.18.sp
-                    ),
+                    style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier
                 )
 
@@ -101,13 +91,7 @@ fun OnBoardingContent(
 
                 Text(
                     text = "Finding your dream job is more easier and faster with Kazihub",
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily(Font(R.font.poppins)),
-                        lineHeight = 32.sp,
-                        letterSpacing = 0.18.sp,
-                        color = Color.Gray
-                    ),
+                    style = MaterialTheme.typography.titleLarge.copy(color = Color.Gray),
                     modifier = Modifier
                 )
             }

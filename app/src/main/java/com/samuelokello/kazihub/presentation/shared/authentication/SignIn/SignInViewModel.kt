@@ -1,21 +1,39 @@
 package com.samuelokello.kazihub.presentation.shared.authentication.SignIn
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.samuelokello.kazihub.presentation.shared.authentication.SignIn.Google.SignInResult
+import androidx.lifecycle.viewModelScope
+import com.samuelokello.kazihub.data.model.sign_in.SignInRequest
+import com.samuelokello.kazihub.data.repository.AuthRepository
+import com.samuelokello.kazihub.utils.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SignInViewModel : ViewModel() {
+@HiltViewModel
+class SignInViewModel
+@Inject constructor(private val repository: AuthRepository)
+    : ViewModel() {
 
     private val _state = MutableStateFlow(SignInState())
     val state = _state.asStateFlow()
 
-    fun onSignInResult(result: SignInResult) {
+    private fun showLoading() {
         _state.update {
             it.copy(
-                isSignInSuccessful = result.data != null,
-                signInError = result.errorMessage
+                isLoading = true
+            )
+        }
+    }
+
+    private fun hideLoading() {
+        _state.update {
+            it.copy(
+                isLoading = false
             )
         }
     }
@@ -24,7 +42,7 @@ class SignInViewModel : ViewModel() {
         when (event) {
             is SignInEvent.OnEmailChanged -> {
                 _state.update {
-                    it.copy(email = event.email)
+                    it.copy(userName = event.userName)
                 }
             }
 
@@ -35,11 +53,45 @@ class SignInViewModel : ViewModel() {
             }
 
             is SignInEvent.OnSignInClicked -> {
-                validate()
+                val userName = state.value.userName
+                val password = state.value.password
+                val signInState = SignInRequest(
+                    username = userName,
+                    password = password
+                )
+                viewModelScope.launch(Dispatchers.IO) {
+                    showLoading()
+                    validate()
+                    when (val result = repository.signIn(signInState)) {
+                        is Resource.Success -> {
+                            _state.update {
+                                it.copy(
+                                    isLoading = true,
+                                    navigateToHome = it.signInSuccess
+                                )
+                            }
+                            Log.d("SignInViewModel", "onEvent: ${result.data}")
+                        }
+
+                        is Resource.Error -> {
+                            _state.update {
+                                it.copy(
+                                    isLoading = false,
+                                    signInError = result.message
+                                )
+                            }
+                            Log.d("SignInViewModel", "onEvent: ${result.message}")
+                        }
+                    }
+
+                }
+
+            }
+
+            is SignInEvent.OnCreateAccountClicked -> {
                 _state.update {
                     it.copy(
-                        isLoading = true,
-                        navigateToHome = it.signInSuccess
+                        navigateToSignUp = true
                     )
                 }
             }
@@ -47,7 +99,7 @@ class SignInViewModel : ViewModel() {
     }
 
     private fun validate() {
-        if (state.value.email.isEmpty() || state.value.password.isEmpty()) {
+        if (state.value.userName.isEmpty() || state.value.password.isEmpty()) {
             _state.update {
                 it.copy(
                     signInError = "Please fill in all fields"
