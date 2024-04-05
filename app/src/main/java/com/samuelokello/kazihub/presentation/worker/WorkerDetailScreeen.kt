@@ -1,22 +1,7 @@
 package com.samuelokello.kazihub.presentation.worker
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.ramcosta.composedestinations.annotation.Destination
-import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 
-/**
- * Worker Detail Screen - This composable function calls the WorkerProfileViewModel to get the worker profile
- * and then passes the state to the WorkerProfileScreen
- * */
-@Destination
 @Composable
 fun WorkerDetailScreen() {
     val viewModel :WorkerProfileViewModel = viewModel()
