@@ -23,10 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.R
@@ -43,7 +40,7 @@ fun UserTYpeScreen(navigator: DestinationsNavigator) {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            UserTypeContent { userRole -> navigator.navigate(SignUpScreenDestination(userRole = userRole)) }
+            UserTypeContent { userType -> navigator.navigate(SignUpScreenDestination(userType)) }
         }
     }
 }
@@ -70,8 +67,8 @@ fun UserTypeContent(
         Column {
             Text(
                 text = "Select your user type",
-                style = MaterialTheme.typography.bodyLarge
-                .copy(fontSize = 18.sp, fontFamily = FontFamily(Font(R.font.poppins_bold))),
+                style = MaterialTheme.typography.bodyLarge,
+//                .copy(fontSize = 18.sp, fontFamily = FontFamily(Font(R.font.poppins_bold))),
                 modifier = Modifier.padding(top = 16.dp)
             )
         }
@@ -85,9 +82,9 @@ fun UserTypeContent(
             UserTypeCard(
                 image = R.drawable.undraw_software_engineer_re_tnjc,
                 title = "I am a Job Provider",
-                userRole = UserRole.EMPLOYER,
+                userRole = UserRole.BUSINESS,
                 onClick = {
-                    onClick(UserRole.EMPLOYER)
+                    onClick(UserRole.BUSINESS)
                 }
             )
             Spacer(modifier = Modifier.width(32.dp))

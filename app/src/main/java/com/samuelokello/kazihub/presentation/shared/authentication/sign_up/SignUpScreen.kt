@@ -1,7 +1,6 @@
 package com.samuelokello.kazihub.presentation.shared.authentication.SignIn
 
 import android.os.Build
-import android.widget.Toast
 import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +23,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -71,7 +71,7 @@ fun SignUpScreen(userRole: UserRole, navigator: DestinationsNavigator) {
     KaziHubTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = androidx.compose.material.MaterialTheme.colors.background
+            color = androidx.compose.material.MaterialTheme.colors.surface
         ) {
             val viewModel: SignUpViewModel = viewModel()
             val state by viewModel.state.collectAsState()
@@ -80,54 +80,87 @@ fun SignUpScreen(userRole: UserRole, navigator: DestinationsNavigator) {
                 state = state,
                 onEvent = viewModel::onEvent,
                 onClick = {navigator.navigate(SignInScreenDestination)},
-                navigateToSIgnIn = {navigator.navigate(SignInScreenDestination)}
+                navigateToSIgnIn = {navigator.navigate(SignInScreenDestination)},
+                onClearError = viewModel::clearError,
+                onSignUpClicked = {}
             )
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SignUpContent(
     state: SignUpState,
     onEvent: (SignUpEvent) -> Unit,
     onClick: () -> Unit,
-    navigateToSIgnIn: () -> Unit
+    navigateToSIgnIn: () -> Unit,
+    onClearError: () -> Unit,
+    onSignUpClicked:() -> Unit
 ) {
     val isPasswordVisible = remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val model: SignUpViewModel = viewModel()
 
     if (state.isLoading) {
         Dialog(
             onDismissRequest = {},
-            DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+            DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false
+            ),
         ) {
-            Surface { Card {CircularProgressIndicator(modifier = Modifier.padding(48.dp)) } }
+            Surface {
+                Card {
+                    CircularProgressIndicator(modifier = Modifier.padding(48.dp))
+                }
+            }
         }
     }
 
-    LaunchedEffect(key1 = state.signUpError) {
-        state.signUpError?.let { error ->
-            Toast.makeText(
-                context,
-                error,
-                Toast.LENGTH_LONG
-            ).show()
-        }
-    }
-    LaunchedEffect(key1 = state.signUpSuccess) {
-        if (state.signUpSuccess) {
-            Toast.makeText(
-                context,
-                "Sign Up successful",
-                Toast.LENGTH_LONG
-            ).show()
-        }
-    }
+//    if (state.authenticationError != null){
+//        val error = state.authenticationError
+//        ModalBottomSheet(onDismissRequest = onClearError) {
+//            Surface {
+//                Column(
+//                    modifier =
+//                    Modifier
+//                        .padding(all = 24.dp)
+//                        .padding(bottom = 24.dp),
+//                ) {
+//                    Text(
+//                        text = "Authentication Error",
+//                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
+//                    )
+//                    Text(
+//                        modifier = Modifier.padding(vertical = 24.dp),
+//                        text = state.authenticationError,
+//                    )
+//                    Button(
+//                        modifier =
+//                        Modifier
+//                            .fillMaxWidth()
+//                            .height(60.dp)
+//                            .padding(vertical = 16.dp),
+//                        onClick = {},
+//                        shape = RoundedCornerShape(10.dp),
+//                        colors = ButtonColors(
+//                            containerColor = primaryLight,
+//                            contentColor = Color.White,
+//                            disabledContainerColor = Color.Gray,
+//                            disabledContentColor = Color.Black
+//                        )
+//                    ) {
+//                        Text(text = "retry")
+//                    }
+//                }
+//            }
+//
+//        }
+//    }
 
     LaunchedEffect(state.navigateToSignIn) {
-        if (state.navigateToSignIn) {
-            navigateToSIgnIn()
-        }
+        if ( state.navigateToSignIn) navigateToSIgnIn()
     }
 
     Column(
@@ -159,6 +192,10 @@ private fun SignUpContent(
         }
 
         Spacer(modifier = Modifier.height(32.dp))
+
+        LaunchedEffect(state.navigateToSignIn) {
+            if ( state.navigateToSignIn) navigateToSIgnIn()
+        }
 
         Column(
             modifier = Modifier.fillMaxWidth()
@@ -249,17 +286,8 @@ private fun SignUpContent(
             }
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                onClick = {
-                    onEvent(
-                        SignUpEvent.OnSignUpClicked(
-                            state.userName,
-                            state.firstName,
-                            state.lastName,
-                            state.password,
-                            state.role.toString()
-                        )
-                    )
-                },
+                onClick = { onSignUpClicked()},
+                enabled = model.validate(),
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -315,14 +343,14 @@ private fun SignUpContent(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+                horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
             ) {
                 IconButton(onClick = { /*TODO*/ }) {
                     Image(
                         painter = painterResource(id = R.drawable.icons8_google_48),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.size(64.dp)
+                        modifier = Modifier.size(50.dp)
                     )
                 }
                 IconButton(onClick = { /*TODO*/ }) {
@@ -330,7 +358,7 @@ private fun SignUpContent(
                         painter = painterResource(id = R.drawable.icons8_facebook_circled_48),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.size(64.dp)
+                        modifier = Modifier.size(50.dp)
                     )
                 }
             }
@@ -347,7 +375,6 @@ private fun SignUpContent(
                         text = "Sign In",
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier,
-//                            .padding(bottom = 64.dp)
                     )
                 }
             }

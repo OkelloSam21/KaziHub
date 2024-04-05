@@ -1,11 +1,9 @@
 package com.samuelokello.kazihub.presentation.shared.navigation.bottom_bar_navigation
 
+
 import com.samuelokello.kazihub.R
 import com.samuelokello.kazihub.presentation.destinations.Destination
-import com.samuelokello.kazihub.presentation.destinations.HomeScreenDestination
-import com.samuelokello.kazihub.presentation.destinations.MessagesScreenDestination
-import com.samuelokello.kazihub.presentation.destinations.ProfileScreenDestination
-import com.samuelokello.kazihub.presentation.destinations.SettingsScreenDestination
+import com.samuelokello.kazihub.presentation.destinations.*
 
 sealed class BottomNavItem(var title: String, var icon: Int, var destination: Destination) {
     data object Home : BottomNavItem(
