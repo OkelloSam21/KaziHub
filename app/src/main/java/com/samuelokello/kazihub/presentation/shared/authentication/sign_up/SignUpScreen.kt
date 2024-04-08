@@ -16,10 +16,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -65,25 +70,25 @@ import com.samuelokello.kazihub.utils.UserRole
 @Destination
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @Composable
-fun SignUpScreen(userRole: UserRole, navigator: DestinationsNavigator) {
+fun SignUpScreen(userType: UserRole, navigator: DestinationsNavigator) {
 
     val viewModel: SignUpViewModel = hiltViewModel()
     val state by viewModel.state
 
-    viewModel.onEvent(SignUpEvent.OnUserRoleChanged(userRole))
+    viewModel.onEvent(SignUpEvent.OnUserRoleChanged(userType))
 
     KaziHubTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Log.d("SignUpScreen", "SignUpScreen: ${userRole.name}")
+            Log.d("SignUpScreen", "SignUpScreen: ${userType.name}")
 
             SignUpContent(
                 state = state,
                 onEvent = viewModel::onEvent,
-                navigateToSIgnIn = { navigator.navigate(SignInScreenDestination) },
-                userRole = userRole
+                navigateToSIgnIn = { navigator.navigate(SignInScreenDestination(userType)) },
+                userType = userType
             )
         }
     }
@@ -94,7 +99,7 @@ private fun SignUpContent(
     state: SignUpState,
     onEvent: (SignUpEvent) -> Unit,
     navigateToSIgnIn: () -> Unit,
-    userRole: UserRole
+    userType: UserRole
 ) {
     val isPasswordVisible = remember { mutableStateOf(false) }
     val isFormValid =
@@ -115,8 +120,7 @@ private fun SignUpContent(
         isFormValid = isFormValid,
         onEvent = onEvent,
         navigateToSIgnIn = navigateToSIgnIn,
-        userRole = userRole
-
+        userRole = userType
     )
 
 }
