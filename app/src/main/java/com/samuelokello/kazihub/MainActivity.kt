@@ -21,8 +21,9 @@ import com.samuelokello.kazihub.presentation.shared.destinations.MessagesScreenD
 import com.samuelokello.kazihub.presentation.shared.destinations.ProfileScreenDestination
 import com.samuelokello.kazihub.presentation.shared.destinations.SettingsScreenDestination
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override fun onCreate(savedInstanceState: Bundle?) {
