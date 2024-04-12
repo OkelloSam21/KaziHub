@@ -30,5 +30,6 @@
     <string name = "settings">Settings</string>
     <string name="or_connect_with">Or Connect with</string>
     <string name="register_account">Register Account</string>
+    <string name="maps_api_key">AIzaSyBT6Jitcm4NBH36CzJeWdZR50yx_p4fAOw</string>
 
 </resources>
