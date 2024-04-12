@@ -16,10 +16,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -75,7 +80,7 @@ fun SignUpScreen(userType: UserRole, navigator: DestinationsNavigator) {
     KaziHubTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
+            color = MaterialTheme.colorScheme.surface
         ) {
             Log.d("SignUpScreen", "SignUpScreen: ${userType.name}")
 
@@ -93,8 +98,8 @@ fun SignUpScreen(userType: UserRole, navigator: DestinationsNavigator) {
 private fun SignUpContent(
     state: SignUpState,
     onEvent: (SignUpEvent) -> Unit,
-    navigateToSIgnIn: () -> Unit,
-    userType: UserRole
+    onClick: () -> Unit,
+    navigateToSIgnIn: () -> Unit
 ) {
     val isPasswordVisible = remember { mutableStateOf(false) }
     val isFormValid =
@@ -287,10 +292,10 @@ fun SignUpForm(
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            Row(
+            Row (
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
-            ) {
+            ){
                 HorizontalDivider(
                     modifier = Modifier
                         .weight(1f)
@@ -349,11 +354,12 @@ fun SignUpForm(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = "Already have an Account ? ")
-                TextButton(onClick = { navigateToSIgnIn() }) {
+                TextButton(onClick = { onClick() }) {
                     Text(
                         text = "Sign In",
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier,
+//                            .padding(bottom = 64.dp)
                     )
                 }
             }
