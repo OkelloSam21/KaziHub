@@ -1,16 +1,14 @@
 package com.samuelokello.kazihub.data.repository
 
 import android.content.Context
-import android.location.LocationManager
 import android.net.http.HttpException
+import android.os.Build
 import android.util.Log
-import com.samuelokello.kazihub.data.model.sign_in.SignInRequest
+import androidx.annotation.RequiresExtension
 import com.samuelokello.kazihub.data.model.sign_in.SignInResponse
 import com.samuelokello.kazihub.data.remote.KaziHubApi
 import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileRequest
 import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileResponse
-import com.samuelokello.kazihub.domain.model.sign_in.SignInRequest
-import com.samuelokello.kazihub.domain.model.sign_in.SignInResponse
 import com.samuelokello.kazihub.domain.model.sign_up.SignUpRequest
 import com.samuelokello.kazihub.domain.model.sign_up.SignUpResponse
 import com.samuelokello.kazihub.utils.LocationManager
@@ -20,9 +18,9 @@ import com.samuelokello.kazihub.utils.storeAccessToken
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.HttpException
 import javax.inject.Inject
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 class KaziHubRepository
 @Inject constructor(
     private val api: KaziHubApi,
@@ -39,7 +37,8 @@ class KaziHubRepository
         }
     }
 
-    suspend fun signIn(signInRequest: SignInRequest): Resource<SignInResponse> = withContext(Dispatchers.IO){
+
+    suspend fun signIn(signInRequest: com.samuelokello.kazihub.domain.model.shared.auth.sign_in.SignInRequest): Resource<SignInResponse> = withContext(Dispatchers.IO){
         return@withContext try {
             val response = api.sigIn(signInRequest)
             storeAccessToken(context, response.data?.accessToken!!)
@@ -74,10 +73,8 @@ class KaziHubRepository
         }
     }
 
-
-
     private fun <T>handleException(e: Exception): Resource<T>{
-        return if (e is HttpException && (e.code() == 401 || e.code() == 403)) {
+        return if (e is HttpException && (e.hashCode() == 401 || e.hashCode() == 403)) {
             Resource.Error("Authorization failed. Please check your credentials.")
         } else {
             Resource.Error(e.message ?: "An error occurred")
