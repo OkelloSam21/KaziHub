@@ -73,4 +73,10 @@ object AppModule {
         return ViewModelProvider.NewInstanceFactory()
     }
 
+    @Provides
+    @Singleton
+    fun providesContext(@ApplicationContext appContext: Context): Context{
+        return appContext
+    }
+
 }
