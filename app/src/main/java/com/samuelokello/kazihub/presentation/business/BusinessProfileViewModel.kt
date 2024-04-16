@@ -4,7 +4,9 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
+import android.os.Build
 import android.util.Patterns
+import androidx.annotation.RequiresExtension
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -24,6 +26,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @HiltViewModel
 class BusinessProfileViewModel @Inject constructor(
     private val repository: KaziHubRepository,
@@ -80,6 +83,7 @@ class BusinessProfileViewModel @Inject constructor(
 
 
 
+    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     suspend fun createProfile() {
         val email = _profile.value.email
         val phone = _profile.value.phone
@@ -112,6 +116,7 @@ class BusinessProfileViewModel @Inject constructor(
         }
     }
 
+    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     private fun fetchProfile() {
         viewModelScope.launch(Dispatchers.IO) {
             val id: Int = 0

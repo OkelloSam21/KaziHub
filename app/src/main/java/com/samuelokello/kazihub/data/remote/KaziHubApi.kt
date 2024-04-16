@@ -1,10 +1,9 @@
 package com.samuelokello.kazihub.data.remote
 
+import com.samuelokello.kazihub.data.model.sign_in.SignInResponse
 import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileRequest
 import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileResponse
 import com.samuelokello.kazihub.domain.model.JobsResponse
-import com.samuelokello.kazihub.domain.model.sign_in.SignInRequest
-import com.samuelokello.kazihub.domain.model.sign_in.SignInResponse
 import com.samuelokello.kazihub.domain.model.sign_up.SignUpRequest
 import com.samuelokello.kazihub.domain.model.sign_up.SignUpResponse
 import retrofit2.http.Body
@@ -19,7 +18,7 @@ interface KaziHubApi {
     suspend fun signUp(@Body signUpRequest: SignUpRequest): SignUpResponse
 
     @POST("auth/signin")
-    suspend fun sigIn(@Body signInRequest: SignInRequest): SignInResponse
+    suspend fun sigIn(@Body signInRequest: com.samuelokello.kazihub.domain.model.shared.auth.sign_in.SignInRequest): SignInResponse
 
     @POST("/business/profiles/create")
     suspend fun createBusinessProfile(
@@ -29,7 +28,7 @@ interface KaziHubApi {
 
     @GET("/business/profiles/{bus_profile_id}")
     suspend fun getBusinessProfile(
-        @Path("bus_profile_id") id : Int
+        @Path("bus_profile_id") id: Int
     ): BusinessProfileResponse
 
     @GET("/business/profiles/all/")
@@ -37,34 +36,33 @@ interface KaziHubApi {
 
     @PUT("/business/profiles/{bus_profile_id}/update")
     suspend fun updateBusinessProfile(
-        @Path("bus_profile_id") id : Int,
+        @Path("bus_profile_id") id: Int,
         @Body businessProfile: BusinessProfileRequest
     ): BusinessProfileResponse
 
     @PUT("/business/profiles/{bus_profile_id}/update/image")
     suspend fun updateBusinessProfileImage(
-        @Path("bus_profile_id") id : Int,
+        @Path("bus_profile_id") id: Int,
         @Body businessProfile: BusinessProfileRequest
     ): BusinessProfileResponse
 
     @GET("/business/verify/with_email/")
     suspend fun verifyBusinessByEmail(
-        @Path("bus_profile_id") id : Int,
+        @Path("bus_profile_id") id: Int,
         @Body businessProfile: BusinessProfileRequest
     ): BusinessProfileResponse
 
     @GET("/business/verify/with_phone/")
     suspend fun verifyBusinessByPhone(
-        @Path("bus_profile_id") id : Int,
+        @Path("bus_profile_id") id: Int,
         @Body businessProfile: BusinessProfileRequest
     ): BusinessProfileResponse
 
     @GET("/business/profile/verify/")
     suspend fun verifyBusinessByCode(
-        @Path("bus_profile_id") id : Int,
+        @Path("bus_profile_id") id: Int,
         @Body businessProfile: BusinessProfileRequest
     ): BusinessProfileResponse
-
 
 
     @GET("jobs/list")

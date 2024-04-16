@@ -6,7 +6,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.samuelokello.kazihub.data.repository.KaziHubRepository
-import com.samuelokello.kazihub.domain.model.shared.auth.signup.SignInRequest
+import com.samuelokello.kazihub.domain.model.shared.auth.sign_in.SignInRequest
 import com.samuelokello.kazihub.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
