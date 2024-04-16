@@ -1,8 +1,6 @@
 package com.samuelokello.kazihub.data.repository
 
-import android.content.Context
-import android.net.http.HttpException
-import android.os.Build
+import android.content.Context import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresExtension
 import com.samuelokello.kazihub.data.model.sign_in.SignInResponse
@@ -18,6 +16,7 @@ import com.samuelokello.kazihub.utils.storeAccessToken
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 import javax.inject.Inject
 
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
@@ -80,5 +79,4 @@ class KaziHubRepository
             Resource.Error(e.message ?: "An error occurred")
         }
     }
-
 }
