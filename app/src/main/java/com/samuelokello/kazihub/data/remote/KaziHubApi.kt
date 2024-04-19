@@ -18,7 +18,7 @@ interface KaziHubApi {
     suspend fun signUp(@Body signUpRequest: SignUpRequest): SignUpResponse
 
     @POST("auth/signin")
-    suspend fun sigIn(@Body signInRequest: com.samuelokello.kazihub.domain.model.shared.auth.sign_in.SignInRequest): SignInResponse
+    suspend fun signIn(@Body signInRequest: com.samuelokello.kazihub.domain.model.shared.auth.sign_in.SignInRequest): SignInResponse
 
     @POST("/business/profiles/create")
     suspend fun createBusinessProfile(
@@ -36,14 +36,21 @@ interface KaziHubApi {
 
     @PUT("/business/profiles/{bus_profile_id}/update")
     suspend fun updateBusinessProfile(
+        @Header("Authorization") token: String,
         @Path("bus_profile_id") id: Int,
         @Body businessProfile: BusinessProfileRequest
     ): BusinessProfileResponse
 
     @PUT("/business/profiles/{bus_profile_id}/update/image")
     suspend fun updateBusinessProfileImage(
+        @Header("Authorization") token: String,
         @Path("bus_profile_id") id: Int,
         @Body businessProfile: BusinessProfileRequest
+    ): BusinessProfileResponse
+
+    @PUT("/business/profiles/image/{profile_id}")
+    suspend fun getBusinessProfileImage(
+        @Path("profile_id") id: Int
     ): BusinessProfileResponse
 
     @GET("/business/verify/with_email/")

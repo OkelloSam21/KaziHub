@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.shared.authentication.common
+package com.samuelokello.kazihub.presentation.common
 
 import android.widget.Toast
 import androidx.compose.foundation.background

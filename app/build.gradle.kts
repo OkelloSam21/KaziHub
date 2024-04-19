@@ -71,6 +71,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-maps:18.2.0")
     implementation("com.google.android.gms:play-services-location:21.2.0")
     implementation("com.google.android.libraries.places:places:3.4.0")
+    implementation("androidx.test.ext:junit-ktx:1.1.5")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -113,9 +114,12 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.10.0")
 
     implementation ("com.google.firebase:firebase-auth-ktx:22.3.1")
-    implementation ("com.google.android.gms:play-services-auth:21.0.0")
+    implementation ("com.google.android.gms:play-services-auth:21.1.0")
 
     //Okhttp
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    //mockito
+    implementation("org.mockito:mockito-core:4.0.0")
 }

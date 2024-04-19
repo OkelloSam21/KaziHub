@@ -1,6 +1,6 @@
 package com.samuelokello.kazihub.presentation.shared.authentication.sign_up
 
-import com.samuelokello.kazihub.presentation.shared.authentication.common.AuthState
+import com.samuelokello.kazihub.presentation.common.AuthState
 
 data class SignUpState (
 //    val isSignUpSuccessful: Boolean = false,

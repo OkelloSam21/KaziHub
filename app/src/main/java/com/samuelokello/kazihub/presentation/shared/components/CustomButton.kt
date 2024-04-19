@@ -16,7 +16,7 @@ import com.samuelokello.kazihub.ui.theme.primaryLight
 fun CustomButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    isEnabled: Boolean = true,
+    isEnabled: Boolean = false,
     text: String,
     containerColor: Color = primaryLight,
     contentColor: Color = Color.White,

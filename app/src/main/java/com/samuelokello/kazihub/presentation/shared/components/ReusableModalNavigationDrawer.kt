@@ -1,6 +1,6 @@
 package com.samuelokello.kazihub.presentation.shared.components
 
-import androidx.compose.foundation.layout.PaddingValues
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ModalNavigationDrawer
@@ -9,13 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ReusableModalNavigationDrawer(
     drawerState: DrawerState,
     drawerContent: @Composable () -> Unit,
     topBar: @Composable () -> Unit,
     bottomBar: @Composable () -> Unit,
-    content: @Composable (PaddingValues) -> Unit
+//    content: @Composable (PaddingValues) -> Unit
 ) {
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -24,7 +25,7 @@ fun ReusableModalNavigationDrawer(
         Scaffold(
             topBar = topBar,
             modifier = Modifier.padding(bottom = 32.dp),
-            content = content
+            content = {}
         )
     }
 }

@@ -16,12 +16,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.presentation.shared.components.CustomButton
 import com.samuelokello.kazihub.presentation.shared.components.EditTextField
-import com.samuelokello.kazihub.presentation.shared.components.LocationDropDown
 import com.samuelokello.kazihub.utils.UserRole
 
 @Composable
@@ -85,13 +83,13 @@ fun WorkerProfileForm(
                 )
             )
             Spacer(modifier = Modifier.height(16.dp))
-            LocationDropDown(
-                value = state.location,
-                onValueChange = { newValue, newLocationLatLng ->
-                    viewModel.onLocationChange(newValue, newLocationLatLng as LatLng)},
-                places = placesClient,
-                label = "Location"
-            )
+//            LocationDropDown(
+//                value = state.location,
+//                onValueChange = { newValue, newLocationLatLng ->
+//                    viewModel.onLocationChange(newValue, newLocationLatLng as LatLng)},
+//                places = placesClient,
+//                label = "Location"
+//            )
             Spacer(modifier = Modifier.height(16.dp))
             EditTextField(
                 value = state.bio,
