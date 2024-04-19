@@ -12,7 +12,7 @@ import com.samuelokello.kazihub.presentation.business.BusinessProfileViewModel
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @Composable
 fun BusinessProfileScreen(viewModel: BusinessProfileViewModel) {
-    val state by viewModel.profile.collectAsState()
+    val state by viewModel.state.collectAsState()
 
     Column {
         Text(text = "Profile")
