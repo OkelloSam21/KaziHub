@@ -1,18 +1,17 @@
 package com.samuelokello.kazihub.data.repository
 
 import android.content.Context
-import android.location.LocationManager
-import android.net.http.HttpException
+import android.os.Build
 import android.util.Log
-import com.samuelokello.kazihub.data.model.sign_in.SignInRequest
+import androidx.annotation.RequiresExtension
 import com.samuelokello.kazihub.data.model.sign_in.SignInResponse
 import com.samuelokello.kazihub.data.remote.KaziHubApi
 import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileRequest
 import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileResponse
-import com.samuelokello.kazihub.domain.model.sign_in.SignInRequest
-import com.samuelokello.kazihub.domain.model.sign_in.SignInResponse
+import com.samuelokello.kazihub.domain.model.shared.auth.sign_in.SignInRequest
 import com.samuelokello.kazihub.domain.model.sign_up.SignUpRequest
 import com.samuelokello.kazihub.domain.model.sign_up.SignUpResponse
+import com.samuelokello.kazihub.domain.model.worker.image.WorkerProfileImageRequest
 import com.samuelokello.kazihub.utils.LocationManager
 import com.samuelokello.kazihub.utils.Resource
 import com.samuelokello.kazihub.utils.getAccessToken
@@ -23,6 +22,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import javax.inject.Inject
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 class KaziHubRepository
 @Inject constructor(
     private val api: KaziHubApi,
@@ -39,9 +39,10 @@ class KaziHubRepository
         }
     }
 
+
     suspend fun signIn(signInRequest: SignInRequest): Resource<SignInResponse> = withContext(Dispatchers.IO){
         return@withContext try {
-            val response = api.sigIn(signInRequest)
+            val response = api.signIn(signInRequest)
             storeAccessToken(context, response.data?.accessToken!!)
             Log.d("AuthRepository", "signIn: ${response.data.accessToken}")
             Resource.Success(response)
@@ -55,8 +56,10 @@ class KaziHubRepository
         return@withContext try {
             val token = getAccessToken(context)
             val response =if (token != null) {
+                Log.d("KaziHubRepository", "createBusinessProfile: $token")
                 api.createBusinessProfile(" Bearer $token",request)
             } else {
+                Log.d("KaziHubRepository", "createBusinessProfile: Token is null")
                 throw Exception("Token is null")
             }
             Resource.Success(response)
@@ -65,7 +68,7 @@ class KaziHubRepository
         }
     }
 
-    suspend fun fetchBusinessProfile(id: Int): Resource<BusinessProfileResponse>  = withContext(Dispatchers.IO){
+    suspend fun fetchBusinessProfileById(id: Int): Resource<BusinessProfileResponse>  = withContext(Dispatchers.IO){
         return@withContext try {
             val response = api.getBusinessProfile(id)
             Resource.Success(response)
@@ -74,14 +77,59 @@ class KaziHubRepository
         }
     }
 
+    suspend fun fetchAllBusinessProfiles(): Resource<List<BusinessProfileResponse>> = withContext(Dispatchers.IO){
+        return@withContext try {
+            val response = api.getAllBusinessProfiles()
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    // worker
+    suspend fun fetchWorkerProfileById(id: Int): Resource<BusinessProfileResponse>  = withContext(Dispatchers.IO){
+        return@withContext try {
+            val response = api.getBusinessProfile(id)
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun fetchAllWorkerProfiles(): Resource<List<BusinessProfileResponse>> = withContext(Dispatchers.IO){
+        return@withContext try {
+            val response = api.getAllBusinessProfiles()
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    // not complete need to work on the request
+    suspend fun UpdateWorkerProfileImage(id: Int, request: WorkerProfileImageRequest): Resource<BusinessProfileResponse> = withContext(Dispatchers.IO) {
+        return@withContext try {
+            val token = getAccessToken(context)
+            val response =if (token != null) {
+                Log.d("KaziHubRepository", "createBusinessProfile: $token")
+                api.updateBusinessProfileImage(" Bearer $token",id,request)
+            } else {
+                Log.d("KaziHubRepository", "createBusinessProfile: Token is null")
+                throw Exception("Token is null")
+            }
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
 
 
     private fun <T>handleException(e: Exception): Resource<T>{
-        return if (e is HttpException && (e.code() == 401 || e.code() == 403)) {
+        return if (e is HttpException && (e.hashCode() == 401 || e.hashCode() == 403)) {
             Resource.Error("Authorization failed. Please check your credentials.")
         } else {
             Resource.Error(e.message ?: "An error occurred")
         }
     }
+
 
 }

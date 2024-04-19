@@ -51,13 +51,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.R
-import com.samuelokello.kazihub.presentation.destinations.SignInScreenDestination
-import com.samuelokello.kazihub.presentation.shared.authentication.common.HandleError
-import com.samuelokello.kazihub.presentation.shared.authentication.common.HandleLoading
-import com.samuelokello.kazihub.presentation.shared.authentication.common.HandleSuccess
+import com.samuelokello.kazihub.presentation.common.HandleError
+import com.samuelokello.kazihub.presentation.common.HandleLoading
+import com.samuelokello.kazihub.presentation.common.HandleSuccess
 import com.samuelokello.kazihub.presentation.shared.authentication.sign_up.SignUpEvent
 import com.samuelokello.kazihub.presentation.shared.authentication.sign_up.SignUpState
 import com.samuelokello.kazihub.presentation.shared.authentication.sign_up.SignUpViewModel
+import com.samuelokello.kazihub.presentation.shared.destinations.SignInScreenDestination
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import com.samuelokello.kazihub.ui.theme.primaryLight
 import com.samuelokello.kazihub.utils.UserRole
@@ -65,25 +65,26 @@ import com.samuelokello.kazihub.utils.UserRole
 @Destination
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @Composable
-fun SignUpScreen(userRole: UserRole, navigator: DestinationsNavigator) {
+fun SignUpScreen(userType: UserRole, navigator: DestinationsNavigator) {
 
     val viewModel: SignUpViewModel = hiltViewModel()
     val state by viewModel.state
 
-    viewModel.onEvent(SignUpEvent.OnUserRoleChanged(userRole))
+    viewModel.onEvent(SignUpEvent.OnUserRoleChanged(userType))
 
     KaziHubTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
+            color = MaterialTheme.colorScheme.surface
         ) {
-            Log.d("SignUpScreen", "SignUpScreen: ${userRole.name}")
+            Log.d("SignUpScreen", "SignUpScreen: ${userType.name}")
 
             SignUpContent(
                 state = state,
                 onEvent = viewModel::onEvent,
-                navigateToSIgnIn = { navigator.navigate(SignInScreenDestination) },
-                userRole = userRole
+                navigateToSIgnIn = { navigator.navigate(SignInScreenDestination(userType)) },
+                onClick = {},
+                userType = userType
             )
         }
     }
@@ -93,30 +94,31 @@ fun SignUpScreen(userRole: UserRole, navigator: DestinationsNavigator) {
 private fun SignUpContent(
     state: SignUpState,
     onEvent: (SignUpEvent) -> Unit,
+    onClick: () -> Unit,
     navigateToSIgnIn: () -> Unit,
-    userRole: UserRole
+    userType: UserRole
 ) {
     val isPasswordVisible = remember { mutableStateOf(false) }
     val isFormValid =
-    state.userName.isNotBlank() &&
-    state.firstName.isNotBlank() &&
-    state.lastName.isNotBlank() &&
-    state.password.length > 8
+        state.userName.isNotBlank() &&
+                state.firstName.isNotBlank() &&
+                state.lastName.isNotBlank() &&
+                state.password.length > 8
 
 
     HandleLoading(state)
     HandleError(state)
-    HandleSuccess(state,"Sign Up Successful")
+    HandleSuccess(state, "Sign Up Successful")
     HandleNavigation(state, navigateToSIgnIn)
+
 
     SignUpForm(
         state = state,
         isPasswordVisible = isPasswordVisible,
         isFormValid = isFormValid,
         onEvent = onEvent,
-        navigateToSIgnIn = navigateToSIgnIn,
-        userRole = userRole
-
+        onClick = navigateToSIgnIn,
+        userRole = userType
     )
 
 }
@@ -127,7 +129,7 @@ fun SignUpForm(
     isPasswordVisible: MutableState<Boolean>,
     isFormValid: Boolean,
     onEvent: (SignUpEvent) -> Unit,
-    navigateToSIgnIn: () -> Unit,
+    onClick: () -> Unit,
     userRole: UserRole
 ) {
     Column(
@@ -222,12 +224,16 @@ fun SignUpForm(
                 label = { Text(text = "Password") },
                 placeholder = { Text(text = "Password") },
                 trailingIcon = {
-                    IconButton(onClick = {
-                        isPasswordVisible.value = !isPasswordVisible.value
-                    }) {
+                    IconButton(
+                        onClick = {
+                            isPasswordVisible.value = !isPasswordVisible.value
+                        }
+                    ) {
                         Icon(
-                            imageVector = if (isPasswordVisible.value) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                            contentDescription = null
+                            imageVector = if (isPasswordVisible.value)
+                                Icons.Default.VisibilityOff
+                            else Icons.Default.Visibility,
+                            contentDescription = null,
                         )
                     }
                 },
@@ -256,15 +262,16 @@ fun SignUpForm(
                     Log.d("SignUpScreen", "Password: ${state.password}")
                     Log.d("SignUpScreen", "IsFormValid: $isFormValid")
                     if (isFormValid) {
-                    onEvent(
-                        SignUpEvent.OnSignUpClicked(
-                            state.userName,
-                            state.firstName,
-                            state.lastName,
-                            state.password,
-                            role = userRole.name
+                        onEvent(
+                            SignUpEvent.OnSignUpClicked(
+                                state.userName,
+                                state.firstName,
+                                state.lastName,
+                                state.password,
+                                role = userRole.name
+                            )
                         )
-                    )}
+                    }
                     Log.d("SignUpScreen", "SignUpContent: $userRole")
                 },
                 modifier = Modifier
@@ -350,11 +357,12 @@ fun SignUpForm(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = "Already have an Account ? ")
-                TextButton(onClick = { navigateToSIgnIn() }) {
+                TextButton(onClick = { onClick() }) {
                     Text(
                         text = "Sign In",
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier,
+//                            .padding(bottom = 64.dp)
                     )
                 }
             }

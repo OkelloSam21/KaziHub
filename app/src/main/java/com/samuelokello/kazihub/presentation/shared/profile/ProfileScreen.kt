@@ -5,29 +5,14 @@ import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,21 +31,23 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.R
 import com.samuelokello.kazihub.ui.theme.primaryLight
+import com.samuelokello.kazihub.utils.UserRole
 
 @Destination
 @Composable
-fun ProfileScreen(navigator: DestinationsNavigator) {
-    ProfileScreenContent(navigator = navigator)
+fun ProfileScreen(navigator: DestinationsNavigator, userType: UserRole) {
+    when (userType) {
+        UserRole.WORKER -> WorkerProfileScreenContent(navigator)
+        UserRole.BUSINESS -> BusinessProfileScreenContent(navigator)
+    }
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ProfileScreenContent(navigator: DestinationsNavigator) {
+fun WorkerProfileScreenContent(navigator: DestinationsNavigator) {
     var name by rememberSaveable { mutableStateOf("John Doe") }
     var email by rememberSaveable { mutableStateOf("johndoe@gmail.com") }
     var pasword by rememberSaveable { mutableStateOf("passw0rd") }
-
-    val notification = rememberSaveable { mutableStateOf("") }
     Scaffold( containerColor = MaterialTheme.colorScheme.background ) {
         Spacer(modifier = Modifier.height(32.dp))
         Column (
@@ -168,7 +155,6 @@ fun ProfileScreenContent(navigator: DestinationsNavigator) {
             }
         }
     }
-
 }
 
 
@@ -207,6 +193,13 @@ fun ProfileImage() {
         }
         Text(text = "John Doe")
         Text(text = "Edit Profile")
+    }
+}
+
+@Composable
+fun BusinessProfileScreenContent(navigator: DestinationsNavigator) {
+    Column {
+        Text(text = "Business Profile")
     }
 }
 

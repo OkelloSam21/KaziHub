@@ -40,7 +40,7 @@ fun UserTYpeScreen(navigator: DestinationsNavigator) {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            UserTypeContent { userRole -> navigator.navigate(SignUpScreenDestination(userRole = userRole)) }
+            UserTypeContent { userType -> navigator.navigate(SignUpScreenDestination(userType)) }
         }
     }
 }
@@ -82,9 +82,9 @@ fun UserTypeContent(
             UserTypeCard(
                 image = R.drawable.undraw_software_engineer_re_tnjc,
                 title = "I am a Job Provider",
-                userRole = UserRole.EMPLOYER,
+                userRole = UserRole.BUSINESS,
                 onClick = {
-                    onClick(UserRole.EMPLOYER)
+                    onClick(UserRole.BUSINESS)
                 }
             )
             Spacer(modifier = Modifier.width(32.dp))

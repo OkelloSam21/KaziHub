@@ -1,11 +1,16 @@
 package com.samuelokello.kazihub.di
 
+import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresExtension
 import androidx.lifecycle.ViewModelProvider
-import com.samuelokello.kazihub.data.remote.AuthApi
-import com.samuelokello.kazihub.data.repository.AuthRepository
+import com.samuelokello.kazihub.data.remote.KaziHubApi
+import com.samuelokello.kazihub.data.repository.KaziHubRepository
+import com.samuelokello.kazihub.utils.LocationManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -48,17 +53,30 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesAuthApi(retrofit: Retrofit): AuthApi {
-        return retrofit.create(AuthApi::class.java)
+    fun providesKaziHubApi(retrofit: Retrofit): KaziHubApi {
+        return retrofit.create(KaziHubApi::class.java)
     }
 
+    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     @Provides
     @Singleton
-    fun provideAuthRepository(api: AuthApi) = AuthRepository(api)
+    fun provideKaziHubRepository(
+        api: KaziHubApi,
+        location: LocationManager ,
+        @ApplicationContext context: Context,
+    ): KaziHubRepository {
+        return KaziHubRepository(api, location, context)
+    }
 
     @Provides
     fun provideViewModelFactory(): ViewModelProvider.Factory {
         return ViewModelProvider.NewInstanceFactory()
+    }
+
+    @Provides
+    @Singleton
+    fun providesContext(@ApplicationContext appContext: Context): Context{
+        return appContext
     }
 
 }

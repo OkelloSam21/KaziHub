@@ -25,10 +25,6 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
@@ -49,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import com.samuelokello.kazihub.R
 import com.samuelokello.kazihub.presentation.shared.components.AppBar
 import com.samuelokello.kazihub.presentation.shared.components.JobCard
-import com.samuelokello.kazihub.presentation.shared.navigation.bottom_bar_navigation.navigationItems
 import kotlinx.coroutines.launch
 
 /**
@@ -68,48 +63,48 @@ fun WorkerHomeScreen() {
     val searchQuery by remember { mutableStateOf("") }
     var selectedItemIndex by remember { mutableIntStateOf(0) }
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet {
-                Spacer(modifier = Modifier.height(16.dp))
-                navigationItems.forEachIndexed { index, item ->
-                    NavigationDrawerItem(
-                        label = {
-                            Text(text = item.title)
-                        },
-                        selected = index == selectedItemIndex,
-                        onClick = {
-//                                            navController.navigate(item.route)
-                            selectedItemIndex = index
-                            scope.launch {
-                                drawerState.close()
-                            }
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = if (index == selectedItemIndex) {
-                                    item.selectedIcon
-                                } else item.unselectedIcon,
-                                contentDescription = item.title
-                            )
-                        },
-                        badge = {
-                            item.badgeCount?.let {
-                                Text(text = item.badgeCount.toString())
-                            }
-                        },
-                        modifier = Modifier
-                            .padding(NavigationDrawerItemDefaults.ItemPadding),
-                        colors = NavigationDrawerItemDefaults.colors(
-                            selectedContainerColor = MaterialTheme.colorScheme.primary,
-                            unselectedContainerColor = MaterialTheme.colorScheme.surface,
-                        )
-                    )
-                }
-            }
-        }
-    ) {
+//    ModalNavigationDrawer(
+//        drawerState = drawerState,
+//        drawerContent = {
+//            ModalDrawerSheet {
+//                Spacer(modifier = Modifier.height(16.dp))
+//                navigationItems.forEachIndexed { index, item ->
+//                    NavigationDrawerItem(
+//                        label = {
+//                            Text(text = item.title)
+//                        },
+//                        selected = index == selectedItemIndex,
+//                        onClick = {
+////                                            navController.navigate(item.route)
+//                            selectedItemIndex = index
+//                            scope.launch {
+//                                drawerState.close()
+//                            }
+//                        },
+//                        icon = {
+//                            Icon(
+//                                imageVector = if (index == selectedItemIndex) {
+//                                    item.selectedIcon
+//                                } else item.unselectedIcon,
+//                                contentDescription = item.title
+//                            )
+//                        },
+//                        badge = {
+//                            item.badgeCount?.let {
+//                                Text(text = item.badgeCount.toString())
+//                            }
+//                        },
+//                        modifier = Modifier
+//                            .padding(NavigationDrawerItemDefaults.ItemPadding),
+//                        colors = NavigationDrawerItemDefaults.colors(
+//                            selectedContainerColor = MaterialTheme.colorScheme.primary,
+//                            unselectedContainerColor = MaterialTheme.colorScheme.surface,
+//                        )
+//                    )
+//                }
+//            }
+//        }
+//    ) {
         Scaffold(
             topBar = {
                 AppBar {
@@ -224,7 +219,7 @@ fun WorkerHomeScreen() {
             }
         }
     }
-}
+//}
 
 /**
  * Recent Post
