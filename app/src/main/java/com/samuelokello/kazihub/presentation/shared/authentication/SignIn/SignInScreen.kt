@@ -51,9 +51,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.R
-import com.samuelokello.kazihub.presentation.shared.authentication.common.HandleError
-import com.samuelokello.kazihub.presentation.shared.authentication.common.HandleLoading
-import com.samuelokello.kazihub.presentation.shared.authentication.common.HandleSuccess
+import com.samuelokello.kazihub.presentation.common.HandleError
+import com.samuelokello.kazihub.presentation.common.HandleLoading
+import com.samuelokello.kazihub.presentation.common.HandleSuccess
 import com.samuelokello.kazihub.presentation.shared.destinations.CreateProfileScreenDestination
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import com.samuelokello.kazihub.ui.theme.primaryLight
@@ -62,18 +62,25 @@ import com.samuelokello.kazihub.utils.UserRole
 @Destination
 @Composable
 fun SignInScreen(navigator: DestinationsNavigator, userType: UserRole) {
-    KaziHubTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
+
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        KaziHubTheme {
             val viewModel: SignInViewModel = hiltViewModel()
             val state by viewModel.state.collectAsState()
 
             SignInContent(
                 state = state,
                 onEvent = viewModel::onEvent,
-                navigateToProfileCreation = { navigator.navigate(CreateProfileScreenDestination(userType)) },
+                navigateToProfileCreation = {
+                    navigator.navigate(
+                        CreateProfileScreenDestination(
+                            userType
+                        )
+                    )
+                },
                 navigateToSignUp = { navigator.popBackStack() }
             )
         }
@@ -150,7 +157,11 @@ fun SignInHeader() {
  *
  */
 @Composable
-fun SignInForm(state: SignInState, isPasswordVisible: MutableState<Boolean>, onEvent: (SignInEvent) -> Unit) {
+fun SignInForm(
+    state: SignInState,
+    isPasswordVisible: MutableState<Boolean>,
+    onEvent: (SignInEvent) -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -323,6 +334,7 @@ fun HandleNavigation(state: SignInState, navigate: () -> Unit) {
                 Log.d("SignInScreen", "HandleNavigation: Navigate to Home")
                 navigate()
             }
+
             state.navigateToSignUp -> {
                 Log.d("SignInScreen", "HandleNavigation: Navigate to Sign Up")
                 navigate()
