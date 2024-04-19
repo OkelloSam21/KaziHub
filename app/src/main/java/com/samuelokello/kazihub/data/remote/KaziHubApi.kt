@@ -8,6 +8,8 @@ import com.samuelokello.kazihub.domain.model.sign_up.SignUpRequest
 import com.samuelokello.kazihub.domain.model.sign_up.SignUpResponse
 import com.samuelokello.kazihub.domain.model.worker.WorkerProfileRequest
 import com.samuelokello.kazihub.domain.model.worker.WorkerProfileResponse
+import com.samuelokello.kazihub.domain.model.worker.image.WorkerProfileImageRequest
+import com.samuelokello.kazihub.domain.model.worker.image.WorkerProfileImageResponse
 import com.samuelokello.kazihub.domain.model.worker.skill.WorkerSkillRequest
 import com.samuelokello.kazihub.domain.model.worker.skill.WorkerSkillResponse
 import retrofit2.http.Body
@@ -106,8 +108,8 @@ interface KaziHubApi {
     suspend fun updateWorkerProfileImage(
         @Header("Authorization") token: String,
         @Path("worker_profile_id") id: Int,
-        @Body workerProfile: WorkerProfileRequest
-    ): WorkerProfileResponse
+        @Body workerProfile: WorkerProfileImageRequest
+    ): WorkerProfileImageResponse
 
     @GET("/worker/profiles/image/{profile_id}")
     suspend fun getWorkerProfileImage(
@@ -141,19 +143,16 @@ interface KaziHubApi {
     @GET("/worker/verify/with_email/")
     suspend fun verifyWorkerByEmail(
         @Header("Authorization") token: String,
-        @Path("worker_profile_id") id: Int,
     ): WorkerProfileResponse
 
     @GET("/worker/verify/with_phone/")
     suspend fun verifyWorkerByPhone(
         @Header("Authorization") token: String,
-        @Path("worker_profile_id") id: Int,
     ): WorkerProfileResponse
 
     @POST("/worker/verify/{code}")
     suspend fun verifyWorkerByCode(
         @Header("Authorization") token: String,
-        @Path("worker_profile_id") id: Int,
     ): WorkerProfileResponse
 
 
