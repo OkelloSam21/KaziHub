@@ -28,7 +28,7 @@ fun WorkerProfile(
     userRole: UserRole
 ) {
     val viewModel: WorkerProfileViewModel = hiltViewModel()
-    val state = viewModel.profile.collectAsState().value
+    val state = viewModel.state.collectAsState().value
     val placesClient = viewModel.getPlacesClient()
 
     WorkerProfileForm(
