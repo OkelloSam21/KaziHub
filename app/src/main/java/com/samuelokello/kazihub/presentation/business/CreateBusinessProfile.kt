@@ -1,6 +1,7 @@
 package com.samuelokello.kazihub.presentation.business
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.layout.Column
@@ -13,44 +14,46 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.android.libraries.places.api.net.PlacesClient
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.samuelokello.kazihub.presentation.business.state.BusinessEvent
+import com.samuelokello.kazihub.presentation.business.state.BusinessProfileState
+import com.samuelokello.kazihub.presentation.common.HandleError
+import com.samuelokello.kazihub.presentation.common.HandleLoading
+import com.samuelokello.kazihub.presentation.common.HandleSuccess
 import com.samuelokello.kazihub.presentation.shared.components.CustomButton
 import com.samuelokello.kazihub.presentation.shared.components.EditTextField
 import com.samuelokello.kazihub.presentation.shared.components.LocationDropDown
 import com.samuelokello.kazihub.presentation.shared.destinations.HomeScreenDestination
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import com.samuelokello.kazihub.utils.UserRole
-import kotlinx.coroutines.launch
 
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @RequiresApi(Build.VERSION_CODES.M)
 @Composable
 fun CreateBusinessProfile(navigator: DestinationsNavigator,userType: UserRole) {
-    val viewModel: BusinessProfileViewModel = hiltViewModel()
-    val state = viewModel.profile.collectAsState().value
-    LocalContext.current
-    val placesClient = viewModel.getPlacesClient()
+
 
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
         KaziHubTheme {
+            val viewModel: BusinessProfileViewModel = hiltViewModel()
+            val state by viewModel.state.collectAsState()
+
            BusinessProfileForm(
                 state = state,
-                viewModel = viewModel,
-                placesClient = placesClient,
+                onEvent = viewModel::onEvent,
                 navigateToDashBoard = { navigator.navigate(HomeScreenDestination(userType)) }
-            )
+           )
         }
     }
 
@@ -60,11 +63,23 @@ fun CreateBusinessProfile(navigator: DestinationsNavigator,userType: UserRole) {
 @Composable
 fun BusinessProfileForm(
     state: BusinessProfileState,
-    viewModel: BusinessProfileViewModel,
-    placesClient: PlacesClient,
+    onEvent: (BusinessEvent)-> Unit,
     navigateToDashBoard : () -> Unit
 ) {
-    val coroutineScope = rememberCoroutineScope()
+
+    HandleLoading(state)
+    HandleError(state)
+    HandleSuccess(state = state, successMessage = state.error)
+
+    LaunchedEffect (state.navigateToHome){
+        if(state.navigateToHome) {
+            navigateToDashBoard()
+        }
+    }
+
+    fun isFormComplete(state: BusinessProfileState): Boolean {
+        return state.email.isNotEmpty() && state.phone.isNotEmpty() && state.location.isNotEmpty()
+    }
     Column (
         modifier = Modifier
             .fillMaxSize()
@@ -80,9 +95,10 @@ fun BusinessProfileForm(
         Column {
             EditTextField(
                 value = state.email,
-                onValueChange = { viewModel.onEmailChange(it) },
+                onValueChange = { email ->
+                    onEvent(BusinessEvent.OnEmailChanged(email))},
                 label = "Email",
-                error = !viewModel.isEmailValid(state.email),
+//                error = !viewModel.isEmailValid(state.email),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
@@ -92,9 +108,11 @@ fun BusinessProfileForm(
             Spacer(modifier = Modifier.height(16.dp))
             EditTextField(
                 value = state.phone,
-                onValueChange = { viewModel.onPhoneChange(it) },
+                onValueChange = { phone ->
+                                onEvent(BusinessEvent.OnPhoneNumberChanged(phone))
+                },
                 label = "Phone",
-                error = !viewModel.isPhoneValid(state.phone),
+//                error = !viewModel.isPhoneValid(state.phone),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
@@ -104,17 +122,22 @@ fun BusinessProfileForm(
             Spacer(modifier = Modifier.height(16.dp))
             LocationDropDown(
                 value = state.location,
-                onValueChange = {
-                                newLocation, placeId ->
-                    viewModel.onLocationChange(newLocation, placeId)
+                onValueChange = { newValue, input->
+                    onEvent(BusinessEvent.OnLocationInputChanged(input))
+                    onEvent(BusinessEvent.OnLocationChanged(newValue))
                                 },
-                places = placesClient,
-                label = "Location",
+                locationSuggestions = state.locationSuggestion,
+                onLocationInputChanged = { input ->
+                    onEvent(BusinessEvent.OnLocationInputChanged(input))
+                },
+                label = "Location"
             )
             Spacer(modifier = Modifier.height(16.dp))
             EditTextField(
                 value = state.bio,
-                onValueChange = { viewModel.onBioChange(it)},
+                onValueChange = { bio ->
+                    onEvent(BusinessEvent.OnBioChanged(bio))
+                },
                 label = "Bio",
                 error = false,
                 singleLine = false,
@@ -129,15 +152,21 @@ fun BusinessProfileForm(
         Column {
             CustomButton(
                 onClick = {
-                    coroutineScope.launch {
-                        viewModel.createProfile()
-                    }
-//                    navigateToDashBoard()
+                    onEvent(
+                        BusinessEvent.OnCreateProfileClicked(
+                        email = state.email,
+                        phone = state.phone,
+                        location = state.location,
+                        bio = state.bio
+                    ))
+                    Log.d("BusinessProfile UI", "createProfile: ${state.navigateToHome}")
                 },
                 text = "Create Profile",
-                isEnabled = viewModel.isFormComplete(state.email,state.phone,state.location)
+                isEnabled = isFormComplete(state)
+
             )
         }
+
     }
 }
 

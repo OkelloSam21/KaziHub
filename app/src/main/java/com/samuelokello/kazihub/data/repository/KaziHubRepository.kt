@@ -1,12 +1,14 @@
 package com.samuelokello.kazihub.data.repository
 
-import android.content.Context import android.os.Build
+import android.content.Context
+import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresExtension
 import com.samuelokello.kazihub.data.model.sign_in.SignInResponse
 import com.samuelokello.kazihub.data.remote.KaziHubApi
 import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileRequest
 import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileResponse
+import com.samuelokello.kazihub.domain.model.shared.auth.sign_in.SignInRequest
 import com.samuelokello.kazihub.domain.model.sign_up.SignUpRequest
 import com.samuelokello.kazihub.domain.model.sign_up.SignUpResponse
 import com.samuelokello.kazihub.utils.LocationManager
@@ -37,9 +39,9 @@ class KaziHubRepository
     }
 
 
-    suspend fun signIn(signInRequest: com.samuelokello.kazihub.domain.model.shared.auth.sign_in.SignInRequest): Resource<SignInResponse> = withContext(Dispatchers.IO){
+    suspend fun signIn(signInRequest: SignInRequest): Resource<SignInResponse> = withContext(Dispatchers.IO){
         return@withContext try {
-            val response = api.sigIn(signInRequest)
+            val response = api.signIn(signInRequest)
             storeAccessToken(context, response.data?.accessToken!!)
             Log.d("AuthRepository", "signIn: ${response.data.accessToken}")
             Resource.Success(response)
@@ -53,8 +55,10 @@ class KaziHubRepository
         return@withContext try {
             val token = getAccessToken(context)
             val response =if (token != null) {
+                Log.d("KaziHubRepository", "createBusinessProfile: $token")
                 api.createBusinessProfile(" Bearer $token",request)
             } else {
+                Log.d("KaziHubRepository", "createBusinessProfile: Token is null")
                 throw Exception("Token is null")
             }
             Resource.Success(response)
