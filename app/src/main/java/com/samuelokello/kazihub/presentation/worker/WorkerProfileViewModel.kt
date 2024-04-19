@@ -117,6 +117,10 @@ class WorkerProfileViewModel @Inject constructor(
 
         }
     }
+
+//    fun onLocationInputChanged(input: Any): Any {
+//
+//    }
 }
 
 data class WorkerProfileState(
