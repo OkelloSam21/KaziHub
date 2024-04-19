@@ -162,7 +162,7 @@ fun BusinessProfileForm(
                     Log.d("BusinessProfile UI", "createProfile: ${state.navigateToHome}")
                 },
                 text = "Create Profile",
-                isEnabled = isFormComplete(state)
+                isEnabled = state.email.isNotEmpty() && state.phone.isNotEmpty() && state.location.isNotEmpty() && state.bio.isNotEmpty(),
 
             )
         }

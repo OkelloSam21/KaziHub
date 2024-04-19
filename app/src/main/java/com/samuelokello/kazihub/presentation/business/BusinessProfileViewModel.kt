@@ -120,11 +120,11 @@ class BusinessProfileViewModel @Inject constructor(
             }
 
             is BusinessEvent.OnCreateProfileClicked -> {
-                val email = state.value.email
-                val phone = state.value.phone
-                val bio = state.value.bio
-                val location = state.value.location
-                val locationLatLng = state.value.locationLatLng ?: return
+                val email = _state.value.email
+                val phone = _state.value.phone
+                val bio = _state.value.bio
+                val location = _state.value.location
+                val locationLatLng = _state.value.locationLatLng ?: return
 
                 val request = BusinessProfileRequest(
                     email = email,
@@ -138,7 +138,8 @@ class BusinessProfileViewModel @Inject constructor(
                 try {
                     viewModelScope.launch(Dispatchers.IO) {
                         showLoading()
-                        if (!isFormComplete(email, phone, location)) {
+                        Log.d("BusinessProfileModel", "Making API call to create profile")
+                        if (isFormComplete(email, phone, location)) {
                             when (val response = repository.createBusinessProfile(request)) {
                                 is Resource.Success -> {
                                     _state.update {
@@ -147,15 +148,6 @@ class BusinessProfileViewModel @Inject constructor(
                                             isLoading = true
                                         )
                                     }
-                                    Log.d(
-                                        "BusinessProfileModel",
-                                        "createProfile: ${state.value.navigateToHome}"
-                                    )
-                                    Log.d(
-                                        "BusinessProfileModel",
-                                        "createProfile: ${response.data}"
-                                    )
-
                                     hideLoading()
                                 }
 

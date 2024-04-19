@@ -51,9 +51,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.R
-import com.samuelokello.kazihub.presentation.shared.authentication.common.HandleError
-import com.samuelokello.kazihub.presentation.shared.authentication.common.HandleLoading
-import com.samuelokello.kazihub.presentation.shared.authentication.common.HandleSuccess
+import com.samuelokello.kazihub.presentation.common.HandleError
+import com.samuelokello.kazihub.presentation.common.HandleLoading
+import com.samuelokello.kazihub.presentation.common.HandleSuccess
 import com.samuelokello.kazihub.presentation.shared.authentication.sign_up.SignUpEvent
 import com.samuelokello.kazihub.presentation.shared.authentication.sign_up.SignUpState
 import com.samuelokello.kazihub.presentation.shared.authentication.sign_up.SignUpViewModel
