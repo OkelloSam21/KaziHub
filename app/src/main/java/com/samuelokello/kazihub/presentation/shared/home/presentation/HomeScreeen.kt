@@ -3,7 +3,7 @@ package com.samuelokello.kazihub.presentation.shared.home.presentation
 import androidx.compose.runtime.Composable
 import com.ramcosta.composedestinations.annotation.Destination
 import com.samuelokello.kazihub.presentation.business.BusinessHomeScreen
-import com.samuelokello.kazihub.presentation.worker.WorkerHomeScreen
+import com.samuelokello.kazihub.presentation.worker.ui.home.WorkerHomeScreen
 import com.samuelokello.kazihub.utils.UserRole
 
 /***

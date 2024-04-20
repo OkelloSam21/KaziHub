@@ -126,7 +126,7 @@ class KaziHubRepository
     }
 
     // not complete need to work on the request
-    suspend fun UpdateWorkerProfileImage(id: Int, request: WorkerProfileImageRequest): Resource<WorkerProfileImageResponse> = withContext(Dispatchers.IO) {
+    suspend fun updateWorkerProfileImage(id: Int, request: WorkerProfileImageRequest): Resource<WorkerProfileImageResponse> = withContext(Dispatchers.IO) {
         return@withContext try {
             val token = getAccessToken(context)
             val response =if (token != null) {
