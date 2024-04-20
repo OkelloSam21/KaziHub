@@ -12,8 +12,12 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.samuelokello.kazihub.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -25,8 +29,12 @@ class LocationManager @Inject constructor(private val context: Context) {
     // Used to get the user's location
     private val focusedLocationClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(context)
+
+    val scope: CoroutineScope = CoroutineScope(Dispatchers.Main)
+
     // Client for interacting with Google Places API
     private val placesClient: PlacesClient
+
 
     init {
         Places.initializeWithNewPlacesApiEnabled(context, context.getString(R.string.maps_api_key))
@@ -92,6 +100,7 @@ class LocationManager @Inject constructor(private val context: Context) {
             callback.onLocationError("Failed to get user location: ${exception.message}")
         }
     }
+
     /**
      * Fetches the LatLng from a given Place ID using Places API asynchronously.
      *
@@ -99,7 +108,11 @@ class LocationManager @Inject constructor(private val context: Context) {
      * @param callback The callback to receive the LatLng if successful.
      * @param errorCallback The callback to receive an error message if unsuccessful.
      */
-    suspend fun getLatLngFromPlaceId(placeId: String, callback: (LatLng) -> Unit, errorCallback: (String) -> Unit) {
+    suspend fun getLatLngFromPlaceId(
+        placeId: String,
+        callback: (LatLng) -> Unit,
+        errorCallback: (String) -> Unit
+    ) {
         val placeFields = listOf(Place.Field.LAT_LNG)
         val fetchPlaceRequest = FetchPlaceRequest.newInstance(placeId, placeFields)
 
@@ -115,6 +128,56 @@ class LocationManager @Inject constructor(private val context: Context) {
             errorCallback.invoke("Error fetching place details: ${e.message}")
         }
     }
+
+    /**
+     * Fetches location suggestions based on a provided location string.
+     *
+     * @param locationQuery The query string for the location search.
+     * @param onSuccess Callback function to receive the list of suggestions.
+     * @param onError Callback function to receive an error message in case of failure.
+     */
+    fun fetchLocationSuggestions(
+        locationQuery: String,
+        onSuccess: (List<Place>) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        // Define a request for autocomplete predictions
+        val request = FindAutocompletePredictionsRequest.builder()
+            .setQuery(locationQuery)
+            .build()
+
+        // Fetch autocomplete predictions
+            placesClient.findAutocompletePredictions(request)
+                .addOnSuccessListener { predictions ->
+                    scope.launch {
+                    // Convert predictions to a list of Place objects
+                    val places = predictions.autocompletePredictions.mapNotNull { prediction ->
+                        // Fetch place details for each prediction to get Place objects
+                        try {
+
+                            val placeRequest = FetchPlaceRequest.builder(
+                                prediction.placeId,
+                                listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG)
+                            ).build()
+                            val placeResponse = placesClient.fetchPlace(placeRequest).await()
+                            placeResponse.place
+                        } catch (e: Exception) {
+                            // Handle exceptions when fetching place details
+                            onError.invoke("Error fetching place details: ${e.message}")
+                            null
+                        }
+                    }
+                    // Invoke the success callback with the list of places
+                    onSuccess.invoke(places)
+                }
+                }
+                .addOnFailureListener { exception ->
+                    // Handle errors and invoke the error callback
+                    onError.invoke("Error fetching location suggestions: ${exception.message}")
+                }
+        }
+
+
 
     fun getPlacesClient() = placesClient
 
