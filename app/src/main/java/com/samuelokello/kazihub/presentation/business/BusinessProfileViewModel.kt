@@ -1,6 +1,7 @@
 package com.samuelokello.kazihub.presentation.business
 
 import android.content.Context
+import android.location.Location
 import android.os.Build
 import android.util.Log
 import android.util.Patterns
@@ -9,15 +10,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.AutocompletePrediction
-import com.google.android.libraries.places.api.model.AutocompleteSessionToken
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
-import com.google.android.libraries.places.api.net.PlacesClient
+import com.google.android.libraries.places.api.model.Place
 import com.samuelokello.kazihub.data.repository.KaziHubRepository
 import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileRequest
 import com.samuelokello.kazihub.presentation.business.state.BusinessEvent
 import com.samuelokello.kazihub.presentation.business.state.BusinessProfileState
+import com.samuelokello.kazihub.presentation.common.location.LocationViewModel
 import com.samuelokello.kazihub.utils.LocationManager
 import com.samuelokello.kazihub.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,9 +34,43 @@ class BusinessProfileViewModel @Inject constructor(
     private val repository: KaziHubRepository,
     private val locationManager: LocationManager,
     @ApplicationContext private val context: Context
-) : ViewModel() {
+) : ViewModel(),  LocationManager.LocationCallback , LocationViewModel{
     private val _state = MutableStateFlow(BusinessProfileState())
     val state = _state.asStateFlow()
+    override val locationSuggestions: List<LatLng?> = _state.value.locationSuggestion
+
+    override fun onLocationReceived(location: Location) {
+        LatLng(location.latitude, location.longitude)
+        onLocationChange(location.toString())
+    }
+
+    override fun onLocationError(errorMessage: String) {
+        _state.value = _state.value.copy(error = errorMessage)
+    }
+
+    override fun onLocationLatLngReceived(latLng: LatLng) {
+        onLocationChange("${latLng.latitude}, ${latLng.longitude}")
+    }
+    override fun onLocationChange(location: String) {
+        _state.value = _state.value.copy(location = location)
+    }
+    override fun fetchLocationSuggestions(query: String) {
+        viewModelScope.launch {
+            locationManager.fetchLocationSuggestions(
+                locationQuery = query,
+                onSuccess = { places: List<Place> ->
+                    _state.update {
+                        it.copy(locationSuggestion = places.map { it.latLng })
+                    }
+                },
+                onError = { errorMessage ->
+                    _state.update {
+                        it.copy(error = errorMessage)
+                    }
+                }
+            )
+        }
+    }
 
     private val sharedPreferences = context.getSharedPreferences("user", Context.MODE_PRIVATE)
 
@@ -58,26 +91,8 @@ class BusinessProfileViewModel @Inject constructor(
         }
     }
 
-    fun getPlacesClient() = locationManager.getPlacesClient()
-
-
     fun updateLocation(latitude: Double, longitude: Double) {
         _state.update { it.copy(locationLatLng = LatLng(latitude, longitude)) }
-    }
-
-    fun onLocationChange(newLocation: String, placeId: String) {
-        _state.update { it.copy(location = newLocation, placeId = placeId) }
-        if (placeId.isNotEmpty()) {
-            viewModelScope.launch(Dispatchers.IO) {
-                locationManager.getLatLngFromPlaceId(placeId,
-                    callback = { latLng ->
-                        _state.update { it.copy(locationLatLng = latLng) }
-                    },
-                    errorCallback = { error ->
-                        //handle error
-                    })
-            }
-        }
     }
 
     private fun isEmailValid(email: String): Boolean {
@@ -205,29 +220,6 @@ class BusinessProfileViewModel @Inject constructor(
         }
     }
 
-    private fun fetchLocationSuggestions(input: String) {
-        //initialize places client
-        val placesClient: PlacesClient = Places.createClient(context)
-
-        // create a new token for autocomplete session
-        val token = AutocompleteSessionToken.newInstance()
-
-        // create a new request
-        val request = FindAutocompletePredictionsRequest.builder()
-            .setSessionToken(token)
-            .setQuery(input)
-            .build()
-
-        // fetch predictions
-        placesClient.findAutocompletePredictions(request).addOnSuccessListener { response ->
-            // Update the location suggestions in the state with the results
-            val suggestions = response.autocompletePredictions.map { it }
-            _state.update { it.copy(locationSuggestion = suggestions) }
-        }.addOnFailureListener {
-            // handle error
-//            _state.update { it.copy(error = "An Error occurred") }
-        }
-    }
 }
 
 
