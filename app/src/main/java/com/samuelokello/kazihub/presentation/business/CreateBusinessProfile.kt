@@ -51,6 +51,7 @@ fun CreateBusinessProfile(navigator: DestinationsNavigator,userType: UserRole) {
 
            BusinessProfileForm(
                 state = state,
+               viewModel = viewModel,
                 onEvent = viewModel::onEvent,
                 navigateToDashBoard = { navigator.navigate(HomeScreenDestination(userType)) }
            )
@@ -64,7 +65,8 @@ fun CreateBusinessProfile(navigator: DestinationsNavigator,userType: UserRole) {
 fun BusinessProfileForm(
     state: BusinessProfileState,
     onEvent: (BusinessEvent)-> Unit,
-    navigateToDashBoard : () -> Unit
+    navigateToDashBoard : () -> Unit,
+    viewModel: BusinessProfileViewModel
 ) {
 
     HandleLoading(state)
@@ -121,15 +123,9 @@ fun BusinessProfileForm(
             )
             Spacer(modifier = Modifier.height(16.dp))
             LocationDropDown(
-                value = state.location,
-                onValueChange = { newValue, input->
-                    onEvent(BusinessEvent.OnLocationInputChanged(input))
-                    onEvent(BusinessEvent.OnLocationChanged(newValue))
-                                },
-                locationSuggestions = state.locationSuggestion,
-                onLocationInputChanged = { input ->
-                    onEvent(BusinessEvent.OnLocationInputChanged(input))
-                },
+                viewModel = viewModel,
+                value = state.location ,
+                onValueChange = {onEvent(BusinessEvent.OnLocationChanged(it))},
                 label = "Location"
             )
             Spacer(modifier = Modifier.height(16.dp))

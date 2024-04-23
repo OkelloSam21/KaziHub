@@ -1,10 +1,9 @@
-package com.samuelokello.kazihub.domain.model.Bussiness
-
+package com.samuelokello.kazihub.domain.model.worker
 
 import com.google.gson.annotations.SerializedName
 import com.samuelokello.kazihub.domain.model.common.Data
 
-data class BusinessProfileResponse(
+data class WorkerProfileResponse(
     @SerializedName("data")
     val `data`: Data?,
     @SerializedName("message")

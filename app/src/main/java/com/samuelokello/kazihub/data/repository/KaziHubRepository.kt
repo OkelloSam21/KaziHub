@@ -11,6 +11,11 @@ import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileResponse
 import com.samuelokello.kazihub.domain.model.shared.auth.sign_in.SignInRequest
 import com.samuelokello.kazihub.domain.model.sign_up.SignUpRequest
 import com.samuelokello.kazihub.domain.model.sign_up.SignUpResponse
+import com.samuelokello.kazihub.domain.model.worker.WorkerProfileRequest
+import com.samuelokello.kazihub.domain.model.worker.WorkerProfileResponse
+import com.samuelokello.kazihub.domain.model.worker.image.WorkerProfileImageRequest
+import com.samuelokello.kazihub.domain.model.worker.image.WorkerProfileImageResponse
+import com.samuelokello.kazihub.domain.model.worker.skill.WorkerSkillRequest
 import com.samuelokello.kazihub.utils.LocationManager
 import com.samuelokello.kazihub.utils.Resource
 import com.samuelokello.kazihub.utils.getAccessToken
@@ -67,9 +72,140 @@ class KaziHubRepository
         }
     }
 
-    suspend fun fetchBusinessProfile(id: Int): Resource<BusinessProfileResponse>  = withContext(Dispatchers.IO){
+    suspend fun fetchBusinessProfileById(id: Int): Resource<BusinessProfileResponse>  = withContext(Dispatchers.IO){
         return@withContext try {
             val response = api.getBusinessProfile(id)
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun fetchAllBusinessProfiles(): Resource<List<BusinessProfileResponse>> = withContext(Dispatchers.IO){
+        return@withContext try {
+            val response = api.getAllBusinessProfiles()
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    // worker
+    suspend fun createWorkerProfile(request: WorkerProfileRequest): Resource<WorkerProfileResponse> = withContext(Dispatchers.IO) {
+        return@withContext try {
+            val token = getAccessToken(context)
+            val response =if (token != null) {
+                Log.d("KaziHubRepository", "createBusinessProfile: $token")
+                api.createWorkerProfile(" Bearer $token",request)
+            } else {
+                Log.d("KaziHubRepository", "createBusinessProfile: Token is null")
+                throw Exception("Token is null")
+            }
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun fetchWorkerProfileById(id: Int): Resource<WorkerProfileResponse>  = withContext(Dispatchers.IO){
+        return@withContext try {
+            val response = api.getWorkerProfile(id)
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun fetchAllWorkerProfiles(): Resource<List<WorkerProfileResponse>> = withContext(Dispatchers.IO){
+        return@withContext try {
+            val response = api.getAllWorkerProfiles()
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    // not complete need to work on the request
+    suspend fun updateWorkerProfileImage(id: Int, request: WorkerProfileImageRequest): Resource<WorkerProfileImageResponse> = withContext(Dispatchers.IO) {
+        return@withContext try {
+            val token = getAccessToken(context)
+            val response =if (token != null) {
+                Log.d("KaziHubRepository", "createBusinessProfile: $token")
+                api.updateWorkerProfileImage(" Bearer $token",id,request)
+            } else {
+                Log.d("KaziHubRepository", "createBusinessProfile: Token is null")
+                throw Exception("Token is null")
+            }
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun updateWorkerProfile(id: Int, request: WorkerProfileRequest): Resource<WorkerProfileResponse> = withContext(Dispatchers.IO) {
+        return@withContext try {
+            val token = getAccessToken(context)
+            val response =if (token != null) {
+                Log.d("KaziHubRepository", "createBusinessProfile: $token")
+                api.updateWorkerProfile(" Bearer $token",id,request)
+            } else {
+                Log.d("KaziHubRepository", "createBusinessProfile: Token is null")
+                throw Exception("Token is null")
+            }
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun fetchWorkerImage(id: Int) = withContext(Dispatchers.IO){
+        return@withContext try {
+            val response = api.getWorkerProfileImage(id)
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun createSkills(bearer: String, request: WorkerSkillRequest) = withContext(Dispatchers.IO){
+        return@withContext try {
+            val response = api.createWorkerSkill(bearer,request)
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun deleteSkill(bearer: String, id: Int) = withContext(Dispatchers.IO){
+        return@withContext try {
+            val response = api.deleteWorkerSkill(bearer,id)
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun verifyWorkerWithEmail(bearer: String) = withContext(Dispatchers.IO){
+        return@withContext try {
+            val response = api.verifyWorkerByEmail(bearer)
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun verifyWorkerWithPhone(bearer: String) = withContext(Dispatchers.IO){
+        return@withContext try {
+            val response = api.verifyWorkerByPhone(bearer)
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun verifyWorkerWithCode(bearer: String) = withContext(Dispatchers.IO){
+        return@withContext try {
+            val response = api.verifyWorkerByCode(bearer)
             Resource.Success(response)
         } catch (e: Exception) {
             handleException(e)
@@ -83,4 +219,6 @@ class KaziHubRepository
             Resource.Error(e.message ?: "An error occurred")
         }
     }
+
+
 }

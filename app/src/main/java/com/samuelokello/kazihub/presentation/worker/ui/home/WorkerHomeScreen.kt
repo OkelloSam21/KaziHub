@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.worker
+package com.samuelokello.kazihub.presentation.worker.ui.home
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image

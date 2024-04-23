@@ -256,12 +256,7 @@ fun SignUpForm(
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
-                    Log.d("SignUpScreen", "UserName: ${state.userName}")
-                    Log.d("SignUpScreen", "FirstName: ${state.firstName}")
-                    Log.d("SignUpScreen", "LastName: ${state.lastName}")
-                    Log.d("SignUpScreen", "Password: ${state.password}")
-                    Log.d("SignUpScreen", "IsFormValid: $isFormValid")
-                    if (isFormValid) {
+                     if (isFormValid) {
                         onEvent(
                             SignUpEvent.OnSignUpClicked(
                                 state.userName,

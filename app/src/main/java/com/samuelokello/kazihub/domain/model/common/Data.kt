@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.domain.model.Bussiness
+package com.samuelokello.kazihub.domain.model.common
 
 
 import com.google.gson.annotations.SerializedName
