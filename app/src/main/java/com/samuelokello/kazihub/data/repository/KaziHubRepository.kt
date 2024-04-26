@@ -1,9 +1,7 @@
 package com.samuelokello.kazihub.data.repository
 
 import android.content.Context
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresExtension
 import com.samuelokello.kazihub.data.model.sign_in.SignInResponse
 import com.samuelokello.kazihub.data.remote.KaziHubApi
 import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileRequest
@@ -26,7 +24,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import javax.inject.Inject
 
-@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
+//@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 class KaziHubRepository
 @Inject constructor(
     private val api: KaziHubApi,
@@ -59,15 +57,11 @@ class KaziHubRepository
     suspend fun createBusinessProfile(request: BusinessProfileRequest): Resource<BusinessProfileResponse> = withContext(Dispatchers.IO) {
         return@withContext try {
             val token = getAccessToken(context)
-            val response =if (token != null) {
-                Log.d("KaziHubRepository", "createBusinessProfile: $token")
-                api.createBusinessProfile(" Bearer $token",request)
-            } else {
-                Log.d("KaziHubRepository", "createBusinessProfile: Token is null")
-                throw Exception("Token is null")
-            }
+            Log.d("KaziHubRepository", "createBusinessProfile: $token")
+            val response = api.createBusinessProfile(" Bearer $token",request)
             Resource.Success(response)
         } catch (e: Exception) {
+            Log.e("KaziHubRepository", "createWorkerProfile: ${e.message}")
             handleException(e)
         }
     }
@@ -94,13 +88,8 @@ class KaziHubRepository
     suspend fun createWorkerProfile(request: WorkerProfileRequest): Resource<WorkerProfileResponse> = withContext(Dispatchers.IO) {
         return@withContext try {
             val token = getAccessToken(context)
-            val response =if (token != null) {
-                Log.d("KaziHubRepository", "createBusinessProfile: $token")
-                api.createWorkerProfile(" Bearer $token",request)
-            } else {
-                Log.d("KaziHubRepository", "createBusinessProfile: Token is null")
-                throw Exception("Token is null")
-            }
+            Log.d("KaziHubRepository", "createBusinessProfile: $token")
+            val response = api.createWorkerProfile(" Bearer $token",request)
             Resource.Success(response)
         } catch (e: Exception) {
             handleException(e)
@@ -129,12 +118,9 @@ class KaziHubRepository
     suspend fun updateWorkerProfileImage(id: Int, request: WorkerProfileImageRequest): Resource<WorkerProfileImageResponse> = withContext(Dispatchers.IO) {
         return@withContext try {
             val token = getAccessToken(context)
-            val response =if (token != null) {
+            val response = run {
                 Log.d("KaziHubRepository", "createBusinessProfile: $token")
                 api.updateWorkerProfileImage(" Bearer $token",id,request)
-            } else {
-                Log.d("KaziHubRepository", "createBusinessProfile: Token is null")
-                throw Exception("Token is null")
             }
             Resource.Success(response)
         } catch (e: Exception) {
@@ -145,12 +131,9 @@ class KaziHubRepository
     suspend fun updateWorkerProfile(id: Int, request: WorkerProfileRequest): Resource<WorkerProfileResponse> = withContext(Dispatchers.IO) {
         return@withContext try {
             val token = getAccessToken(context)
-            val response =if (token != null) {
+            val response = run {
                 Log.d("KaziHubRepository", "createBusinessProfile: $token")
                 api.updateWorkerProfile(" Bearer $token",id,request)
-            } else {
-                Log.d("KaziHubRepository", "createBusinessProfile: Token is null")
-                throw Exception("Token is null")
             }
             Resource.Success(response)
         } catch (e: Exception) {
