@@ -2,9 +2,9 @@ package com.samuelokello.kazihub.utils
 
 import android.content.Context
 
-fun getAccessToken(context: Context): String? {
+fun getAccessToken(context: Context): String {
     val sharedPreferences = context.getSharedPreferences("MyApp", Context.MODE_PRIVATE)
-    return sharedPreferences.getString("accessToken", null)
+    return sharedPreferences.getString("accessToken","").toString()
 }
 fun storeAccessToken(context: Context, token: String) {
     val sharedPreferences = context.getSharedPreferences("MyApp", Context.MODE_PRIVATE)

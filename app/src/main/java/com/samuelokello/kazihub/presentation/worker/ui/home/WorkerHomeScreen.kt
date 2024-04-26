@@ -63,88 +63,46 @@ fun WorkerHomeScreen() {
     val searchQuery by remember { mutableStateOf("") }
     var selectedItemIndex by remember { mutableIntStateOf(0) }
 
-//    ModalNavigationDrawer(
-//        drawerState = drawerState,
-//        drawerContent = {
-//            ModalDrawerSheet {
-//                Spacer(modifier = Modifier.height(16.dp))
-//                navigationItems.forEachIndexed { index, item ->
-//                    NavigationDrawerItem(
-//                        label = {
-//                            Text(text = item.title)
-//                        },
-//                        selected = index == selectedItemIndex,
-//                        onClick = {
-////                                            navController.navigate(item.route)
-//                            selectedItemIndex = index
-//                            scope.launch {
-//                                drawerState.close()
-//                            }
-//                        },
-//                        icon = {
-//                            Icon(
-//                                imageVector = if (index == selectedItemIndex) {
-//                                    item.selectedIcon
-//                                } else item.unselectedIcon,
-//                                contentDescription = item.title
-//                            )
-//                        },
-//                        badge = {
-//                            item.badgeCount?.let {
-//                                Text(text = item.badgeCount.toString())
-//                            }
-//                        },
-//                        modifier = Modifier
-//                            .padding(NavigationDrawerItemDefaults.ItemPadding),
-//                        colors = NavigationDrawerItemDefaults.colors(
-//                            selectedContainerColor = MaterialTheme.colorScheme.primary,
-//                            unselectedContainerColor = MaterialTheme.colorScheme.surface,
-//                        )
-//                    )
-//                }
-//            }
-//        }
-//    ) {
-        Scaffold(
-            topBar = {
-                AppBar {
-                    scope.launch {
-                        drawerState.open()
-                    }
+    Scaffold(
+        topBar = {
+            AppBar {
+                scope.launch {
+                    drawerState.open()
                 }
-            },
-            modifier = Modifier.padding(bottom = 32.dp),
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(top = 32.dp, start = 16.dp, end = 16.dp)
-                    .fillMaxWidth(),
+            }
+        },
+        modifier = Modifier.padding(bottom = 32.dp),
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(top = 32.dp, start = 16.dp, end = 16.dp)
+                .fillMaxWidth(),
 
+            ) {
+            Spacer(modifier = Modifier.height(40.dp))
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                SearchBar(
+                    query = searchQuery,
+                    onQueryChange = { },
+                    onSearch = {},
+                    active = onActive,
+                    onActiveChange = {},
+                    colors = SearchBarDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.onSecondary,
+                    ),
+                    modifier = Modifier
+                        .width(210.dp)
+                        .height(40.dp)
+                        .padding(start = 8.dp)
                 ) {
-                Spacer(modifier = Modifier.height(40.dp))
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    SearchBar(
-                        query = searchQuery,
-                        onQueryChange = { },
-                        onSearch = {},
-                        active = onActive,
-                        onActiveChange = {},
-                        colors = SearchBarDefaults.colors(
-                            containerColor = MaterialTheme.colorScheme.onSecondary,
-                        ),
-                        modifier = Modifier
-                            .width(210.dp)
-                            .height(40.dp)
-                            .padding(start = 8.dp)
-                    ) {
-                        if (searchQuery.isNotEmpty()) {
-                            LazyColumn(
-                                verticalArrangement = Arrangement.spacedBy(8.dp),
-                                contentPadding = PaddingValues(20.dp),
-                                modifier = Modifier.fillMaxSize()
-                            ) {
+                    if (searchQuery.isNotEmpty()) {
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            contentPadding = PaddingValues(20.dp),
+                            modifier = Modifier.fillMaxSize()
+                        ) {
 //                                items(searchResult) { job ->
 ////                                    JobList(job)
 //                                    HorizontalDivider(
@@ -153,72 +111,72 @@ fun WorkerHomeScreen() {
 //                                        color = Color.Gray
 //                                    )
 //                                }
-                            }
                         }
                     }
-
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    Icon(
-                        imageVector = Icons.Rounded.FilterAlt,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(32.dp)
-                            .padding(end = 8.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                    )
                 }
-                Spacer(modifier = Modifier.height(16.dp))
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Icon(
+                    imageVector = Icons.Rounded.FilterAlt,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(32.dp)
+                        .padding(end = 8.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                )
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Column {
                 Column {
-                    Column {
-                        Row {
-                            Text(text = "Popular Jobs", modifier = Modifier.weight(1f))
+                    Row {
+                        Text(text = "Popular Jobs", modifier = Modifier.weight(1f))
 
-                            Spacer(modifier = Modifier.width(32.dp))
+                        Spacer(modifier = Modifier.width(32.dp))
 
-                            TextButton(
-                                onClick = { /*TODO*/ }) {
-                                Text(text = "View All")
-                            }
-                        }
-
-                        LazyRow(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-//                            .height(100.dp),
-                            contentPadding = PaddingValues(16.dp)
-                        ) {
-                            items(jobs) {
-                                JobCard(it.icon, it.title, it.budget)
-                                Spacer(modifier = Modifier.width(16.dp))
-                            }
-
+                        TextButton(
+                            onClick = { /*TODO*/ }) {
+                            Text(text = "View All")
                         }
                     }
-                    Spacer(modifier = Modifier.height(32.dp))
-                    Column {
-                        Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                            Text(text = "Recent Posts", modifier = Modifier.weight(1f))
 
-                            Spacer(modifier = Modifier.width(64.dp))
-
-                            TextButton(
-                                onClick = { /*TODO*/ }) {
-                                Text(text = "View All", style = MaterialTheme.typography.bodyLarge)
-                            }
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+//                            .height(100.dp),
+                        contentPadding = PaddingValues(16.dp)
+                    ) {
+                        items(jobs) {
+                            JobCard(it.icon, it.title, it.budget)
+                            Spacer(modifier = Modifier.width(16.dp))
                         }
-                        Spacer(modifier = Modifier.height(16.dp))
-                        LazyColumn {
-                            items(jobs) {
-                                RecentPost()
-                                Spacer(modifier = Modifier.height(16.dp))
-                            }
+
+                    }
+                }
+                Spacer(modifier = Modifier.height(32.dp))
+                Column {
+                    Row(horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text(text = "Recent Posts", modifier = Modifier.weight(1f))
+
+                        Spacer(modifier = Modifier.width(64.dp))
+
+                        TextButton(
+                            onClick = { /*TODO*/ }) {
+                            Text(text = "View All", style = MaterialTheme.typography.bodyLarge)
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    LazyColumn {
+                        items(jobs) {
+                            RecentPost()
+                            Spacer(modifier = Modifier.height(16.dp))
                         }
                     }
                 }
             }
         }
     }
+}
 //}
 
 /**

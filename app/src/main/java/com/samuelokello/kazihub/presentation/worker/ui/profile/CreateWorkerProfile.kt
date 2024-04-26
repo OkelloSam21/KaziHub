@@ -26,7 +26,7 @@ import com.samuelokello.kazihub.presentation.shared.components.CustomButton
 import com.samuelokello.kazihub.presentation.shared.components.EditTextField
 import com.samuelokello.kazihub.presentation.shared.components.LocationDropDown
 import com.samuelokello.kazihub.presentation.shared.destinations.HomeScreenDestination
-import com.samuelokello.kazihub.presentation.worker.data.WorkerProfileViewModel
+import com.samuelokello.kazihub.presentation.worker.data.CreateWorkerProfileViewModel
 import com.samuelokello.kazihub.presentation.worker.state.WorkerEvent
 import com.samuelokello.kazihub.presentation.worker.state.WorkerProfileState
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
@@ -37,7 +37,7 @@ fun CreateWorkerProfile(
     navigator: DestinationsNavigator,
     userRole: UserRole
 ) {
-    val viewModel: WorkerProfileViewModel = hiltViewModel()
+    val viewModel: CreateWorkerProfileViewModel = hiltViewModel()
     val state = viewModel.state.collectAsState().value
     val placesClient = viewModel.getPlacesClient()
     Surface(
@@ -58,7 +58,7 @@ fun CreateWorkerProfile(
 @Composable
 fun WorkerProfileForm(
     state: WorkerProfileState,
-    viewModel: WorkerProfileViewModel,
+    viewModel: CreateWorkerProfileViewModel,
     onEvent: (WorkerEvent) -> Unit,
     navigateToHome: ()  -> Unit
 ) {
