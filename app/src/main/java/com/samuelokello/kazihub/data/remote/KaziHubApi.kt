@@ -3,7 +3,12 @@ package com.samuelokello.kazihub.data.remote
 import com.samuelokello.kazihub.data.model.sign_in.SignInResponse
 import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileRequest
 import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileResponse
-import com.samuelokello.kazihub.domain.model.JobsResponse
+import com.samuelokello.kazihub.domain.model.job.JobResponse
+import com.samuelokello.kazihub.domain.model.job.category.CategoryResponse
+import com.samuelokello.kazihub.domain.model.job.category.create.CreateCategoryRequest
+import com.samuelokello.kazihub.domain.model.job.category.create.CreateCategoryResponse
+import com.samuelokello.kazihub.domain.model.job.create.CreateJobRequest
+import com.samuelokello.kazihub.domain.model.job.create.CreateJobsResponse
 import com.samuelokello.kazihub.domain.model.sign_up.SignUpRequest
 import com.samuelokello.kazihub.domain.model.sign_up.SignUpResponse
 import com.samuelokello.kazihub.domain.model.worker.WorkerProfileRequest
@@ -79,9 +84,6 @@ interface KaziHubApi {
     ): BusinessProfileResponse
 
 
-    @GET("jobs/list")
-    suspend fun getJobs(): List<JobsResponse>
-
     // worker
     @POST("/worker/profiles/create")
     suspend fun createWorkerProfile(
@@ -154,6 +156,78 @@ interface KaziHubApi {
     suspend fun verifyWorkerByCode(
         @Header("Authorization") token: String,
     ): WorkerProfileResponse
+
+    // jobs endpoints
+    @POST("/jobs/category/create")
+    suspend fun createJobCategory(
+        @Body jobCategory: CreateCategoryRequest
+    ): CreateCategoryResponse
+
+    @GET("/jobs/category/list")
+    suspend fun getJobCategories(): List<CategoryResponse>
+
+    @GET("/jobs/category/{category_id}")
+    suspend fun getJobCategoryById(
+        @Path("category_id") id: Int
+    ): CategoryResponse
+
+    @POST("/jobs/create")
+    suspend fun createJob(
+        @Header("Authorization") token: String,
+        @Body job: CreateJobRequest
+    ): CreateJobsResponse
+
+    @GET("/jobs/list")
+    suspend fun getJobs(): List<JobResponse>
+
+    @GET("/jobs/{job_id}")
+    suspend fun getJobById(
+        @Path("job_id") id: Int
+    ): JobResponse
+
+    @GET("/jobs/list/category/{category_id}")
+    suspend fun getJobsByCategory(
+        @Path("category_id") id: Int
+    ): List<JobResponse>
+
+    @GET("/jobs/list/business/{business_id}")
+    suspend fun getJobsByBusiness(
+        @Path("business_id") id: Int
+    ): List<JobResponse>
+
+    @PUT("/jobs/update/{job_id}")
+    suspend fun updateJob(
+        @Header("Authorization") token: String,
+        @Path("job_id") id: Int,
+        @Body job: CreateJobRequest
+    ): CreateJobsResponse
+
+    @DELETE("/jobs/delete/{job_id}")
+    suspend fun deleteJob(
+        @Header("Authorization") token: String,
+        @Path("job_id") id: Int
+    ): CreateJobsResponse
+
+    @GET("/jobs/list/nearby/{lat}/{lon}")
+    suspend fun getJobsNearby(
+        @Path("lat") lat: Double,
+        @Path("lon") lon: Double
+    ): List<JobResponse>
+
+    @GET("/jobs/list/search/{q}")
+    suspend fun searchJobs(
+        @Path("q") query: String
+    ): List<JobResponse>
+
+    @GET("/jobs/filter")
+    suspend fun filterJobs(
+        @Path("q") query: String
+    ): List<JobResponse>
+
+    @GET("/jobs/Recent")
+    suspend fun getRecentJobs(): List<JobResponse>
+
+
 
 
 
