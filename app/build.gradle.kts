@@ -122,4 +122,17 @@ dependencies {
 
     //mockito
     implementation("org.mockito:mockito-core:4.0.0")
+
+    // Google Sign In SDK
+    implementation("com.google.android.gms:play-services-auth:21.1.0")
+
+    // Firebase SDK
+    implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
+    implementation("com.google.firebase:firebase-database-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx")
+    implementation("com.google.firebase:firebase-auth-ktx")
+
+    // Firebase UI Library
+    implementation("com.firebaseui:firebase-ui-auth:8.0.2")
+    implementation("com.firebaseui:firebase-ui-database:8.0.2")
 }

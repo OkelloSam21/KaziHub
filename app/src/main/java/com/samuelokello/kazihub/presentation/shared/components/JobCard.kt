@@ -1,7 +1,5 @@
 package com.samuelokello.kazihub.presentation.shared.components
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,17 +21,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberImagePainter
+import com.samuelokello.kazihub.R
+import com.samuelokello.kazihub.presentation.worker.data.Job
 
 @Composable
-fun JobCard(
-    @DrawableRes cardIcon: Int,
-    @StringRes title: Int,
-    @StringRes budget: Int
-) {
+fun JobCard(job: Job) {
     ElevatedCard(
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(
@@ -51,15 +47,24 @@ fun JobCard(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
+                        val painter: Painter = rememberImagePainter(
+                            data = job.imageUrl,
+                            builder = {
+                                crossfade(true)
+                                placeholder(R.drawable.icons8_google_48)
+                                error(R.drawable.icons8_google_48)
+                            }
+                        )
+
                         Image(
-                            painter = painterResource(id = cardIcon),
+                            painter = painter,
                             contentDescription = null,
                             modifier = Modifier
                                 .size(40.dp)
                                 .clip(shape = CircleShape),
                             contentScale = ContentScale.Crop,
                         )
-                        Text(text = "Google", style = MaterialTheme.typography.bodyLarge)
+                        Text(text = job.title ?: "", style = MaterialTheme.typography.bodyLarge)
                     }
                     Spacer(modifier = Modifier.width(42.dp))
                     Icon(imageVector = Icons.Filled.Star, contentDescription = null)
@@ -67,11 +72,11 @@ fun JobCard(
                 Spacer(modifier = Modifier.height(16.dp))
                 Spacer(modifier = Modifier.height(32.dp))
                 Column(modifier = Modifier.padding(bottom = 8.dp)) {
-                    Text(text = stringResource(id = title))
+                    Text(text = job.title ?: "")
 
                     Spacer(modifier = Modifier.height(2.dp))
                     Row {
-                        Text(text = stringResource(id = budget))
+                        Text(text = "ksh ${job.budget ?: 0}")
                     }
                 }
             }

@@ -1,13 +1,18 @@
 package com.samuelokello.kazihub.data.repository
 
 import android.content.Context
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresExtension
+import com.google.android.gms.maps.model.LatLng
 import com.samuelokello.kazihub.data.model.sign_in.SignInResponse
 import com.samuelokello.kazihub.data.remote.KaziHubApi
 import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileRequest
 import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileResponse
+import com.samuelokello.kazihub.domain.model.job.JobResponse
+import com.samuelokello.kazihub.domain.model.job.category.CategoryResponse
+import com.samuelokello.kazihub.domain.model.job.category.create.CreateCategoryRequest
+import com.samuelokello.kazihub.domain.model.job.category.create.CreateCategoryResponse
+import com.samuelokello.kazihub.domain.model.job.create.CreateJobRequest
+import com.samuelokello.kazihub.domain.model.job.create.CreateJobsResponse
 import com.samuelokello.kazihub.domain.model.shared.auth.sign_in.SignInRequest
 import com.samuelokello.kazihub.domain.model.sign_up.SignUpRequest
 import com.samuelokello.kazihub.domain.model.sign_up.SignUpResponse
@@ -26,7 +31,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import javax.inject.Inject
 
-@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
+//@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 class KaziHubRepository
 @Inject constructor(
     private val api: KaziHubApi,
@@ -59,15 +64,11 @@ class KaziHubRepository
     suspend fun createBusinessProfile(request: BusinessProfileRequest): Resource<BusinessProfileResponse> = withContext(Dispatchers.IO) {
         return@withContext try {
             val token = getAccessToken(context)
-            val response =if (token != null) {
-                Log.d("KaziHubRepository", "createBusinessProfile: $token")
-                api.createBusinessProfile(" Bearer $token",request)
-            } else {
-                Log.d("KaziHubRepository", "createBusinessProfile: Token is null")
-                throw Exception("Token is null")
-            }
+            Log.d("KaziHubRepository", "createBusinessProfile: $token")
+            val response = api.createBusinessProfile(" Bearer $token",request)
             Resource.Success(response)
         } catch (e: Exception) {
+            Log.e("KaziHubRepository", "createWorkerProfile: ${e.message}")
             handleException(e)
         }
     }
@@ -94,13 +95,8 @@ class KaziHubRepository
     suspend fun createWorkerProfile(request: WorkerProfileRequest): Resource<WorkerProfileResponse> = withContext(Dispatchers.IO) {
         return@withContext try {
             val token = getAccessToken(context)
-            val response =if (token != null) {
-                Log.d("KaziHubRepository", "createBusinessProfile: $token")
-                api.createWorkerProfile(" Bearer $token",request)
-            } else {
-                Log.d("KaziHubRepository", "createBusinessProfile: Token is null")
-                throw Exception("Token is null")
-            }
+            Log.d("KaziHubRepository", "createBusinessProfile: $token")
+            val response = api.createWorkerProfile(" Bearer $token",request)
             Resource.Success(response)
         } catch (e: Exception) {
             handleException(e)
@@ -129,12 +125,9 @@ class KaziHubRepository
     suspend fun updateWorkerProfileImage(id: Int, request: WorkerProfileImageRequest): Resource<WorkerProfileImageResponse> = withContext(Dispatchers.IO) {
         return@withContext try {
             val token = getAccessToken(context)
-            val response =if (token != null) {
+            val response = run {
                 Log.d("KaziHubRepository", "createBusinessProfile: $token")
                 api.updateWorkerProfileImage(" Bearer $token",id,request)
-            } else {
-                Log.d("KaziHubRepository", "createBusinessProfile: Token is null")
-                throw Exception("Token is null")
             }
             Resource.Success(response)
         } catch (e: Exception) {
@@ -145,12 +138,9 @@ class KaziHubRepository
     suspend fun updateWorkerProfile(id: Int, request: WorkerProfileRequest): Resource<WorkerProfileResponse> = withContext(Dispatchers.IO) {
         return@withContext try {
             val token = getAccessToken(context)
-            val response =if (token != null) {
+            val response = run {
                 Log.d("KaziHubRepository", "createBusinessProfile: $token")
                 api.updateWorkerProfile(" Bearer $token",id,request)
-            } else {
-                Log.d("KaziHubRepository", "createBusinessProfile: Token is null")
-                throw Exception("Token is null")
             }
             Resource.Success(response)
         } catch (e: Exception) {
@@ -212,6 +202,154 @@ class KaziHubRepository
         }
     }
 
+    // Jobs
+    suspend fun fetchAllJobs(): Resource<List<JobResponse>> {
+        return try {
+            val response = api.getJobs()
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun fetchJobById(id: Int): Resource<JobResponse> {
+        return try {
+            val response = api.getJobById(id = id)
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun fetchJobCategories(): Resource<List<CategoryResponse>> {
+        return try {
+            val response = api.getJobCategories()
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun fetchJobCategoryById(id: Int): Resource<CategoryResponse> {
+        return try {
+            val response = api.getJobCategoryById(id = id)
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun fetchJobsByLocation(latLng: LatLng): Resource<List<JobResponse>> {
+        return try {
+            val response = api.getJobsNearby(lon = latLng.longitude, lat = latLng.latitude)
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun fetchJobsByCategory(categoryID: Int): Resource<List<JobResponse>> {
+        return try {
+            val response = api.getJobsByCategory(id = categoryID)
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun fetchJobsByBusiness(businessId: Int): Resource<List<JobResponse>> {
+        return try {
+            val response = api.getJobsByBusiness(id = businessId)
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun createJob(request: CreateJobRequest): Resource<CreateJobsResponse> {
+        return try {
+            val token = getAccessToken(context)
+            val response = api.createJob(token, request)
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun createJobCategory(request: CreateCategoryRequest): Resource<CreateCategoryResponse> {
+        return try {
+            val response = api.createJobCategory(request)
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun updateJob(id: Int, request: CreateJobRequest): Resource<CreateJobsResponse> {
+        return try {
+            val token = getAccessToken(context)
+            val response = api.updateJob(token, id, request)
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun deleteJob(id: Int): Resource<CreateJobsResponse> {
+        return try {
+            val token = getAccessToken(context)
+            val response = api.deleteJob(token, id)
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun searchJobs(query: String): Resource<List<JobResponse>> {
+        return try {
+            val response = api.searchJobs(query)
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun filterJobsByCategory(categoryId: Int): Resource<List<JobResponse>> {
+        return try {
+            val response = api.getJobsByCategory(categoryId)
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun filterJobsByBusiness(businessId: Int): Resource<List<JobResponse>> {
+        return try {
+            val response = api.getJobsByBusiness(businessId)
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun filterJobsByLocation(latLng: LatLng): Resource<List<JobResponse>> {
+        return try {
+            val response = api.getJobsNearby(latLng.latitude, latLng.longitude)
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
+    suspend fun filterRecentJobs(): Resource<List<JobResponse>> {
+        return try {
+            val response = api.getRecentJobs()
+            Resource.Success(response)
+        } catch (e: Exception) {
+            handleException(e)
+        }
+    }
+
     private fun <T>handleException(e: Exception): Resource<T>{
         return if (e is HttpException && (e.hashCode() == 401 || e.hashCode() == 403)) {
             Resource.Error("Authorization failed. Please check your credentials.")
@@ -219,6 +357,4 @@ class KaziHubRepository
             Resource.Error(e.message ?: "An error occurred")
         }
     }
-
-
 }

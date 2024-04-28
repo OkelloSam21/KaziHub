@@ -13,15 +13,15 @@ import com.samuelokello.kazihub.utils.UserRole
 @Composable
 fun ProfileScreen(navigator: DestinationsNavigator, userType: UserRole) {
     when (userType) {
-        UserRole.WORKER -> WorkerProfileScreen(navigator)
-        UserRole.BUSINESS -> BusinessProfileScreen(navigator)
+        UserRole.WORKER -> WorkerProfileScreen()
+        UserRole.BUSINESS -> BusinessProfileScreen()
     }
 }
 
 
 
 @Composable
-fun BusinessProfileScreen(navigator: DestinationsNavigator) {
+fun BusinessProfileScreen() {
     Column {
         Text(text = "Business Profile")
     }

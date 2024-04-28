@@ -3,7 +3,6 @@ package com.samuelokello.kazihub.presentation.business
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,8 +34,6 @@ import com.samuelokello.kazihub.presentation.shared.destinations.HomeScreenDesti
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import com.samuelokello.kazihub.utils.UserRole
 
-@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
-@RequiresApi(Build.VERSION_CODES.M)
 @Composable
 fun CreateBusinessProfile(navigator: DestinationsNavigator,userType: UserRole) {
 
@@ -60,7 +57,6 @@ fun CreateBusinessProfile(navigator: DestinationsNavigator,userType: UserRole) {
 
 }
 
-@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @Composable
 fun BusinessProfileForm(
     state: BusinessProfileState,

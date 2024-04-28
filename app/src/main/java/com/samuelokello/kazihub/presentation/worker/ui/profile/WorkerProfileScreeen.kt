@@ -31,17 +31,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.presentation.shared.components.ProfileImage
-import com.samuelokello.kazihub.presentation.worker.data.WorkerProfileViewModel
+import com.samuelokello.kazihub.presentation.worker.data.CreateWorkerProfileViewModel
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import com.samuelokello.kazihub.ui.theme.primaryLight
 
 @Composable
-fun WorkerProfileScreen(navigator: DestinationsNavigator) {
-    val viewModel: WorkerProfileViewModel = viewModel()
+fun WorkerProfileScreen() {
+    val viewModel: CreateWorkerProfileViewModel = viewModel()
     val state by viewModel.state.collectAsState()
 
     Surface(
@@ -167,5 +167,19 @@ fun WorkerProfileScreenContent() {
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun WorkerProfileScreenPreview() {
+    WorkerProfileScreenContent()
+}
+
+@Preview
+@Composable
+fun WorkerProfileScreenPreviewDark() {
+    KaziHubTheme(darkTheme = true) {
+        WorkerProfileScreen()
     }
 }
