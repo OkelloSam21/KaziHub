@@ -1,8 +1,10 @@
 package com.samuelokello.kazihub.presentation.shared.authentication.SignIn
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresExtension
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.samuelokello.kazihub.data.repository.KaziHubRepository
@@ -44,6 +46,7 @@ class SignInViewModel
         }
     }
 
+    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     fun onEvent(event: SignInEvent) {
         when (event) {
             is SignInEvent.OnUserName -> {
@@ -94,7 +97,7 @@ class SignInViewModel
                             }
                             hideLoading()
                             withContext(Dispatchers.Main){
-                                Toast.makeText(context, result.message, Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, result.data?.message ?: "", Toast.LENGTH_LONG).show()
                             }
                             Log.d("SignInViewModel", "onEvent: ${result.message}")
                         }

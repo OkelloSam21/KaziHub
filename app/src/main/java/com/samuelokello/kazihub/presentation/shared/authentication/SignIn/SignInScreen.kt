@@ -62,18 +62,25 @@ import com.samuelokello.kazihub.utils.UserRole
 @Destination
 @Composable
 fun SignInScreen(navigator: DestinationsNavigator, userType: UserRole) {
-    KaziHubTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
+
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        KaziHubTheme {
             val viewModel: SignInViewModel = hiltViewModel()
             val state by viewModel.state.collectAsState()
 
             SignInContent(
                 state = state,
                 onEvent = viewModel::onEvent,
-                navigateToProfileCreation = { navigator.navigate(CreateProfileScreenDestination(userType)) },
+                navigateToProfileCreation = {
+                    navigator.navigate(
+                        CreateProfileScreenDestination(
+                            userType
+                        )
+                    )
+                },
                 navigateToSignUp = { navigator.popBackStack() }
             )
         }
@@ -150,7 +157,11 @@ fun SignInHeader() {
  *
  */
 @Composable
-fun SignInForm(state: SignInState, isPasswordVisible: MutableState<Boolean>, onEvent: (SignInEvent) -> Unit) {
+fun SignInForm(
+    state: SignInState,
+    isPasswordVisible: MutableState<Boolean>,
+    onEvent: (SignInEvent) -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -323,6 +334,7 @@ fun HandleNavigation(state: SignInState, navigate: () -> Unit) {
                 Log.d("SignInScreen", "HandleNavigation: Navigate to Home")
                 navigate()
             }
+
             state.navigateToSignUp -> {
                 Log.d("SignInScreen", "HandleNavigation: Navigate to Sign Up")
                 navigate()
