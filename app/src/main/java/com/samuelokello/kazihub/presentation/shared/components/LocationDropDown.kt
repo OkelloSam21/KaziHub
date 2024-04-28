@@ -1,5 +1,6 @@
 package com.samuelokello.kazihub.presentation.shared.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -8,63 +9,55 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.google.android.libraries.places.api.model.AutocompletePrediction
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
-import com.google.android.libraries.places.api.net.PlacesClient
-import kotlinx.coroutines.tasks.await
+import com.samuelokello.kazihub.presentation.common.location.LocationViewModel
 
 @Composable
 fun LocationDropDown(
+    viewModel: LocationViewModel, // Use the interface as a parameter
     value: String,
-    onValueChange: (String, String) -> Unit,
-    places: PlacesClient,
+    onValueChange: (String) -> Unit,
     label: String
 ) {
-    var suggestions by remember { mutableStateOf(listOf<AutocompletePrediction>())}
-
-    LaunchedEffect(value) {
-        if(value.isNotEmpty()) {
-            val request = FindAutocompletePredictionsRequest.builder()
-                .setQuery(value)
-                .build()
-
-            val response = places.findAutocompletePredictions(request).await()
-            suggestions = response.autocompletePredictions
-        } else {
-            suggestions = emptyList()
-        }
-    }
+    val locationSuggestions = viewModel.locationSuggestions.collectAsState() // Get location suggestions from the ViewModel
+    Log.d("LocationDropDown", "Current number of location suggestions: ${locationSuggestions.value.size}") // Debug
 
     Column {
+        // OutlinedTextField for location input
         OutlinedTextField(
             value = value,
-            onValueChange = { onValueChange(it, "") },
+            onValueChange = {
+                onValueChange(it)
+                viewModel.onLocationChange(it)
+            },
             label = { Text(label) },
             shape = RoundedCornerShape(8.dp),
             modifier = Modifier.fillMaxWidth()
         )
 
+        // DropdownMenu for location suggestions
         DropdownMenu(
-            expanded = suggestions.isNotEmpty(),
-            onDismissRequest = {suggestions = listOf() }
-        ) {
-            suggestions.forEach { suggestion ->
-                DropdownMenuItem(
-                    text = { Text(text = suggestion.getFullText(null).toString()) },
-                    onClick = {
-                        val newLocation = suggestion.getFullText(null).toString()
-                        val placeId = suggestion.placeId
-                        onValueChange(newLocation, placeId)
-                        suggestions = listOf()
-                    })
+            expanded = locationSuggestions.value.isNotEmpty(),
+            onDismissRequest = {
+                viewModel.clearSuggestions()
             }
+        ) {
+            locationSuggestions.value.forEach { suggestion ->
+                DropdownMenuItem(
+                    text = { suggestion.name?.let { Text(text = it.toString()) } },
+                    onClick = {
+                        val newLocation = suggestion.name.toString()
+
+                        onValueChange(newLocation)
+                        viewModel.onLocationChange(newLocation)
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
         }
     }
 }
+

@@ -1,20 +1,23 @@
 package com.samuelokello.kazihub.presentation.shared.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
@@ -27,9 +30,14 @@ import com.samuelokello.kazihub.R
 fun AppBar(
     onNavigationIconClick: () -> Unit
 ) {
-    TopAppBar(
+    CenterAlignedTopAppBar(
         title = {
-            Text(text = stringResource(id = R.string.app_name))
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Text(text = stringResource(id = R.string.app_name))
+            }
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.surface
@@ -41,7 +49,7 @@ fun AppBar(
                     contentDescription = "Toggle drawer",
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
-                        .size(32.dp)
+                        .size(20.dp)
                         .padding(0.dp)
                         .clip(RoundedCornerShape(0.dp))
                 )

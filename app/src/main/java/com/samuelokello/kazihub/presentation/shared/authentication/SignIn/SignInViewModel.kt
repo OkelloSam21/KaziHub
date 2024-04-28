@@ -102,9 +102,7 @@ class SignInViewModel
                             Log.d("SignInViewModel", "onEvent: ${result.message}")
                         }
                     }
-
                 }
-
             }
 
             is SignInEvent.OnCreateAccountClicked -> {

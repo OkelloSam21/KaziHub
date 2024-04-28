@@ -51,33 +51,37 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    lint{
+        baseline = file("lint-baseline.xml")
+    }
 }
 
 dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
-    implementation(platform("androidx.compose:compose-bom:2024.02.00"))
+    implementation(platform("androidx.compose:compose-bom:2024.04.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
 //    implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.material:material:1.6.2")
+    implementation("androidx.compose.material:material:1.6.5")
     implementation("com.google.firebase:firebase-auth:22.3.1")
-    implementation("androidx.compose.material3:material3-android:1.2.0")
+    implementation("androidx.compose.material3:material3-android:1.2.1")
     implementation("com.google.android.gms:play-services-maps:18.2.0")
     implementation("com.google.android.gms:play-services-location:21.2.0")
     implementation("com.google.android.libraries.places:places:3.4.0")
+    implementation("androidx.test.ext:junit-ktx:1.1.5")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2024.02.00"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2024.04.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     //extended icons
-    implementation("androidx.compose.material:material-icons-extended-android:1.6.2")
+    implementation("androidx.compose.material:material-icons-extended-android:1.6.5")
 
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
@@ -98,7 +102,7 @@ dependencies {
     // Dagger - Hilt
     implementation ("com.google.dagger:hilt-android:2.51")
     ksp ("com.google.dagger:hilt-android-compiler:2.51")
-    implementation ("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
+//    implementation ("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
 //    ksp ("androidx.hilt:hilt-compiler:1.2.0")
     implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
 
@@ -110,9 +114,25 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.10.0")
 
     implementation ("com.google.firebase:firebase-auth-ktx:22.3.1")
-    implementation ("com.google.android.gms:play-services-auth:21.0.0")
+    implementation ("com.google.android.gms:play-services-auth:21.1.0")
 
     //Okhttp
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    //mockito
+    implementation("org.mockito:mockito-core:4.0.0")
+
+    // Google Sign In SDK
+    implementation("com.google.android.gms:play-services-auth:21.1.0")
+
+    // Firebase SDK
+    implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
+    implementation("com.google.firebase:firebase-database-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx")
+    implementation("com.google.firebase:firebase-auth-ktx")
+
+    // Firebase UI Library
+    implementation("com.firebaseui:firebase-ui-auth:8.0.2")
+    implementation("com.firebaseui:firebase-ui-database:8.0.2")
 }

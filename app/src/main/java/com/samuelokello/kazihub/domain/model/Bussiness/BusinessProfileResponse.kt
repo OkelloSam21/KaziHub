@@ -2,6 +2,7 @@ package com.samuelokello.kazihub.domain.model.Bussiness
 
 
 import com.google.gson.annotations.SerializedName
+import com.samuelokello.kazihub.domain.model.common.Data
 
 data class BusinessProfileResponse(
     @SerializedName("data")

@@ -1,9 +1,9 @@
-package com.samuelokello.kazihub.domain.model.Bussiness
+package com.samuelokello.kazihub.domain.model.job
 
 
 import com.google.gson.annotations.SerializedName
 
-data class Data(
+data class Business(
     @SerializedName("bio")
     val bio: String?,
     @SerializedName("email")
@@ -17,15 +17,15 @@ data class Data(
     @SerializedName("joined_on")
     val joinedOn: String?,
     @SerializedName("lat")
-    val lat: Int?,
+    val lat: Double?,
     @SerializedName("location")
     val location: String?,
     @SerializedName("lon")
-    val lon: Int?,
+    val lon: Double?,
     @SerializedName("phone")
     val phone: String?,
     @SerializedName("user_id")
     val userId: Int?,
     @SerializedName("verification_code")
-    val verificationCode: Any?
+    val verificationCode: String?
 )

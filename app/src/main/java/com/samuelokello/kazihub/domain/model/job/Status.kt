@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.domain.model
+package com.samuelokello.kazihub.domain.model.job
 
 
 import com.google.gson.annotations.SerializedName

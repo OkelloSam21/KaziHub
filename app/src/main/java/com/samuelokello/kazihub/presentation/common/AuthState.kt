@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.shared.authentication.common
+package com.samuelokello.kazihub.presentation.common
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -12,6 +12,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -39,7 +43,7 @@ fun HandleLoading(state: AuthState) {
 @Composable
 fun HandleError(state: AuthState) {
     if (state.error.isNotEmpty()) {
-//        ShowErrorToast(state.error)
+        ShowErrorToast(state.error)
         ShowErrorDialog(error = state.error)
     }
 }
@@ -80,19 +84,26 @@ fun ShowLoadingDialog() {
 
 @Composable
 fun ShowErrorDialog(error: String) {
-    Dialog(
-        onDismissRequest = {},
-        DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
-    ) {
-        Surface {
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    contentColor = primaryLight
-                )
-            ) {
-                Column {
-                    Text(text = error, modifier = Modifier.padding(16.dp))
+    var showDialog by remember { mutableStateOf(true) }
+
+    if (showDialog) {
+        Dialog(
+            onDismissRequest = {
+                showDialog = false
+
+            },
+            DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
+        ) {
+            Surface {
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        contentColor = primaryLight
+                    )
+                ) {
+                    Column {
+                        Text(text = error, modifier = Modifier.padding(16.dp))
+                    }
                 }
             }
         }
