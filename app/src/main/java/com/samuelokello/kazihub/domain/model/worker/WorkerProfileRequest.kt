@@ -5,6 +5,6 @@ data class WorkerProfileRequest(
     val phone: String,
     val bio: String,
     val location: String,
-    val latitude: Number,
-    val longitude: Number
+    val lat: Double,
+    val lon: Double
 )

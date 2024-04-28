@@ -9,6 +9,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.samuelokello.kazihub.presentation.common.location.LocationViewModel
@@ -20,8 +21,8 @@ fun LocationDropDown(
     onValueChange: (String) -> Unit,
     label: String
 ) {
-    val locationSuggestions = viewModel.locationSuggestions // Get location suggestions from the ViewModel
-    Log.d("LocationDropDown", "Current number of location suggestions: ${locationSuggestions.size}") // Debug
+    val locationSuggestions = viewModel.locationSuggestions.collectAsState() // Get location suggestions from the ViewModel
+    Log.d("LocationDropDown", "Current number of location suggestions: ${locationSuggestions.value.size}") // Debug
 
     Column {
         // OutlinedTextField for location input
@@ -38,16 +39,16 @@ fun LocationDropDown(
 
         // DropdownMenu for location suggestions
         DropdownMenu(
-            expanded = locationSuggestions.isNotEmpty(),
+            expanded = locationSuggestions.value.isNotEmpty(),
             onDismissRequest = {
-                // Handle dropdown dismiss (optional)
+                viewModel.clearSuggestions()
             }
         ) {
-            locationSuggestions.forEach { suggestion ->
+            locationSuggestions.value.forEach { suggestion ->
                 DropdownMenuItem(
-                    text = { Text(text = suggestion.toString()) },
+                    text = { suggestion.name?.let { Text(text = it.toString()) } },
                     onClick = {
-                        val newLocation = suggestion.toString()
+                        val newLocation = suggestion.name.toString()
 
                         onValueChange(newLocation)
                         viewModel.onLocationChange(newLocation)
@@ -55,6 +56,7 @@ fun LocationDropDown(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
+
         }
     }
 }

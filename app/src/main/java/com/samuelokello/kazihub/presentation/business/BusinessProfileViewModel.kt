@@ -23,21 +23,26 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
+//@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @HiltViewModel
 class BusinessProfileViewModel @Inject constructor(
     private val repository: KaziHubRepository,
     private val locationManager: LocationManager,
     @ApplicationContext private val context: Context
-) : ViewModel(),  LocationManager.LocationCallback , LocationViewModel{
+) : ViewModel(),  LocationManager.LocationCallback , LocationViewModel {
     private val _state = MutableStateFlow(BusinessProfileState())
     val state = _state.asStateFlow()
-    override val locationSuggestions: List<LatLng?> = _state.value.locationSuggestion
+    override val locationSuggestions: StateFlow<List<Place>> =
+        _state.map { it.locationSuggestion }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     override fun onLocationReceived(location: Location) {
         LatLng(location.latitude, location.longitude)
@@ -59,8 +64,8 @@ class BusinessProfileViewModel @Inject constructor(
             locationManager.fetchLocationSuggestions(
                 locationQuery = query,
                 onSuccess = { places: List<Place> ->
-                    _state.update {
-                        it.copy(locationSuggestion = places.map { it.latLng })
+                    _state.update {suggestion ->
+                        suggestion.copy(locationSuggestion = places)
                     }
                 },
                 onError = { errorMessage ->
@@ -69,6 +74,12 @@ class BusinessProfileViewModel @Inject constructor(
                     }
                 }
             )
+        }
+    }
+
+    override fun clearSuggestions() {
+        _state.update {
+            it.copy(locationSuggestion = emptyList())
         }
     }
 
@@ -107,7 +118,6 @@ class BusinessProfileViewModel @Inject constructor(
         return isEmailValid(email) && isPhoneValid(phone) && location.isNotEmpty()
     }
 
-
     fun onEvent(event: BusinessEvent) {
         when (event) {
             is BusinessEvent.OnEmailChanged -> {
@@ -127,7 +137,7 @@ class BusinessProfileViewModel @Inject constructor(
             }
 
             is BusinessEvent.OnLocationInputChanged -> {
-                fetchLocationSuggestions(event.input)
+//                fetchLocationSuggestions(event.input)
             }
 
             is BusinessEvent.OnLocationSuggestionsFetched -> {
@@ -149,47 +159,47 @@ class BusinessProfileViewModel @Inject constructor(
                     latitude = locationLatLng.latitude,
                     longitude = locationLatLng.longitude
                 )
+                Log.e("ViewModel", "OnCreateProfileClicked")
+//                if (isFormComplete(email, phone, location)) {
+                    createProfile(request)
+//                }
 
-                try {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        showLoading()
-                        Log.d("BusinessProfileModel", "Making API call to create profile")
-                        if (isFormComplete(email, phone, location)) {
-                            when (val response = repository.createBusinessProfile(request)) {
-                                is Resource.Success -> {
-                                    _state.update {
-                                        it.copy(
-                                            navigateToHome = true,
-                                            isLoading = true
-                                        )
-                                    }
-                                    hideLoading()
-                                }
-
-                                is Resource.Error -> {
-                                    _state.update {
-                                        it.copy(
-//                                            error = response.message ?: "An error occurred",
-                                            isLoading = false
-                                        )
-                                    }
-
-                                    Log.d(
-                                        "BusinessProfileModel",
-                                        "createProfile: ${response.message}"
-                                    )
-                                }
-                            }
-
-                        }
-                    }
-                } catch (e: Exception) {
-                    Log.e("BusinessProfileModel", "Exception Occurred: ${e.message}")
-                    hideLoading()
-                } finally {
-                    hideLoading()
-                }
             }
+        }
+    }
+
+    private fun createProfile(request: BusinessProfileRequest) {
+        Log.e("createProfile: ", "createProfile:")
+        viewModelScope.launch {
+            showLoading()
+            Log.e("BusinessProfileModel", "Making API call to create profile")
+                when (val response = repository.createBusinessProfile(request)) {
+                    is Resource.Success -> {
+                        Log.e("createProfile: ","success" )
+                        _state.update {
+                            it.copy(
+                                isLoading = true,
+                                navigateToHome = true,
+                            )
+                        }
+                        hideLoading()
+                    }
+
+                    is Resource.Error -> {
+                        Log.e("createProfile: ","error" )
+                        _state.update {
+                            it.copy(
+//                                            error = response.message ?: "An error occurred",
+                                isLoading = false
+                            )
+                        }
+
+                        Log.d(
+                            "BusinessProfileModel",
+                            "createProfile: ${response.message}"
+                        )
+                    }
+                }
         }
     }
 
