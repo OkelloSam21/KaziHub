@@ -79,7 +79,6 @@ fun SignUpScreen(userType: UserRole  = UserRole.WORKER, navigator: DestinationsN
                 state = state,
                 onEvent = viewModel::onEvent,
                 navigateToSIgnIn = { navigator.navigate(SignInScreenDestination(userType)) },
-                onClick = {},
                 userType = userType
             )
         }
@@ -90,7 +89,6 @@ fun SignUpScreen(userType: UserRole  = UserRole.WORKER, navigator: DestinationsN
 private fun SignUpContent(
     state: SignUpState,
     onEvent: (SignUpEvent) -> Unit,
-    onClick: () -> Unit,
     navigateToSIgnIn: () -> Unit,
     userType: UserRole
 ) {
@@ -224,7 +222,7 @@ fun SignUpForm(
                 visualTransformation = if (isPasswordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth()
             )
-            TextButton(onClick = onClick, modifier = Modifier.align(Alignment.End)) {
+            TextButton(onClick ={ onClick()}, modifier = Modifier.align(Alignment.End)) {
                 Text(
                     text = "Forgot password?",
                     style = MaterialTheme.typography.bodyLarge
