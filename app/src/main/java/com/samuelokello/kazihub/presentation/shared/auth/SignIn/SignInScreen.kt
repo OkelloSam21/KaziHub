@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.shared.authentication.SignIn
+package com.samuelokello.kazihub.presentation.shared.auth.SignIn
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -40,8 +40,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -130,21 +128,12 @@ fun SignInHeader() {
 
         Text(
             text = stringResource(R.string.welcome_back),
-            style = MaterialTheme.typography.titleLarge.copy(
-                fontFamily = FontFamily(
-                    Font(R.font.poppins_bold)
-                )
-            )
+            style = MaterialTheme.typography.titleLarge
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = stringResource(R.string.fill_your_details_or_continue_with_social_media),
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontFamily = FontFamily(
-                    Font(R.font.poppins_medium)
-                ),
-                color = Color.Gray
-            )
+            style = MaterialTheme.typography.titleLarge
         )
     }
 }
