@@ -13,7 +13,6 @@ import com.samuelokello.kazihub.domain.model.job.category.create.CreateCategoryR
 import com.samuelokello.kazihub.domain.model.job.category.create.CreateCategoryResponse
 import com.samuelokello.kazihub.domain.model.job.create.CreateJobRequest
 import com.samuelokello.kazihub.domain.model.job.create.CreateJobsResponse
-import com.samuelokello.kazihub.domain.model.shared.auth.sign_in.SignInRequest
 import com.samuelokello.kazihub.domain.model.sign_up.SignUpRequest
 import com.samuelokello.kazihub.domain.model.sign_up.SignUpResponse
 import com.samuelokello.kazihub.domain.model.worker.WorkerProfileRequest
@@ -21,6 +20,7 @@ import com.samuelokello.kazihub.domain.model.worker.WorkerProfileResponse
 import com.samuelokello.kazihub.domain.model.worker.image.WorkerProfileImageRequest
 import com.samuelokello.kazihub.domain.model.worker.image.WorkerProfileImageResponse
 import com.samuelokello.kazihub.domain.model.worker.skill.WorkerSkillRequest
+import com.samuelokello.kazihub.domain.repositpry.KaziHubRepository
 import com.samuelokello.kazihub.utils.LocationManager
 import com.samuelokello.kazihub.utils.Resource
 import com.samuelokello.kazihub.utils.getAccessToken
@@ -31,14 +31,13 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import javax.inject.Inject
 
-//@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
-class KaziHubRepository
+class KaziHubRepositoryImpl
 @Inject constructor(
     private val api: KaziHubApi,
     private val locationManager: LocationManager,
     @ApplicationContext private val context: Context
-) {
-    suspend fun signUp(signUpRequest: SignUpRequest):Resource<SignUpResponse> = withContext(Dispatchers.IO) {
+) : KaziHubRepository{
+    override suspend fun signUp(signUpRequest: SignUpRequest):Resource<SignUpResponse> = withContext(Dispatchers.IO) {
         return@withContext try {
             val response = api.signUp(signUpRequest)
             Log.d("AuthRepository", "signUp: $response")
@@ -48,9 +47,8 @@ class KaziHubRepository
         }
     }
 
-
-    suspend fun signIn(signInRequest: SignInRequest): Resource<SignInResponse> = withContext(Dispatchers.IO){
-        return@withContext try {
+    override suspend fun signIn(signInRequest: com.samuelokello.kazihub.data.model.sign_in.SignInRequest): Resource<SignInResponse> {
+        return try {
             val response = api.signIn(signInRequest)
             storeAccessToken(context, response.data?.accessToken!!)
             Log.d("AuthRepository", "signIn: ${response.data.accessToken}")

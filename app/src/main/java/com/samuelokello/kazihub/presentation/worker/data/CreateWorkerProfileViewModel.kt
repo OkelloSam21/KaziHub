@@ -8,9 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.Place
-import com.samuelokello.kazihub.data.repository.KaziHubRepository
 import com.samuelokello.kazihub.domain.model.worker.WorkerProfileRequest
-import com.samuelokello.kazihub.domain.model.worker.image.WorkerProfileImageRequest
+import com.samuelokello.kazihub.domain.repositpry.KaziHubRepository
 import com.samuelokello.kazihub.presentation.common.location.LocationViewModel
 import com.samuelokello.kazihub.presentation.worker.state.WorkerEvent
 import com.samuelokello.kazihub.presentation.worker.state.WorkerProfileState
@@ -192,69 +191,67 @@ class CreateWorkerProfileViewModel @Inject constructor(
         }
 
     }
-
-    // Function to fetch worker profile by ID
-
-    private fun fetchProfile(id: Int) {
-        viewModelScope.launch {
-            when (val response = repository.fetchWorkerProfileById(id)) {
-                is Resource.Success -> {
-                    val profile = response.data
-                    // Update ViewModel state with the fetched profile data
-                    _state.update {
-                        it.copy(
-                            email = profile?.data?.email ?: "",
-                            phone = profile?.data?.phone ?: "",
-                            bio = profile?.data?.bio ?: "",
-                            location = profile?.data?.location ?: "",
-                        )
-                    }
-                }
-
-                is Resource.Error -> {
-                    // Handle error case
-                    _state.update { it.copy(error = response.message ?: "An error occurred") }
-                }
-            }
-        }
-    }
-
-
-    // Function to update worker profile image
-    fun updateWorkerProfileImage(id: Int, request: WorkerProfileImageRequest) {
-        viewModelScope.launch {
-            when (val response = repository.updateWorkerProfileImage(id, request)) {
-                is Resource.Success -> {
-                    // Handle success case
-                    _state.update { it.copy(successMessage = "Profile image updated successfully!") }
-                }
-
-                is Resource.Error -> {
-                    // Handle error case
-                    _state.update {
-                        it.copy(
-                            error = response.message ?: "Failed to update profile image"
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    // Function to delete a worker skill
-    fun deleteWorkerSkill(bearer: String, id: Int) {
-        viewModelScope.launch {
-            when (val response = repository.deleteSkill(bearer, id)) {
-                is Resource.Success -> {
-                    // Handle success case
-                    _state.update { it.copy(successMessage = "Skill deleted successfully!") }
-                }
-
-                is Resource.Error -> {
-                    // Handle error case
-                    _state.update { it.copy(error = response.message ?: "Failed to delete skill") }
-                }
-            }
-        }
-    }
 }
+
+//    private fun fetchProfile(id: Int) {
+//        viewModelScope.launch {
+//            when (val response = repository.fetchWorkerProfileById(id)) {
+//                is Resource.Success -> {
+//                    val profile = response.data
+//                    // Update ViewModel state with the fetched profile data
+//                    _state.update {
+//                        it.copy(
+//                            email = profile?.data?.email ?: "",
+//                            phone = profile?.data?.phone ?: "",
+//                            bio = profile?.data?.bio ?: "",
+//                            location = profile?.data?.location ?: "",
+//                        )
+//                    }
+//                }
+//
+//                is Resource.Error -> {
+//                    // Handle error case
+//                    _state.update { it.copy(error = response.message ?: "An error occurred") }
+//                }
+//            }
+//        }
+//    }
+
+
+// Function to update worker profile image
+//    fun updateWorkerProfileImage(id: Int, request: WorkerProfileImageRequest) {
+//        viewModelScope.launch {
+//            when (val response = repository.updateWorkerProfileImage(id, request)) {
+//                is Resource.Success -> {
+//                    // Handle success case
+//                    _state.update { it.copy(successMessage = "Profile image updated successfully!") }
+//                }
+//
+//                is Resource.Error -> {
+//                    // Handle error case
+//                    _state.update {
+//                        it.copy(
+//                            error = response.message ?: "Failed to update profile image"
+//                        )
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    // Function to delete a worker skill
+//    fun deleteWorkerSkill(bearer: String, id: Int) {
+//        viewModelScope.launch {
+//            when (val response = repository.deleteSkill(bearer, id)) {
+//                is Resource.Success -> {
+//                    // Handle success case
+//                    _state.update { it.copy(successMessage = "Skill deleted successfully!") }
+//                }
+//
+//                is Resource.Error -> {
+//                    // Handle error case
+//                    _state.update { it.copy(error = response.message ?: "Failed to delete skill") }
+//                }
+//            }
+//        }
+//    }

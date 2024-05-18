@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.shared.authentication.sign_up
+package com.samuelokello.kazihub.presentation.shared.auth.sign_up
 
 import com.samuelokello.kazihub.utils.UserRole
 

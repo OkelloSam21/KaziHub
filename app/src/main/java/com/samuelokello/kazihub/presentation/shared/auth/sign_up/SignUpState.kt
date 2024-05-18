@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.shared.authentication.sign_up
+package com.samuelokello.kazihub.presentation.shared.auth.sign_up
 
 import com.samuelokello.kazihub.presentation.common.AuthState
 
@@ -11,5 +11,5 @@ data class SignUpState (
     val password: String = "",
     val navigateToHome: Boolean = false,
     override val isLoading: Boolean = false,
-    val navigateToSignIn: Boolean = false
+    val navigateCreateProfile: Boolean = false
 ): AuthState

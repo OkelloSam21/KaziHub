@@ -1,8 +1,6 @@
 package com.samuelokello.kazihub.presentation.business
 
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -101,7 +99,8 @@ fun BusinessProfileForm(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next
-                )
+                ),
+                modifier = Modifier
             )
             Spacer(modifier = Modifier.height(16.dp))
             EditTextField(
@@ -115,7 +114,8 @@ fun BusinessProfileForm(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Next
-                )
+                ),
+                modifier = Modifier
             )
             Spacer(modifier = Modifier.height(16.dp))
             LocationDropDown(
@@ -136,7 +136,8 @@ fun BusinessProfileForm(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Done
-                )
+                ),
+                modifier = Modifier
             )
         }
 

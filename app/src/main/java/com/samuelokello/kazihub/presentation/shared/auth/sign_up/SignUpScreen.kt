@@ -1,8 +1,6 @@
-package com.samuelokello.kazihub.presentation.shared.authentication.SignIn
+package com.samuelokello.kazihub.presentation.shared.auth.sign_up
 
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,8 +17,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,8 +36,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -49,23 +43,22 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.R
 import com.samuelokello.kazihub.presentation.common.HandleError
 import com.samuelokello.kazihub.presentation.common.HandleLoading
 import com.samuelokello.kazihub.presentation.common.HandleSuccess
-import com.samuelokello.kazihub.presentation.shared.authentication.sign_up.SignUpEvent
-import com.samuelokello.kazihub.presentation.shared.authentication.sign_up.SignUpState
-import com.samuelokello.kazihub.presentation.shared.authentication.sign_up.SignUpViewModel
+import com.samuelokello.kazihub.presentation.shared.components.CustomButton
+import com.samuelokello.kazihub.presentation.shared.components.EditTextField
 import com.samuelokello.kazihub.presentation.shared.destinations.SignInScreenDestination
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
-import com.samuelokello.kazihub.ui.theme.primaryLight
 import com.samuelokello.kazihub.utils.UserRole
 
+@RootNavGraph(start = true)
 @Destination
-@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @Composable
-fun SignUpScreen(userType: UserRole, navigator: DestinationsNavigator) {
+fun SignUpScreen(userType: UserRole  = UserRole.WORKER, navigator: DestinationsNavigator) {
 
     val viewModel: SignUpViewModel = hiltViewModel()
     val state by viewModel.state
@@ -83,7 +76,6 @@ fun SignUpScreen(userType: UserRole, navigator: DestinationsNavigator) {
                 state = state,
                 onEvent = viewModel::onEvent,
                 navigateToSIgnIn = { navigator.navigate(SignInScreenDestination(userType)) },
-                onClick = {},
                 userType = userType
             )
         }
@@ -94,7 +86,6 @@ fun SignUpScreen(userType: UserRole, navigator: DestinationsNavigator) {
 private fun SignUpContent(
     state: SignUpState,
     onEvent: (SignUpEvent) -> Unit,
-    onClick: () -> Unit,
     navigateToSIgnIn: () -> Unit,
     userType: UserRole
 ) {
@@ -105,12 +96,10 @@ private fun SignUpContent(
                 state.lastName.isNotBlank() &&
                 state.password.length > 8
 
-
     HandleLoading(state)
     HandleError(state)
     HandleSuccess(state, "Sign Up Successful")
     HandleNavigation(state, navigateToSIgnIn)
-
 
     SignUpForm(
         state = state,
@@ -135,86 +124,71 @@ fun SignUpForm(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(20.dp),
+            .padding(horizontal = 16.dp, vertical = 16.dp),
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.SpaceAround
+                .fillMaxWidth()
         ) {
-            Spacer(modifier = Modifier.height(32.dp))
-
             Text(
                 text = stringResource(R.string.register_account),
-                style = MaterialTheme.typography.titleLarge.copy(fontFamily = FontFamily(Font(R.font.poppins_bold)))
+                style = MaterialTheme.typography.titleLarge
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 text = stringResource(id = R.string.fill_your_details_or_continue_with_social_media),
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                    color = Color.Gray
-                )
+                style = MaterialTheme.typography.titleMedium
             )
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            OutlinedTextField(
+            EditTextField(
+                label = "User Name",
                 value = state.userName,
-                onValueChange = { userName ->
-                    onEvent(SignUpEvent.OnUserNameChanged(userName))
-                },
-                label = { Text(text = "User Name") },
+                onValueChange = {onEvent(SignUpEvent.OnUserNameChanged(it))},
+                singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
+                    imeAction = ImeAction.Next,
                 ),
-                singleLine = true,
-                shape = RoundedCornerShape(10.dp),
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-            OutlinedTextField(
+            EditTextField(
+                label = "First Name",
                 value = state.firstName,
-                onValueChange = { firstName ->
-                    onEvent(SignUpEvent.FirstNameChanged(firstName))
-                },
-                label = { Text(text = "First Name") },
+                onValueChange = {onEvent(SignUpEvent.FirstNameChanged(it))},
+                singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
+                    imeAction = ImeAction.Next,
                 ),
-                singleLine = true,
-                shape = RoundedCornerShape(10.dp),
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-            OutlinedTextField(
+            EditTextField(
+                label = "Last Name",
                 value = state.lastName,
-                onValueChange = { lName ->
-                    onEvent(SignUpEvent.LastNameChanged(lName))
-                },
-                label = { Text(text = "Last Name") },
+                onValueChange = {onEvent(SignUpEvent.LastNameChanged(it))},
+                singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
+                    imeAction = ImeAction.Next,
                 ),
-                singleLine = true,
-                shape = RoundedCornerShape(10.dp),
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             OutlinedTextField(
                 value = state.password,
@@ -222,7 +196,6 @@ fun SignUpForm(
                     onEvent(SignUpEvent.OnPasswordChanged(password))
                 },
                 label = { Text(text = "Password") },
-                placeholder = { Text(text = "Password") },
                 trailingIcon = {
                     IconButton(
                         onClick = {
@@ -246,17 +219,15 @@ fun SignUpForm(
                 visualTransformation = if (isPasswordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth()
             )
-
-            TextButton(onClick = { /*TODO*/ }) {
+            TextButton(onClick ={ onClick()}, modifier = Modifier.align(Alignment.End)) {
                 Text(
                     text = "Forgot password?",
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
+            CustomButton(
                 onClick = {
-                     if (isFormValid) {
+                    if (isFormValid) {
                         onEvent(
                             SignUpEvent.OnSignUpClicked(
                                 state.userName,
@@ -267,25 +238,13 @@ fun SignUpForm(
                             )
                         )
                     }
-                    Log.d("SignUpScreen", "SignUpContent: $userRole")
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(54.dp),
-//                enabled = isFormValid,
-                shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = primaryLight,
-                    contentColor = Color.White,
-                    disabledContainerColor = Color.Gray,
-                    disabledContentColor = Color.Black
-                )
-            ) {
-                Text(text = "SIGN UP")
-            }
+                isEnabled = isFormValid,
+                text = "Sign Up"
+            )
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Column(
             modifier = Modifier.fillMaxWidth()
@@ -317,7 +276,7 @@ fun SignUpForm(
             }
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -345,7 +304,7 @@ fun SignUpForm(
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Row(
                 horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
@@ -357,7 +316,6 @@ fun SignUpForm(
                         text = "Sign In",
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier,
-//                            .padding(bottom = 64.dp)
                     )
                 }
             }
@@ -367,7 +325,7 @@ fun SignUpForm(
 
 @Composable
 fun HandleNavigation(state: SignUpState, navigate: () -> Unit) {
-    if (state.navigateToSignIn) {
+    if (state.navigateCreateProfile) {
         navigate()
     }
 }

@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.shared.authentication.SignIn
+package com.samuelokello.kazihub.presentation.shared.auth.SignIn
 
 sealed interface SignInEvent {
     data class OnUserName(val userName: String): SignInEvent
