@@ -1,18 +1,14 @@
 package com.samuelokello.kazihub.presentation.worker.data
 
-import android.util.Log
 import androidx.compose.material3.DrawerValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.samuelokello.kazihub.data.repository.KaziHubRepository
 import com.samuelokello.kazihub.domain.model.job.JobResponse
+import com.samuelokello.kazihub.domain.repositpry.KaziHubRepository
 import com.samuelokello.kazihub.presentation.worker.state.WorkerHomeScreenEvent
-import com.samuelokello.kazihub.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,24 +31,24 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    init {
-        fetchJobs()
-    }
+//    init {
+//        fetchJobs()
+//    }
 
-    private fun fetchJobs() {
-        _state.value = WorkerHomeScreenUiState(isLoading = true)
-        viewModelScope.launch {
-            val response = repository.fetchAllJobs()
-            Log.e("ViewModel", "fetchJobs: response = $response")
-            if (response is Resource.Success) {
-                Log.e("ViewModel", "fetchJobs: response.data = ${response.data}")
-                val jobs = response.data?.map { mapJobResponseToJob(it) }
-                Log.e("ViewModel", "fetchJobs: jobs = $jobs")
-                _state.update { job -> job.copy(data = jobs ?: emptyList()) }
-            }
-            _state.value = WorkerHomeScreenUiState(isLoading = false)
-        }
-    }
+//    private fun fetchJobs() {
+//        _state.value = WorkerHomeScreenUiState(isLoading = true)
+//        viewModelScope.launch {
+//            val response = repository.fetchAllJobs()
+//            Log.e("ViewModel", "fetchJobs: response = $response")
+//            if (response is Resource.Success) {
+//                Log.e("ViewModel", "fetchJobs: response.data = ${response.data}")
+//                val jobs = response.data?.map { mapJobResponseToJob(it) }
+//                Log.e("ViewModel", "fetchJobs: jobs = $jobs")
+//                _state.update { job -> job.copy(data = jobs ?: emptyList()) }
+//            }
+//            _state.value = WorkerHomeScreenUiState(isLoading = false)
+//        }
+//    }
 
     private fun updateData(jobs: List<Job>) {
         _state.update { it.copy(data = jobs) }

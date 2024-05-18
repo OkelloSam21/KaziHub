@@ -1,7 +1,7 @@
 package com.samuelokello.kazihub.presentation.worker.data
 
 import androidx.lifecycle.ViewModel
-import com.samuelokello.kazihub.data.repository.KaziHubRepository
+import com.samuelokello.kazihub.domain.repositpry.KaziHubRepository
 import com.samuelokello.kazihub.presentation.worker.state.WorkerProfileState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
