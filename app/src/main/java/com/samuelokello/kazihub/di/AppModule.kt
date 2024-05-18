@@ -5,7 +5,8 @@ import android.os.Build
 import androidx.annotation.RequiresExtension
 import androidx.lifecycle.ViewModelProvider
 import com.samuelokello.kazihub.data.remote.KaziHubApi
-import com.samuelokello.kazihub.data.repository.KaziHubRepository
+import com.samuelokello.kazihub.data.repository.KaziHubRepositoryImpl
+import com.samuelokello.kazihub.domain.repositpry.KaziHubRepository
 import com.samuelokello.kazihub.utils.LocationManager
 import dagger.Module
 import dagger.Provides
@@ -65,7 +66,7 @@ object AppModule {
         location: LocationManager ,
         @ApplicationContext context: Context,
     ): KaziHubRepository {
-        return KaziHubRepository(api, location, context)
+        return KaziHubRepositoryImpl(api, location, context)
     }
 
     @Provides
