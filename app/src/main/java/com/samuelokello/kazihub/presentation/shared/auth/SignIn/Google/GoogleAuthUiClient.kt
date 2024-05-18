@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.shared.authentication.SignIn.Google
+package com.samuelokello.kazihub.presentation.shared.auth.SignIn.Google
 
 import android.content.Context
 import android.content.Intent
