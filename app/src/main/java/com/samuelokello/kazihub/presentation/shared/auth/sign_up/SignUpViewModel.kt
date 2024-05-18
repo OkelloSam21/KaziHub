@@ -1,14 +1,12 @@
 package com.samuelokello.kazihub.presentation.shared.auth.sign_up
 
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresExtension
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.samuelokello.kazihub.data.repository.KaziHubRepository
 import com.samuelokello.kazihub.domain.model.sign_up.SignUpRequest
+import com.samuelokello.kazihub.domain.repositpry.KaziHubRepository
 import com.samuelokello.kazihub.utils.Resource
 import com.samuelokello.kazihub.utils.UserRole
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,7 +42,6 @@ class SignUpViewModel
         state.value.copy(isLoading = false).also { state.value = it }
     }
 
-    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     fun onEvent(event: SignUpEvent) {
         when (event) {
             is SignUpEvent.OnUserRoleChanged -> {
@@ -84,7 +81,7 @@ class SignUpViewModel
                     when(val response = repository.signUp(signUpState)) {
                         is Resource.Success -> {
                             state.value.copy(
-                                navigateToSignIn = true,
+                                navigateCreateProfile = true,
                                 signUpSuccess = true,
                                 signUpError = null
                             ).also { state.value = it }
@@ -101,14 +98,6 @@ class SignUpViewModel
                     }
                 }
             }
-
-//            SignUpEvent.OnSignInClicked -> {
-//                _state.update {
-//                    it.copy(
-//                        navigateToSignIn = true
-//                    )
-//                }
-//            }
         }
     }
 
@@ -126,70 +115,3 @@ class SignUpViewModel
         }
     }
 }
-
-        //                    val result = networkService.signUpUser(signUpState)
-//                    when (result) {
-//                        is Resource.
-//                        Success -> {
-//                            if (result.data is SignUpResponse) {
-//                                val signUpResponse = result.data
-//                                _state.update { currentState ->
-//                                    currentState.copy(
-//                                        signUpSuccess = true,
-//                                        signUpError = null
-//                                    )
-//                                }
-//                            } else {
-//                                // Handle the case where data is not an instance of SignUpResponse
-//                            }
-//                        }
-//
-//                        is Resource.Error -> {
-//                            _state.update { currentState ->
-//                                currentState.copy(
-//                                    signUpError = result.message ?: "An error occurred"
-//                                )
-//                            }
-//                        }
-//
-//                        else -> {}
-//                    }
-//            is SignUpEvent.OnSignUpClicked -> {
-//                validate()
-//                val userName = state.value.userName
-//                val firstName = state.value.firstName
-//                val lastName = state.value.lastName
-//                val role = state.value.role
-//                val password = state.value.password
-//                val signUpState = SignUpState(
-//                    userName = userName,
-//                    firstName = firstName,
-//                    lastName = lastName,
-//                    password = password,
-//                    role = role
-//                )
-//                viewModelScope.launch {
-//                    val result = networkService.signUpUser(signUpState)
-//                    when (result) {
-//                        is Resource.Success -> {
-//                            val signUpResponse = result.data as SignUpResponse
-//                            _state.update { currentState ->
-//                                currentState.copy(
-//                                    signUpSuccess = true,
-//                                    signUpError = null
-//                                )
-//                            }
-//                        }
-//
-//                        is Resource.Error -> {
-//                            _state.update { currentState ->
-//                                currentState.copy(
-//                                    signUpError = result.message ?: "An error occurred"
-//                                )
-//                            }
-//                        }
-//
-//                        else -> {}
-//                    }
-//                }
-//            }

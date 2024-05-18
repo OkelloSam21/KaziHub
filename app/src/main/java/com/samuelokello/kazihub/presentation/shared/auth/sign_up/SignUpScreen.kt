@@ -1,8 +1,6 @@
 package com.samuelokello.kazihub.presentation.shared.auth.sign_up
 
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -59,7 +57,6 @@ import com.samuelokello.kazihub.utils.UserRole
 
 @RootNavGraph(start = true)
 @Destination
-@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @Composable
 fun SignUpScreen(userType: UserRole  = UserRole.WORKER, navigator: DestinationsNavigator) {
 
@@ -319,7 +316,6 @@ fun SignUpForm(
                         text = "Sign In",
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier,
-//                            .padding(bottom = 64.dp)
                     )
                 }
             }
@@ -329,7 +325,7 @@ fun SignUpForm(
 
 @Composable
 fun HandleNavigation(state: SignUpState, navigate: () -> Unit) {
-    if (state.navigateToSignIn) {
+    if (state.navigateCreateProfile) {
         navigate()
     }
 }

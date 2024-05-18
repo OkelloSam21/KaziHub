@@ -11,5 +11,5 @@ data class SignUpState (
     val password: String = "",
     val navigateToHome: Boolean = false,
     override val isLoading: Boolean = false,
-    val navigateToSignIn: Boolean = false
+    val navigateCreateProfile: Boolean = false
 ): AuthState
