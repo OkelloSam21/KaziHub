@@ -17,8 +17,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -52,9 +50,9 @@ import com.samuelokello.kazihub.R
 import com.samuelokello.kazihub.presentation.common.HandleError
 import com.samuelokello.kazihub.presentation.common.HandleLoading
 import com.samuelokello.kazihub.presentation.common.HandleSuccess
+import com.samuelokello.kazihub.presentation.shared.components.CustomButton
 import com.samuelokello.kazihub.presentation.shared.destinations.CreateProfileScreenDestination
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
-import com.samuelokello.kazihub.ui.theme.primaryLight
 import com.samuelokello.kazihub.utils.UserRole
 
 @Destination
@@ -93,6 +91,7 @@ private fun SignInContent(
     navigateToSignUp: () -> Unit
 ) {
     val isPasswordVisible = remember { mutableStateOf(false) }
+    val isFormComplete  = state.userName.isNotEmpty() && state.password.isNotEmpty()
 
     HandleLoading(state)
     HandleError(state)
@@ -116,7 +115,7 @@ private fun SignInContent(
             .padding(20.dp),
     ) {
         SignInHeader()
-        SignInForm(state, isPasswordVisible, onEvent)
+        SignInForm(state, isPasswordVisible, onEvent, isFormComplete)
         SignInFooter(navigateToSignUp)
     }
 }
@@ -143,13 +142,15 @@ fun SignInHeader() {
  * @param state: SignInState - the state of the sign in screen
  * @param isPasswordVisible: MutableState<Boolean> - the state of the password visibility
  * @param onEvent: (SignInEvent) -> Unit - the event handler
+ * @param isFormValid boolean variable for checking if form is filled
  *
  */
 @Composable
 fun SignInForm(
     state: SignInState,
     isPasswordVisible: MutableState<Boolean>,
-    onEvent: (SignInEvent) -> Unit
+    onEvent: (SignInEvent) -> Unit,
+    isFormValid: Boolean
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -202,7 +203,7 @@ fun SignInForm(
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
-        Button(
+        CustomButton(
             onClick = {
                 onEvent(
                     SignInEvent.OnSignInClicked(
@@ -211,19 +212,10 @@ fun SignInForm(
                     )
                 )
             },
-            shape = RoundedCornerShape(10.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = primaryLight,
-                contentColor = Color.White,
-                disabledContentColor = Color.Gray,
-                disabledContainerColor = Color.Black
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(54.dp)
-        ) {
-            Text(text = "SIGN IN")
-        }
+            isEnabled = isFormValid,
+            text = "SIGN IN"
+        )
+
     }
 }
 
