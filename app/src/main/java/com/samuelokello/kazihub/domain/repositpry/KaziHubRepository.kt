@@ -14,7 +14,7 @@ import com.samuelokello.kazihub.utils.Resource
 interface KaziHubRepository {
     suspend fun signUp(signUpRequest: SignUpRequest): Resource<SignUpResponse>
     suspend fun signIn(signInRequest: SignInRequest): Resource<SignInResponse>
-    abstract fun createBusinessProfile(request: BusinessProfileRequest): Resource<BusinessProfileResponse>
-    fun createWorkerProfile(request: WorkerProfileRequest): Resource<WorkerProfileResponse>
-    fun fetchAllJobs(): Resource<JobResponse>
+    suspend fun createBusinessProfile(request: BusinessProfileRequest): Resource<BusinessProfileResponse>
+    suspend fun createWorkerProfile(request: WorkerProfileRequest): Resource<WorkerProfileResponse>
+    suspend fun fetchAllJobs(): Resource<List<JobResponse>>
 }
