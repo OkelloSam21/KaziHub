@@ -59,7 +59,7 @@ class KaziHubRepositoryImpl
         }
     }
 
-    suspend fun createBusinessProfile(request: BusinessProfileRequest): Resource<BusinessProfileResponse> = withContext(Dispatchers.IO) {
+    override suspend fun createBusinessProfile(request: BusinessProfileRequest): Resource<BusinessProfileResponse> = withContext(Dispatchers.IO) {
         return@withContext try {
             val token = getAccessToken(context)
             Log.d("KaziHubRepository", "createBusinessProfile: $token")
@@ -90,7 +90,7 @@ class KaziHubRepositoryImpl
     }
 
     // worker
-    suspend fun createWorkerProfile(request: WorkerProfileRequest): Resource<WorkerProfileResponse> = withContext(Dispatchers.IO) {
+    override suspend fun createWorkerProfile(request: WorkerProfileRequest): Resource<WorkerProfileResponse> = withContext(Dispatchers.IO) {
         return@withContext try {
             val token = getAccessToken(context)
             Log.d("KaziHubRepository", "createBusinessProfile: $token")
@@ -201,7 +201,7 @@ class KaziHubRepositoryImpl
     }
 
     // Jobs
-    suspend fun fetchAllJobs(): Resource<List<JobResponse>> {
+    override suspend fun fetchAllJobs(): Resource<List<JobResponse>> {
         return try {
             val response = api.getJobs()
             Resource.Success(response)
