@@ -15,17 +15,16 @@ import com.samuelokello.kazihub.ui.theme.primaryLight
 @Composable
 fun CustomButton(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
     isEnabled: Boolean = false,
     text: String,
-    containerColor: Color = primaryLight,
-    contentColor: Color = Color.White,
-    disabledContainerColor: Color = Color.Gray,
-    disabledContentColor: Color = Color.Black
 ) {
+    val containerColor: Color = primaryLight
+    val contentColor: Color = Color.White
+    val disabledContainerColor: Color = Color.Gray
+    val disabledContentColor: Color = Color.Black
     Button(
         onClick = onClick,
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .height(54.dp),
         enabled = isEnabled,
