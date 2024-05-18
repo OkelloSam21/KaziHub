@@ -126,6 +126,10 @@ class SignInViewModel
             return
         }
 
+        if (state.value.userName.contains(" ")) {
+            _state.update { it.copy(signInError = "userName should not contain a space") }
+        }
+
         if (state.value.password.isEmpty()) {
             _state.update { it.copy(signInError = "password cannot be empty") }
             return
