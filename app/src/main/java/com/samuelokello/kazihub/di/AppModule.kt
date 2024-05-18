@@ -5,7 +5,8 @@ import android.os.Build
 import androidx.annotation.RequiresExtension
 import androidx.lifecycle.ViewModelProvider
 import com.samuelokello.kazihub.data.remote.KaziHubApi
-import com.samuelokello.kazihub.data.repository.KaziHubRepository
+import com.samuelokello.kazihub.data.repository.KaziHubRepositoryImpl
+import com.samuelokello.kazihub.domain.repositpry.KaziHubRepository
 import com.samuelokello.kazihub.utils.LocationManager
 import dagger.Module
 import dagger.Provides
@@ -35,9 +36,9 @@ object AppModule {
     fun providesOkHttpClient(logger: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(logger)
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(5, TimeUnit.SECONDS)
+            .readTimeout(5, TimeUnit.SECONDS)
+            .writeTimeout(5, TimeUnit.SECONDS)
             .build()
     }
 
@@ -65,7 +66,7 @@ object AppModule {
         location: LocationManager ,
         @ApplicationContext context: Context,
     ): KaziHubRepository {
-        return KaziHubRepository(api, location, context)
+        return KaziHubRepositoryImpl(api, location, context)
     }
 
     @Provides

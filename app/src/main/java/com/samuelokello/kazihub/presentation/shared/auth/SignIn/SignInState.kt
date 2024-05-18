@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.shared.authentication.SignIn
+package com.samuelokello.kazihub.presentation.shared.auth.SignIn
 
 import com.samuelokello.kazihub.presentation.common.AuthState
 

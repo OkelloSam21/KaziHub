@@ -1,5 +1,6 @@
 package com.samuelokello.kazihub.data.remote
 
+import com.samuelokello.kazihub.data.model.sign_in.SignInRequest
 import com.samuelokello.kazihub.data.model.sign_in.SignInResponse
 import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileRequest
 import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileResponse
@@ -30,7 +31,7 @@ interface KaziHubApi {
     suspend fun signUp(@Body signUpRequest: SignUpRequest): SignUpResponse
 
     @POST("auth/signin")
-    suspend fun signIn(@Body signInRequest: com.samuelokello.kazihub.domain.model.shared.auth.sign_in.SignInRequest): SignInResponse
+    suspend fun signIn(@Body signInRequest: SignInRequest): SignInResponse
 
     @POST("/business/profiles/create")
     suspend fun createBusinessProfile(

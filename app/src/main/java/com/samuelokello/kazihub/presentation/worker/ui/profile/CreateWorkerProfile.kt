@@ -94,7 +94,8 @@ fun WorkerProfileForm(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next
-                )
+                ),
+                modifier = Modifier
             )
             Spacer(modifier = Modifier.height(16.dp))
             EditTextField(
@@ -105,7 +106,8 @@ fun WorkerProfileForm(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Next
-                )
+                ),
+                modifier = Modifier
             )
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -125,7 +127,8 @@ fun WorkerProfileForm(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Done
-                )
+                ),
+                modifier = Modifier
             )
         }
         Spacer(modifier = Modifier.weight(1.5f))

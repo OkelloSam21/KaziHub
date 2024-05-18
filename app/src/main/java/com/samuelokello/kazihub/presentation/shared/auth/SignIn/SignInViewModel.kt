@@ -1,14 +1,12 @@
-package com.samuelokello.kazihub.presentation.shared.authentication.SignIn
+package com.samuelokello.kazihub.presentation.shared.auth.SignIn
 
 import android.content.Context
-import android.os.Build
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresExtension
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.samuelokello.kazihub.data.repository.KaziHubRepository
-import com.samuelokello.kazihub.domain.model.shared.auth.sign_in.SignInRequest
+import com.samuelokello.kazihub.data.model.sign_in.SignInRequest
+import com.samuelokello.kazihub.domain.repositpry.KaziHubRepository
 import com.samuelokello.kazihub.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -22,8 +20,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignInViewModel
-@Inject constructor(private val repository: KaziHubRepository, @ApplicationContext private val context: Context)
-    : ViewModel() {
+@Inject constructor(
+    private val repository: KaziHubRepository,
+    @ApplicationContext private val context: Context
+) : ViewModel() {
 
     private val _state = MutableStateFlow(SignInState())
     val state = _state.asStateFlow()
@@ -46,7 +46,6 @@ class SignInViewModel
         }
     }
 
-    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     fun onEvent(event: SignInEvent) {
         when (event) {
             is SignInEvent.OnUserName -> {
@@ -82,7 +81,8 @@ class SignInViewModel
                             }
                             val accessToken = result.data?.data?.accessToken
                             result.data?.let {
-                                sharedPreferences.edit().putString("accessToken",accessToken).apply()
+                                sharedPreferences.edit().putString("accessToken", accessToken)
+                                    .apply()
                             }
                             Log.d("SignInViewModel", "onEvent: ${result.data}")
                             hideLoading()
@@ -96,8 +96,12 @@ class SignInViewModel
                                 )
                             }
                             hideLoading()
-                            withContext(Dispatchers.Main){
-                                Toast.makeText(context, result.data?.message ?: "", Toast.LENGTH_LONG).show()
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(
+                                    context,
+                                    result.data?.message ?: "",
+                                    Toast.LENGTH_LONG
+                                ).show()
                             }
                             Log.d("SignInViewModel", "onEvent: ${result.message}")
                         }
@@ -117,14 +121,21 @@ class SignInViewModel
     }
 
     private fun validate() {
-        if (state.value.userName.isEmpty() || state.value.password.isEmpty()) {
-            _state.update {
-                it.copy(
-                    signInError = "Please fill in all fields"
-                )
-            }
+        if (state.value.userName.isEmpty()) {
+            _state.update { it.copy(signInError = "user name cannot be empty") }
             return
-        } else {
+        }
+
+        if (state.value.userName.contains(" ")) {
+            _state.update { it.copy(signInError = "userName should not contain a space") }
+        }
+
+        if (state.value.password.isEmpty()) {
+            _state.update { it.copy(signInError = "password cannot be empty") }
+            return
+        }
+
+        if (state.value.userName.isNotEmpty() && _state.value.password.isNotEmpty()) {
             _state.update {
                 it.copy(
                     signInError = null,

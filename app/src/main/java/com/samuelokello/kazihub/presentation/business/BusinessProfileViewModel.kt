@@ -2,18 +2,16 @@ package com.samuelokello.kazihub.presentation.business
 
 import android.content.Context
 import android.location.Location
-import android.os.Build
 import android.util.Log
 import android.util.Patterns
-import androidx.annotation.RequiresExtension
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.AutocompletePrediction
 import com.google.android.libraries.places.api.model.Place
-import com.samuelokello.kazihub.data.repository.KaziHubRepository
 import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileRequest
+import com.samuelokello.kazihub.domain.repositpry.KaziHubRepository
 import com.samuelokello.kazihub.presentation.business.state.BusinessEvent
 import com.samuelokello.kazihub.presentation.business.state.BusinessProfileState
 import com.samuelokello.kazihub.presentation.common.location.LocationViewModel
@@ -21,7 +19,6 @@ import com.samuelokello.kazihub.utils.LocationManager
 import com.samuelokello.kazihub.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -32,7 +29,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-//@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @HiltViewModel
 class BusinessProfileViewModel @Inject constructor(
     private val repository: KaziHubRepository,
@@ -203,32 +199,32 @@ class BusinessProfileViewModel @Inject constructor(
         }
     }
 
-    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
-    private fun fetchProfile() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val id: Int = 0
-            when (val result = repository.fetchBusinessProfileById(id)) {
-                is Resource.Success -> {
-                    val profile = result.data
-                    _state.update {
-                        it.copy(
-                            email = profile?.data?.email ?: "",
-                            phone = profile?.data?.phone ?: "",
-                            bio = profile?.data?.bio ?: "",
-                            location = profile?.data?.location ?: "",
-                        )
-                    }
-                }
-
-                is Resource.Error -> {
+//    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
+//    private fun fetchProfile() {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            val id: Int = 0
+//            when (val result = repository.fetchBusinessProfileById(id)) {
+//                is Resource.Success -> {
+//                    val profile = result.data
 //                    _state.update {
-//                        it
-//                            .copy(error = result.message ?: "An error occurred")
+//                        it.copy(
+//                            email = profile?.data?.email ?: "",
+//                            phone = profile?.data?.phone ?: "",
+//                            bio = profile?.data?.bio ?: "",
+//                            location = profile?.data?.location ?: "",
+//                        )
 //                    }
-                }
-            }
-        }
-    }
+//                }
+//
+//                is Resource.Error -> {
+////                    _state.update {
+////                        it
+////                            .copy(error = result.message ?: "An error occurred")
+////                    }
+//                }
+//            }
+//        }
+//    }
 
 }
 
