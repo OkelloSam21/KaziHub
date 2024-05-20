@@ -55,7 +55,7 @@ import com.samuelokello.kazihub.presentation.shared.destinations.SignInScreenDes
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import com.samuelokello.kazihub.utils.UserRole
 
-@RootNavGraph(start = true)
+
 @Destination
 @Composable
 fun SignUpScreen(userType: UserRole  = UserRole.WORKER, navigator: DestinationsNavigator) {
