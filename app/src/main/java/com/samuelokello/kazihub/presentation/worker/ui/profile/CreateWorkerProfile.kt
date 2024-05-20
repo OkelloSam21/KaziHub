@@ -18,13 +18,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.presentation.common.HandleError
 import com.samuelokello.kazihub.presentation.common.HandleLoading
 import com.samuelokello.kazihub.presentation.common.HandleSuccess
 import com.samuelokello.kazihub.presentation.shared.components.CustomButton
 import com.samuelokello.kazihub.presentation.shared.components.EditTextField
-import com.samuelokello.kazihub.presentation.shared.components.LocationDropDown
+import com.samuelokello.kazihub.presentation.shared.components.LocationAutocompleteTextField
 import com.samuelokello.kazihub.presentation.shared.destinations.HomeScreenDestination
 import com.samuelokello.kazihub.presentation.worker.data.CreateWorkerProfileViewModel
 import com.samuelokello.kazihub.presentation.worker.state.WorkerEvent
@@ -32,10 +33,11 @@ import com.samuelokello.kazihub.presentation.worker.state.WorkerProfileState
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import com.samuelokello.kazihub.utils.UserRole
 
+@RootNavGraph(start = true)
 @Composable
 fun CreateWorkerProfile(
     navigator: DestinationsNavigator,
-    userRole: UserRole
+    userRole: UserRole = UserRole.WORKER
 ) {
     val viewModel: CreateWorkerProfileViewModel = hiltViewModel()
     val state = viewModel.state.collectAsState().value
@@ -47,9 +49,9 @@ fun CreateWorkerProfile(
         KaziHubTheme {
             WorkerProfileForm(
                 state = state,
-                viewModel = viewModel,
                 onEvent = viewModel::onEvent,
                 navigateToHome = { navigator.navigate(HomeScreenDestination(userRole)) },
+                isFormComplete = viewModel.isFormComplete()
             )
         }
     }
@@ -58,9 +60,9 @@ fun CreateWorkerProfile(
 @Composable
 fun WorkerProfileForm(
     state: WorkerProfileState,
-    viewModel: CreateWorkerProfileViewModel,
     onEvent: (WorkerEvent) -> Unit,
-    navigateToHome: ()  -> Unit
+    navigateToHome: ()  -> Unit,
+    isFormComplete: Boolean
 ) {
     HandleLoading(state)
     HandleError(state)
@@ -69,7 +71,6 @@ fun WorkerProfileForm(
     LaunchedEffect(state.navigateToHome) {
         if (state.navigateToHome) navigateToHome()
     }
-
 
     Column(
         modifier = Modifier
@@ -111,11 +112,12 @@ fun WorkerProfileForm(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            LocationDropDown(
-                viewModel = viewModel,
+            LocationAutocompleteTextField(
                 value = state.location,
-                onValueChange = { onEvent(WorkerEvent.OnLocationChanged(it))},
-                label = "Location"
+                onValueChange = { onEvent(WorkerEvent.OnLocationChanged(it)) },
+                suggestions = state.locationSuggestion,
+                onSuggestionSelected = {},
+                placeholder = "Location"
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -131,7 +133,7 @@ fun WorkerProfileForm(
                 modifier = Modifier
             )
         }
-        Spacer(modifier = Modifier.weight(1.5f))
+        Spacer(modifier = Modifier.weight(1.2f))
         Column {
             CustomButton(
                 onClick = {
@@ -145,8 +147,9 @@ fun WorkerProfileForm(
                     )
                 },
                 text = "Create Profile",
-                isEnabled = viewModel.isFormComplete(state.email, state.phone, state.location)
+                isEnabled = isFormComplete
             )
         }
     }
 }
+
