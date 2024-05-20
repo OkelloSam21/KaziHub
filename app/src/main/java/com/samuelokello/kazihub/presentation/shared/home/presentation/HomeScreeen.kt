@@ -15,7 +15,7 @@ import com.samuelokello.kazihub.utils.UserRole
 @RootNavGraph(start = true)
 @Destination
 @Composable
-fun HomeScreen(userType: UserRole = UserRole.BUSINESS, navigator: DestinationsNavigator) {
+fun HomeScreen(userType: UserRole = UserRole.WORKER, navigator: DestinationsNavigator) {
     when (userType) {
         UserRole.BUSINESS -> BusinessHomeScreen()
         UserRole.WORKER -> WorkerHomeScreen()
