@@ -8,7 +8,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -21,7 +20,6 @@ import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.maps.model.LatLng
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.rememberNavHostEngine
-import com.samuelokello.kazihub.presentation.business.BusinessProfileViewModel
 import com.samuelokello.kazihub.presentation.shared.NavGraphs
 import com.samuelokello.kazihub.presentation.shared.components.StandardScaffold
 import com.samuelokello.kazihub.presentation.shared.destinations.HomeScreenDestination
@@ -37,7 +35,6 @@ class MainActivity : ComponentActivity() {
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
     private lateinit var locationManager: LocationManager
-    private val businessProfileViewModel: BusinessProfileViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,10 +101,9 @@ class MainActivity : ComponentActivity() {
 
                     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
                     override fun onLocationLatLngReceived(latLng: LatLng) {
-                        val latitude = latLng.latitude
-                        val longitude = latLng.longitude
+//                        val latitude = latLng.latitude
+//                        val longitude = latLng.longitude
 
-                        businessProfileViewModel.updateLocation(latitude, longitude)
                     }
                 })
             } else {

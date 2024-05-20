@@ -1,6 +1,6 @@
 package com.samuelokello.kazihub.presentation.business
 
-import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +14,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -27,15 +29,13 @@ import com.samuelokello.kazihub.presentation.common.HandleLoading
 import com.samuelokello.kazihub.presentation.common.HandleSuccess
 import com.samuelokello.kazihub.presentation.shared.components.CustomButton
 import com.samuelokello.kazihub.presentation.shared.components.EditTextField
-import com.samuelokello.kazihub.presentation.shared.components.LocationDropDown
+import com.samuelokello.kazihub.presentation.shared.components.LocationAutocompleteTextField
 import com.samuelokello.kazihub.presentation.shared.destinations.HomeScreenDestination
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import com.samuelokello.kazihub.utils.UserRole
 
 @Composable
-fun CreateBusinessProfile(navigator: DestinationsNavigator,userType: UserRole) {
-
-
+fun CreateBusinessProfile(navigator: DestinationsNavigator, userType: UserRole) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -44,12 +44,12 @@ fun CreateBusinessProfile(navigator: DestinationsNavigator,userType: UserRole) {
             val viewModel: BusinessProfileViewModel = hiltViewModel()
             val state by viewModel.state.collectAsState()
 
-           BusinessProfileForm(
+            BusinessProfileForm(
                 state = state,
-               viewModel = viewModel,
                 onEvent = viewModel::onEvent,
-                navigateToDashBoard = { navigator.navigate(HomeScreenDestination(userType)) }
-           )
+                navigateToDashBoard = { navigator.navigate(HomeScreenDestination(userType)) },
+                isFormComplete = viewModel.isFormComplete()
+            )
         }
     }
 
@@ -58,43 +58,39 @@ fun CreateBusinessProfile(navigator: DestinationsNavigator,userType: UserRole) {
 @Composable
 fun BusinessProfileForm(
     state: BusinessProfileState,
-    onEvent: (BusinessEvent)-> Unit,
-    navigateToDashBoard : () -> Unit,
-    viewModel: BusinessProfileViewModel
+    onEvent: (BusinessEvent) -> Unit,
+    navigateToDashBoard: () -> Unit,
+    isFormComplete: Boolean
 ) {
-
     HandleLoading(state)
     HandleError(state)
     HandleSuccess(state = state, successMessage = state.error)
 
-    LaunchedEffect (state.navigateToHome){
-        if(state.navigateToHome) {
-            navigateToDashBoard()
-        }
+    LaunchedEffect(state.navigateToHome) {
+        if (state.navigateToHome) navigateToDashBoard()
     }
 
-    fun isFormComplete(state: BusinessProfileState): Boolean {
-        return state.email.isNotEmpty() && state.phone.isNotEmpty() && state.location.isNotEmpty()
-    }
-    Column (
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
-    ){
-        Spacer(modifier = Modifier.weight(.3f))
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(8.dp))
         Column {
             Text(
                 text = "Create Business Profile",
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.Bold
+                )
             )
         }
         Column {
             EditTextField(
                 value = state.email,
-                onValueChange = { email ->
-                    onEvent(BusinessEvent.OnEmailChanged(email))},
+                onValueChange = { onEvent(BusinessEvent.OnEmailChanged(it)) },
                 label = "Email",
-//                error = !viewModel.isEmailValid(state.email),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
@@ -102,14 +98,13 @@ fun BusinessProfileForm(
                 ),
                 modifier = Modifier
             )
-            Spacer(modifier = Modifier.height(16.dp))
+        }
+        Column {
+
             EditTextField(
                 value = state.phone,
-                onValueChange = { phone ->
-                                onEvent(BusinessEvent.OnPhoneNumberChanged(phone))
-                },
+                onValueChange = { onEvent(BusinessEvent.OnPhoneNumberChanged(it)) },
                 label = "Phone",
-//                error = !viewModel.isPhoneValid(state.phone),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
@@ -117,21 +112,22 @@ fun BusinessProfileForm(
                 ),
                 modifier = Modifier
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            LocationDropDown(
-                viewModel = viewModel,
-                value = state.location ,
-                onValueChange = {onEvent(BusinessEvent.OnLocationChanged(it))},
-                label = "Location"
+
+        }
+        Column {
+            LocationAutocompleteTextField(
+                value = state.location,
+                onValueChange = { onEvent(BusinessEvent.OnLocationChanged(it)) },
+                label = "Location",
+                suggestions = state.locationSuggestion,
+                onSuggestionSelected = { onEvent(BusinessEvent.OnSuggestionSelected(it)) },
             )
-            Spacer(modifier = Modifier.height(16.dp))
+        }
+        Column {
             EditTextField(
                 value = state.bio,
-                onValueChange = { bio ->
-                    onEvent(BusinessEvent.OnBioChanged(bio))
-                },
+                onValueChange = { onEvent(BusinessEvent.OnBioChanged(it)) },
                 label = "Bio",
-                error = false,
                 singleLine = false,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
@@ -140,27 +136,22 @@ fun BusinessProfileForm(
                 modifier = Modifier
             )
         }
-
-        Spacer(modifier = Modifier.weight(2f))
         Column {
             CustomButton(
                 onClick = {
                     onEvent(
                         BusinessEvent.OnCreateProfileClicked(
-                        email = state.email,
-                        phone = state.phone,
-                        location = state.location,
-                        bio = state.bio
-                    ))
-                    Log.d("BusinessProfile UI", "createProfile: ${state.navigateToHome}")
+                            email = state.email,
+                            phone = state.phone,
+                            location = state.location,
+                            bio = state.bio,
+                            selectedLocation = state.selectedLocation
+                        )
+                    )
                 },
                 text = "Create Profile",
-                isEnabled = state.email.isNotEmpty() && state.phone.isNotEmpty() && state.location.isNotEmpty() && state.bio.isNotEmpty(),
-
+                isEnabled = isFormComplete
             )
         }
-
     }
 }
-
-

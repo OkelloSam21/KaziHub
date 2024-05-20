@@ -7,6 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.samuelokello.kazihub.R
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 
 @Composable
@@ -15,16 +16,15 @@ fun EditText(
     label: String,
     value: String,
     onValueChange: (String) -> Unit,
-    keyboardOption: KeyboardOptions
+    keyboardOption: KeyboardOptions,
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = { onValueChange(it) },
         label = { Text(text = label) },
 //        placeholder = { Text(text = label) },
-        leadingIcon = { painterResource(id = icon)},
-        keyboardOptions = keyboardOption
-
+        leadingIcon = { painterResource(id = icon) },
+        keyboardOptions = keyboardOption,
     )
 }
 
@@ -33,11 +33,11 @@ fun EditText(
 fun EditTextPreview() {
     KaziHubTheme {
         EditText(
-            icon = android.R.drawable.ic_menu_search,
+            icon = R.drawable.baseline_person_24,
             label = "Search",
             value = "",
             onValueChange = {},
-            keyboardOption = KeyboardOptions.Default
+            keyboardOption = KeyboardOptions.Default,
         )
     }
 }

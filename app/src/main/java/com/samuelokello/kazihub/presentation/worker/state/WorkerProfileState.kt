@@ -12,5 +12,6 @@ data class WorkerProfileState(
     val bio: String = "some bio",
     val location: String = "",
     val locationSuggestion: List<Place> = emptyList(),
-    val navigateToHome: Boolean = false
-): AuthState
+    val selectedLocation: Place = Place.builder().build(),
+    val navigateToHome: Boolean = false,
+) : AuthState

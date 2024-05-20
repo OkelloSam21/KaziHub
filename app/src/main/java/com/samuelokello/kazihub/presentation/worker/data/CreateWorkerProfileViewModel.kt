@@ -59,11 +59,13 @@ class CreateWorkerProfileViewModel @Inject constructor(
     private suspend fun getLatLngFromSelectedPlace(placeId: String): LatLng =
         suspendCoroutine { continuation ->
             viewModelScope.launch {
+
                 locationProvider.getLatLngFromPlaceId(
                     placeId = placeId,
                     callback = { fetchedLatLng ->
                         continuation.resume(fetchedLatLng)
                     },
+
                     errorCallback = { errorMessage ->
                         Log.e("CreateWorkerProfile", "Failed to get LatLng: $errorMessage")
                         continuation.resumeWithException(RuntimeException(errorMessage)) // return default LatLng on error
@@ -87,18 +89,34 @@ class CreateWorkerProfileViewModel @Inject constructor(
             }
 
             is WorkerEvent.OnLocationChanged -> {
+
                 _state.update { it.copy(location = event.location) }
                 val searchJob = Job()
                 searchJob.cancelChildren()
+
                 viewModelScope.launch(Dispatchers.Main + searchJob) {
                     delay(2000)
+
                     locationProvider.fetchLocationSuggestions(
                         event.location,
-                        onSuccess = {},
-                        onError = {}
+
+                        onSuccess = { suggestions ->
+                            _state.update {
+                                it.copy(locationSuggestion = suggestions)
+                            }
+                        },
+
+                        onError = { errorMessage ->
+                            _state.update {
+                                it.copy(
+                                    locationSuggestion = emptyList(),
+                                    error = errorMessage
+                                )
+                            }
+                        }
+
                     )
                 }
-
             }
 
             is WorkerEvent.OnCreateProfileClicked -> {
@@ -106,27 +124,38 @@ class CreateWorkerProfileViewModel @Inject constructor(
                 val phone = _state.value.phone
                 val bio = _state.value.bio
                 val location = _state.value.location
-//                val locationSuggestion = _state.value.locationSuggestion
+                val coordinates = event.selectedLocation.latLng!!
 
                 // Log the locationSuggestion the selected location
                 Log.d("CreateWorkerProfile", "selected location: $location")
                 viewModelScope.launch {
-                    val latLng = getLatLngFromSelectedPlace(location)
                     val request = WorkerProfileRequest(
                         email = email,
                         phone = phone,
                         bio = bio,
                         location = location,
-                        lat = latLng.latitude,
-                        lon = latLng.longitude
+                        lat = coordinates.longitude,
+                        lon = coordinates.longitude
+                    )
+                    Log.e(
+                        "CreateProfile",
+                        "long: ${coordinates.longitude} lat: ${coordinates.latitude}"
                     )
                     createProfile(request = request)
                 }
             }
 
-            is WorkerEvent.OnAutoCompleteChanged -> {
-
+            is WorkerEvent.OnSuggestionSelected -> {
+                _state.update {
+                    event.suggestion.name?.let { selectedLocation ->
+                        it.copy(
+                            location = selectedLocation,
+                            selectedLocation = event.suggestion
+                        )
+                    }!!
+                }
             }
+
         }
     }
 

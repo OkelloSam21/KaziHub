@@ -1,5 +1,6 @@
 package com.samuelokello.kazihub.presentation.worker.ui.profile
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,13 +13,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.presentation.common.HandleError
 import com.samuelokello.kazihub.presentation.common.HandleLoading
@@ -33,15 +34,15 @@ import com.samuelokello.kazihub.presentation.worker.state.WorkerProfileState
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import com.samuelokello.kazihub.utils.UserRole
 
-@RootNavGraph(start = true)
+
 @Composable
 fun CreateWorkerProfile(
     navigator: DestinationsNavigator,
-    userRole: UserRole = UserRole.WORKER
+    userRole: UserRole
 ) {
     val viewModel: CreateWorkerProfileViewModel = hiltViewModel()
     val state = viewModel.state.collectAsState().value
-    val placesClient = viewModel.getPlacesClient()
+
     Surface(
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize()
@@ -61,7 +62,7 @@ fun CreateWorkerProfile(
 fun WorkerProfileForm(
     state: WorkerProfileState,
     onEvent: (WorkerEvent) -> Unit,
-    navigateToHome: ()  -> Unit,
+    navigateToHome: () -> Unit,
     isFormComplete: Boolean
 ) {
     HandleLoading(state)
@@ -75,9 +76,11 @@ fun WorkerProfileForm(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.weight(.3f))
+        Spacer(modifier = Modifier.height(8.dp))
         Column {
             Text(
                 text = "Create Worker Profile",
@@ -98,10 +101,12 @@ fun WorkerProfileForm(
                 ),
                 modifier = Modifier
             )
-            Spacer(modifier = Modifier.height(16.dp))
+        }
+        Column {
+
             EditTextField(
                 value = state.phone,
-                onValueChange = { onEvent(WorkerEvent.OnPhoneNumberChanged(it))},
+                onValueChange = { onEvent(WorkerEvent.OnPhoneNumberChanged(it)) },
                 label = "Phone",
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
@@ -110,17 +115,18 @@ fun WorkerProfileForm(
                 ),
                 modifier = Modifier
             )
-            Spacer(modifier = Modifier.height(16.dp))
 
+        }
+        Column {
             LocationAutocompleteTextField(
                 value = state.location,
                 onValueChange = { onEvent(WorkerEvent.OnLocationChanged(it)) },
+                label = "Location",
                 suggestions = state.locationSuggestion,
-                onSuggestionSelected = {},
-                placeholder = "Location"
+                onSuggestionSelected = { onEvent(WorkerEvent.OnSuggestionSelected(it)) },
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
+        }
+        Column {
             EditTextField(
                 value = state.bio,
                 onValueChange = { onEvent(WorkerEvent.OnBioChanged(it)) },
@@ -133,7 +139,6 @@ fun WorkerProfileForm(
                 modifier = Modifier
             )
         }
-        Spacer(modifier = Modifier.weight(1.2f))
         Column {
             CustomButton(
                 onClick = {
@@ -142,7 +147,8 @@ fun WorkerProfileForm(
                             email = state.email,
                             phone = state.phone,
                             location = state.location,
-                            bio = state.bio
+                            bio = state.bio,
+                            selectedLocation = state.selectedLocation
                         )
                     )
                 },
