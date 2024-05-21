@@ -13,6 +13,10 @@ import com.samuelokello.kazihub.utils.LocationManager
 import com.samuelokello.kazihub.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -28,11 +32,6 @@ class BusinessProfileViewModel @Inject constructor(
     private val _state = MutableStateFlow(BusinessProfileState())
     val state = _state.asStateFlow()
 
-    fun onLocationChange(location: String) {
-        _state.value = _state.value.copy(location = location)
-    }
-
-//    private val sharedPreferences = context.getSharedPreferences("user", Context.MODE_PRIVATE)
 
     private fun showLoading() {
         _state.update {
@@ -70,6 +69,32 @@ class BusinessProfileViewModel @Inject constructor(
 
             is BusinessEvent.OnLocationChanged -> {
                 _state.update { it.copy(location = event.location) }
+
+                val searchJob = Job()
+                searchJob.cancelChildren()
+                viewModelScope.launch(Dispatchers.Main + searchJob) {
+                    delay(3000)
+
+                    locationManager.fetchLocationSuggestions(
+                        event.location,
+
+                        onSuccess = { suggestions ->
+                            _state.update {
+                                it.copy(locationSuggestion = suggestions)
+                            }
+                        },
+
+                        onError = { errorMessage ->
+                            _state.update {
+                                it.copy(
+                                    locationSuggestion = emptyList(),
+                                    error = errorMessage
+                                )
+                            }
+                        }
+
+                    )
+                }
             }
 
             is BusinessEvent.OnPhoneNumberChanged -> {
