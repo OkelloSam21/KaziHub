@@ -1,12 +1,10 @@
 package com.samuelokello.kazihub.presentation.worker.data
 
 import android.util.Log
-import androidx.compose.material3.DrawerValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.samuelokello.kazihub.domain.model.job.JobResponse
-import com.samuelokello.kazihub.domain.repositpry.KaziHubRepository
-import com.samuelokello.kazihub.presentation.worker.state.WorkerHomeScreenEvent
+import com.samuelokello.kazihub.domain.model.job.Data
+import com.samuelokello.kazihub.domain.repositpry.JobRepository
 import com.samuelokello.kazihub.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,65 +15,86 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: KaziHubRepository
+    private val repository: JobRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(WorkerHomeScreenUiState())
     val state = _state.asStateFlow()
 
-    fun onEvent(event: WorkerHomeScreenEvent) {
-        _state.update {
-            when (event) {
-                is WorkerHomeScreenEvent.OpenDrawer -> it.copy(drawerState = DrawerValue.Open)
-                is WorkerHomeScreenEvent.SearchQueryChanged -> it.copy(searchQuery = event.query)
-                is WorkerHomeScreenEvent.SearchBarActiveChanged -> it.copy(isSearchBarActive = event.isActive)
-                is WorkerHomeScreenEvent.ViewAllPopularJobsClicked -> it.copy(selectedItemIndex = 0)
-                is WorkerHomeScreenEvent.ViewAllRecentPostsClicked -> it.copy(selectedItemIndex = 1)
-                is WorkerHomeScreenEvent.JobSelected -> it.copy(selectedItemIndex = 2)
-            }
-        }
-    }
-
     init {
         fetchJobs()
+//        fetchRecentJobs()
     }
 
     private fun fetchJobs() {
         _state.value = WorkerHomeScreenUiState(isLoading = true)
         viewModelScope.launch {
-            val response = repository.fetchAllJobs()
-            Log.e("ViewModel", "fetchJobs: response = $response")
+            when (val response = repository.fetchAllJobs()) {
+                is Resource.Error -> {
+                    Log.e("ViewModel", "fetchJobs: response = ${response.message}")
+                    response.message ?: "An unknown error occurred"
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                        )
+                    }
+                }
 
-            if (response is Resource.Success) {
-                Log.e("ViewModel", "fetchJobs: response.data = ${response.data}")
-                val jobs = response.data?.map { mapJobResponseToJob(it) }
-                Log.e("ViewModel", "fetchJobs: jobs = $jobs")
-                _state.update { job -> job.copy(
-                    data = jobs ?: emptyList(),
-                    isLoading = false
-                ) }
-            } else if (response is Resource.Error){
-
+                is Resource.Success -> {
+                    val allJobs = response.data?.data?.map { mapJobResponseToJob(it) }
+                    Log.e("ViewModel", "fetchJobs: response  job $allJobs")
+                    _state.update {
+                        it.copy(
+                            isLoading = true,
+                            allJobs = allJobs ?: emptyList(),
+                            nearByJobs = allJobs ?: emptyList()
+                        )
+                    }
+                }
             }
-//            _state.value = WorkerHomeScreenUiState(isLoading = false)
         }
     }
 
-    private fun updateData(jobs: List<Job>) {
-        _state.update { it.copy(data = jobs) }
+    private fun fetchRecentJobs() {
+        viewModelScope.launch {
+            val limit = 5
+            when (val response = repository.fetchRecentJobs(limit = limit)) {
+                is Resource.Error -> {
+                    Log.e("ViewModel", "fetchRecentJobs: response = ${response.data}")
+
+                    _state.update {
+                            it.copy(
+                                isLoading = false,
+                                recentJobs = response.data?.data?.map {recentJobResponse -> mapJobResponseToJob(recentJobResponse) } ?: emptyList()
+                            )
+                    }
+                }
+
+                is Resource.Success -> {
+                    _state.update { it.copy(isLoading = true) }
+                }
+            }
+        }
     }
-    private fun mapJobResponseToJob(jobResponse: JobResponse): Job {
+
+    fun fetchJobsByCategory(categoryId: String) {
+        viewModelScope.launch {
+
+        }
+    }
+
+    private fun mapJobResponseToJob(jobData: Data ): Job {
     return Job(
-        id = jobResponse.id,
-        title = jobResponse.title,
-        desc = jobResponse.desc,
-        budget = jobResponse.budget,
-        location = jobResponse.location,
-        postedOn = jobResponse.postedOn,
-        status = jobResponse.status,
-        business = jobResponse.business,
-        businessId = jobResponse.businessId,
-        category = jobResponse.category,
-        categoryId = jobResponse.categoryId
+        id = jobData.id,
+        title = jobData.title,
+        desc = jobData.desc,
+        budget = jobData.budget,
+        location = jobData.location,
+        postedOn = jobData.postedOn,
+        status = jobData.status,
+        business = jobData.business,
+        businessId = jobData.businessId,
+        category = jobData.category,
+        categoryId = jobData.categoryId
     )
 }
 }

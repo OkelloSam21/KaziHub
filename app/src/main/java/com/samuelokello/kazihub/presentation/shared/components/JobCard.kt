@@ -1,6 +1,5 @@
 package com.samuelokello.kazihub.presentation.shared.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,10 +20,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.samuelokello.kazihub.R
 import com.samuelokello.kazihub.presentation.worker.data.Job
 
@@ -47,37 +48,35 @@ fun JobCard(job: Job) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
-                        val painter: Painter = rememberImagePainter(
-                            data = job.imageUrl,
-                            builder = {
-                                crossfade(true)
-                                placeholder(R.drawable.icons8_google_48)
-                                error(R.drawable.icons8_google_48)
-                            }
-                        )
-
-                        Image(
-                            painter = painter,
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(job.imageUrl)
+                                .crossfade(true),
+                            placeholder = painterResource(id = R.drawable.icons8_google_48),
+                            error = painterResource(id = R.drawable.icons8_google_48),
                             contentDescription = null,
+                            contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .size(40.dp)
                                 .clip(shape = CircleShape),
-                            contentScale = ContentScale.Crop,
                         )
-                        Text(text = job.title ?: "", style = MaterialTheme.typography.bodyLarge)
+//                        Text(text = homeUiState. ?: "", )
+                        Text(text = job.desc ?: "", style = MaterialTheme.typography.bodyLarge)
                     }
-                    Spacer(modifier = Modifier.width(42.dp))
-                    Icon(imageVector = Icons.Filled.Star, contentDescription = null)
                 }
-                Spacer(modifier = Modifier.height(16.dp))
-                Spacer(modifier = Modifier.height(32.dp))
-                Column(modifier = Modifier.padding(bottom = 8.dp)) {
-                    Text(text = job.title ?: "")
+                Spacer(modifier = Modifier.width(42.dp))
+                Icon(imageVector = Icons.Filled.Star, contentDescription = null)
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
+            Column(modifier = Modifier.padding(bottom = 8.dp)) {
+                Text(text = job.title ?: "")
 
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Row {
-                        Text(text = "ksh ${job.budget ?: 0}")
-                    }
+                Spacer(modifier = Modifier.height(2.dp))
+                Row {
+                    Text(text = "ksh ${job.budget?: "Not Specified"}")
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = "ksh ${job.location?: "N/A"} ")
                 }
             }
         }

@@ -165,7 +165,7 @@ interface KaziHubApi {
     ): CreateCategoryResponse
 
     @GET("/jobs/category/list")
-    suspend fun getJobCategories(): List<CategoryResponse>
+    suspend fun getJobCategories(): CategoryResponse
 
     @GET("/jobs/category/{category_id}")
     suspend fun getJobCategoryById(
@@ -179,7 +179,7 @@ interface KaziHubApi {
     ): CreateJobsResponse
 
     @GET("/jobs/list")
-    suspend fun getJobs(): List<JobResponse>
+    suspend fun getJobs(): JobResponse
 
     @GET("/jobs/{job_id}")
     suspend fun getJobById(
@@ -189,12 +189,12 @@ interface KaziHubApi {
     @GET("/jobs/list/category/{category_id}")
     suspend fun getJobsByCategory(
         @Path("category_id") id: Int
-    ): List<JobResponse>
+    ): JobResponse
 
     @GET("/jobs/list/business/{business_id}")
     suspend fun getJobsByBusiness(
         @Path("business_id") id: Int
-    ): List<JobResponse>
+    ): JobResponse
 
     @PUT("/jobs/update/{job_id}")
     suspend fun updateJob(
@@ -213,12 +213,12 @@ interface KaziHubApi {
     suspend fun getJobsNearby(
         @Path("lat") lat: Double,
         @Path("lon") lon: Double
-    ): List<JobResponse>
+    ): JobResponse
 
     @GET("/jobs/list/search/{q}")
     suspend fun searchJobs(
         @Path("q") query: String
-    ): List<JobResponse>
+    ): JobResponse
 
     @GET("/jobs/filter")
     suspend fun filterJobs(
@@ -226,7 +226,7 @@ interface KaziHubApi {
     ): List<JobResponse>
 
     @GET("/jobs/Recent")
-    suspend fun getRecentJobs(): List<JobResponse>
+    suspend fun getRecentJobs(limit: Int): JobResponse
 
 
 

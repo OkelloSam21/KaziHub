@@ -1,11 +1,11 @@
 package com.samuelokello.kazihub.di
 
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresExtension
 import androidx.lifecycle.ViewModelProvider
 import com.samuelokello.kazihub.data.remote.KaziHubApi
+import com.samuelokello.kazihub.data.repository.JobRepositoryImpl
 import com.samuelokello.kazihub.data.repository.KaziHubRepositoryImpl
+import com.samuelokello.kazihub.domain.repositpry.JobRepository
 import com.samuelokello.kazihub.domain.repositpry.KaziHubRepository
 import com.samuelokello.kazihub.utils.LocationManager
 import dagger.Module
@@ -36,9 +36,9 @@ object AppModule {
     fun providesOkHttpClient(logger: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(logger)
-            .connectTimeout(5, TimeUnit.SECONDS)
-            .readTimeout(5, TimeUnit.SECONDS)
-            .writeTimeout(5, TimeUnit.SECONDS)
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(10, TimeUnit.SECONDS)
+            .writeTimeout(10, TimeUnit.SECONDS)
             .build()
     }
 
@@ -58,7 +58,6 @@ object AppModule {
         return retrofit.create(KaziHubApi::class.java)
     }
 
-    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     @Provides
     @Singleton
     fun provideKaziHubRepository(
@@ -69,6 +68,14 @@ object AppModule {
         return KaziHubRepositoryImpl(api, location, context)
     }
 
+    @Provides
+    @Singleton
+    fun provideJobRepository(
+        api: KaziHubApi,
+        context: Context
+    ): JobRepository {
+        return JobRepositoryImpl(api = api, context = context)
+    }
     @Provides
     fun provideViewModelFactory(): ViewModelProvider.Factory {
         return ViewModelProvider.NewInstanceFactory()

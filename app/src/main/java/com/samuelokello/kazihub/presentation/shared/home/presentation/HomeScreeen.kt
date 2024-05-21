@@ -18,6 +18,6 @@ import com.samuelokello.kazihub.utils.UserRole
 fun HomeScreen(userType: UserRole = UserRole.WORKER, navigator: DestinationsNavigator) {
     when (userType) {
         UserRole.BUSINESS -> BusinessHomeScreen()
-        UserRole.WORKER -> WorkerHomeScreen()
+        UserRole.WORKER -> WorkerHomeScreen(navigator = navigator)
     }
 }

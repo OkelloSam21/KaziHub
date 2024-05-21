@@ -8,7 +8,7 @@ data class Job(
     val id: Int?,
     val title: String?,
     val desc: String?,
-    val budget: Double?,
+    val budget: Int?,
     val location: String?,
     val postedOn: String?,
     val status: Status?,
