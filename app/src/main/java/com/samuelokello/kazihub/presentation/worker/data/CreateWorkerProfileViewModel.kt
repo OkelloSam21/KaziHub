@@ -5,7 +5,6 @@ import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.maps.model.LatLng
 import com.samuelokello.kazihub.domain.model.worker.WorkerProfileRequest
 import com.samuelokello.kazihub.domain.repositpry.KaziHubRepository
 import com.samuelokello.kazihub.presentation.worker.state.WorkerEvent
@@ -23,9 +22,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
 /***
  * WorkerProfileViewModel is a ViewModel class that is responsible for handling the business logic of the WorkerProfileFragment.
@@ -42,8 +38,6 @@ class CreateWorkerProfileViewModel @Inject constructor(
     private val _state = MutableStateFlow(WorkerProfileState())
     val state = _state.asStateFlow()
 
-    fun getPlacesClient() = locationProvider.getPlacesClient()
-
     private fun isEmailValid(email: String): Boolean {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
@@ -55,24 +49,6 @@ class CreateWorkerProfileViewModel @Inject constructor(
     fun isFormComplete(): Boolean {
         return isEmailValid(_state.value.email) && isPhoneValid(_state.value.phone) && _state.value.location.isNotEmpty()
     }
-
-    private suspend fun getLatLngFromSelectedPlace(placeId: String): LatLng =
-        suspendCoroutine { continuation ->
-            viewModelScope.launch {
-
-                locationProvider.getLatLngFromPlaceId(
-                    placeId = placeId,
-                    callback = { fetchedLatLng ->
-                        continuation.resume(fetchedLatLng)
-                    },
-
-                    errorCallback = { errorMessage ->
-                        Log.e("CreateWorkerProfile", "Failed to get LatLng: $errorMessage")
-                        continuation.resumeWithException(RuntimeException(errorMessage)) // return default LatLng on error
-                    }
-                )
-            }
-        }
 
     fun onEvent(event: WorkerEvent) {
         when (event) {
@@ -95,7 +71,7 @@ class CreateWorkerProfileViewModel @Inject constructor(
                 searchJob.cancelChildren()
 
                 viewModelScope.launch(Dispatchers.Main + searchJob) {
-                    delay(2000)
+                    delay(3000)
 
                     locationProvider.fetchLocationSuggestions(
                         event.location,

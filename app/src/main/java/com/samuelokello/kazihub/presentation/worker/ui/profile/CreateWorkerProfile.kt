@@ -38,9 +38,9 @@ import com.samuelokello.kazihub.utils.UserRole
 @Composable
 fun CreateWorkerProfile(
     navigator: DestinationsNavigator,
-    userRole: UserRole
+    userRole: UserRole,
+    viewModel: CreateWorkerProfileViewModel = hiltViewModel()
 ) {
-    val viewModel: CreateWorkerProfileViewModel = hiltViewModel()
     val state = viewModel.state.collectAsState().value
 
     Surface(
