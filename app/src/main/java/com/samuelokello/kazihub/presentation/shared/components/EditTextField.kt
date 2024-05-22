@@ -16,6 +16,7 @@ fun EditTextField(
     onValueChange: (String) -> Unit,
     error: Boolean? = false,
     singleLine: Boolean?,
+    trailingIcon: @Composable() (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions,
     modifier: Modifier
 ) {
@@ -25,6 +26,7 @@ fun EditTextField(
         label = { Text(text = label ?: "") },
 //        placeholder = { Text(text = label ?: "") },
         keyboardOptions = keyboardOptions,
+        trailingIcon = trailingIcon,
         isError = error ?: false,
         singleLine = singleLine ?: true,
         shape = RoundedCornerShape(10.dp),
