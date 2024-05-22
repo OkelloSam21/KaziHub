@@ -40,24 +40,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.R
 import com.samuelokello.kazihub.presentation.common.HandleError
 import com.samuelokello.kazihub.presentation.common.HandleLoading
 import com.samuelokello.kazihub.presentation.common.HandleSuccess
 import com.samuelokello.kazihub.presentation.shared.components.CustomButton
+import com.samuelokello.kazihub.presentation.shared.components.EditTextField
 import com.samuelokello.kazihub.presentation.shared.destinations.CreateProfileScreenDestination
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import com.samuelokello.kazihub.utils.UserRole
 
+@RootNavGraph(start = true)
 @Destination
 @Composable
-fun SignInScreen(navigator: DestinationsNavigator, userType: UserRole) {
+fun SignInScreen(navigator: DestinationsNavigator, userType: UserRole = UserRole.WORKER) {
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -170,12 +171,11 @@ fun SignInForm(
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(
+        EditTextField(
+            label = "Password",
             value = state.password,
-            onValueChange = { password ->
-                onEvent(SignInEvent.OnPasswordChanged(password))
-            },
-            label = { Text(text = "Password") },
+            onValueChange = { password -> onEvent(SignInEvent.OnPasswordChanged(password)) },
+            singleLine = true,
             trailingIcon = {
                 IconButton(onClick = {
                     isPasswordVisible.value = !isPasswordVisible.value
@@ -190,19 +190,19 @@ fun SignInForm(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
             ),
-            singleLine = true,
-            visualTransformation = if (isPasswordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
-            shape = RoundedCornerShape(10.dp),
             modifier = Modifier.fillMaxWidth()
         )
 
-        TextButton(onClick = { /*TODO*/ }) {
+        TextButton(
+            onClick = { /*TODO*/ },
+            modifier = Modifier.align(Alignment.End)
+        ) {
             Text(
                 text = "Forgot password?",
                 style = MaterialTheme.typography.bodyLarge
             )
         }
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         CustomButton(
             onClick = {
                 onEvent(
