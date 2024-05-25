@@ -3,11 +3,10 @@ package com.samuelokello.kazihub.di
 import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import com.samuelokello.kazihub.data.remote.KaziHubApi
+import com.samuelokello.kazihub.data.repository.AuthRepositoryImpl
 import com.samuelokello.kazihub.data.repository.JobRepositoryImpl
-import com.samuelokello.kazihub.data.repository.KaziHubRepositoryImpl
+import com.samuelokello.kazihub.domain.repositpry.AuthHubRepository
 import com.samuelokello.kazihub.domain.repositpry.JobRepository
-import com.samuelokello.kazihub.domain.repositpry.KaziHubRepository
-import com.samuelokello.kazihub.utils.LocationManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -60,12 +59,11 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideKaziHubRepository(
+    fun provideAuthRepository(
         api: KaziHubApi,
-        location: LocationManager ,
         @ApplicationContext context: Context,
-    ): KaziHubRepository {
-        return KaziHubRepositoryImpl(api, location, context)
+    ): AuthHubRepository {
+        return AuthRepositoryImpl(api, context)
     }
 
     @Provides
