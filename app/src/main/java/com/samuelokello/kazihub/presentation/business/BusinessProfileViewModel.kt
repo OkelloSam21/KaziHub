@@ -11,7 +11,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.AutocompletePrediction
 import com.google.android.libraries.places.api.model.Place
 import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileRequest
-import com.samuelokello.kazihub.domain.repositpry.KaziHubRepository
+import com.samuelokello.kazihub.domain.repositpry.BusinessRepository
 import com.samuelokello.kazihub.presentation.business.state.BusinessEvent
 import com.samuelokello.kazihub.presentation.business.state.BusinessProfileState
 import com.samuelokello.kazihub.presentation.common.location.LocationViewModel
@@ -31,7 +31,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BusinessProfileViewModel @Inject constructor(
-    private val repository: KaziHubRepository,
+    private val repository: BusinessRepository,
     private val locationManager: LocationManager,
     @ApplicationContext private val context: Context
 ) : ViewModel(),  LocationManager.LocationCallback , LocationViewModel {
