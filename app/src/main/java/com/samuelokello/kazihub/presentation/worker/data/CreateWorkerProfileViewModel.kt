@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.Place
 import com.samuelokello.kazihub.domain.model.worker.WorkerProfileRequest
-import com.samuelokello.kazihub.domain.repositpry.KaziHubRepository
+import com.samuelokello.kazihub.domain.repositpry.AuthHubRepository
 import com.samuelokello.kazihub.presentation.common.location.LocationViewModel
 import com.samuelokello.kazihub.presentation.worker.state.WorkerEvent
 import com.samuelokello.kazihub.presentation.worker.state.WorkerProfileState
@@ -38,7 +38,7 @@ import kotlin.coroutines.suspendCoroutine
  * */
 @HiltViewModel
 class CreateWorkerProfileViewModel @Inject constructor(
-    private val repository: KaziHubRepository,
+    private val repository: AuthHubRepository,
     private val locationProvider: LocationManager,
     @ApplicationContext private val context: Context
 ) : ViewModel(), LocationManager.LocationCallback, LocationViewModel {

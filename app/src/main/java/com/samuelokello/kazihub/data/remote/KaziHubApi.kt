@@ -45,7 +45,7 @@ interface KaziHubApi {
     ): BusinessProfileResponse
 
     @GET("/business/profiles/all/")
-    suspend fun getAllBusinessProfiles(): List<BusinessProfileResponse>
+    suspend fun getAllBusinessProfiles(): BusinessProfileResponse
 
     @PUT("/business/profiles/{bus_profile_id}/update")
     suspend fun updateBusinessProfile(
@@ -117,7 +117,7 @@ interface KaziHubApi {
     @GET("/worker/profiles/image/{profile_id}")
     suspend fun getWorkerProfileImage(
         @Path("profile_id") id: Int
-    ): WorkerProfileResponse
+    ): WorkerProfileImageResponse
 
     @POST("/worker/skills/create")
     suspend fun createWorkerSkill(
