@@ -1,7 +1,7 @@
 package com.samuelokello.kazihub.presentation.worker.data
 
 import androidx.lifecycle.ViewModel
-import com.samuelokello.kazihub.domain.repositpry.KaziHubRepository
+import com.samuelokello.kazihub.domain.repositpry.AuthHubRepository
 import com.samuelokello.kazihub.presentation.worker.state.WorkerProfileState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WorkerProfileViewModel
-@Inject constructor(private val repository: KaziHubRepository) : ViewModel() {
+@Inject constructor(private val repository: AuthHubRepository) : ViewModel() {
 
     private val _state = MutableStateFlow(WorkerProfileState())
     val state = _state.asStateFlow()
