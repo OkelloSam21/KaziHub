@@ -10,7 +10,6 @@ import com.samuelokello.kazihub.presentation.worker.ui.profile.CreateWorkerProfi
 import com.samuelokello.kazihub.utils.UserRole
 
 
-//@RootNavGraph(start = true)
 @Destination
 @Composable
 fun CreateProfileScreen(userType: UserRole, navigator: DestinationsNavigator, viewModel: BusinessProfileViewModel = hiltViewModel()) {

@@ -4,9 +4,13 @@ import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import com.samuelokello.kazihub.data.remote.KaziHubApi
 import com.samuelokello.kazihub.data.repository.AuthRepositoryImpl
+import com.samuelokello.kazihub.data.repository.BusinessRepositoryImpl
 import com.samuelokello.kazihub.data.repository.JobRepositoryImpl
+import com.samuelokello.kazihub.data.repository.WorkerRepositoryImp
 import com.samuelokello.kazihub.domain.repositpry.AuthHubRepository
+import com.samuelokello.kazihub.domain.repositpry.BusinessRepository
 import com.samuelokello.kazihub.domain.repositpry.JobRepository
+import com.samuelokello.kazihub.domain.repositpry.WorkerRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -66,6 +70,23 @@ object AppModule {
         return AuthRepositoryImpl(api, context)
     }
 
+    @Provides
+    @Singleton
+    fun provideBusinessRepository(
+        api: KaziHubApi,
+        @ApplicationContext context: Context
+    ): BusinessRepository {
+        return BusinessRepositoryImpl(api,context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideWorkerRepository(
+        api: KaziHubApi,
+        @ApplicationContext context: Context
+    ): WorkerRepository {
+        return WorkerRepositoryImp(api,context)
+    }
     @Provides
     @Singleton
     fun provideJobRepository(

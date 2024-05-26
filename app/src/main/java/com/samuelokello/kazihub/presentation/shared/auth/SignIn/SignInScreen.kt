@@ -50,8 +50,8 @@ import com.samuelokello.kazihub.R
 import com.samuelokello.kazihub.presentation.common.HandleError
 import com.samuelokello.kazihub.presentation.common.HandleLoading
 import com.samuelokello.kazihub.presentation.common.HandleSuccess
+import com.samuelokello.kazihub.presentation.destinations.CreateProfileScreenDestination
 import com.samuelokello.kazihub.presentation.shared.components.CustomButton
-import com.samuelokello.kazihub.presentation.shared.destinations.CreateProfileScreenDestination
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import com.samuelokello.kazihub.utils.UserRole
 
