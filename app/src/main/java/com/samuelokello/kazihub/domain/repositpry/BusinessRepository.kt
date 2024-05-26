@@ -8,5 +8,7 @@ interface BusinessRepository {
     suspend fun createBusinessProfile(request: BusinessProfileRequest): Resource<BusinessProfileResponse>
     suspend fun fetchBusinessProfileById(id: Int) : Resource<BusinessProfileResponse>
     suspend fun fetchBusinessProfiles(): Resource<BusinessProfileResponse>
+
+    suspend fun fetchBusinessProfileImage()
 }
 

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
@@ -19,14 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
-import com.samuelokello.kazihub.R
 import com.samuelokello.kazihub.presentation.worker.data.Job
 
 @Composable
@@ -48,18 +40,18 @@ fun JobCard(job: Job) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
-                        AsyncImage(
-                            model = ImageRequest.Builder(LocalContext.current)
-                                .data(job.imageUrl)
-                                .crossfade(true),
-                            placeholder = painterResource(id = R.drawable.icons8_google_48),
-                            error = painterResource(id = R.drawable.icons8_google_48),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(shape = CircleShape),
-                        )
+//                        AsyncImage(
+//                            model = ImageRequest.Builder(LocalContext.current)
+//                                .data(job.imageUrl)
+//                                .crossfade(true),
+//                            placeholder = painterResource(id = R.drawable.icons8_google_48),
+//                            error = painterResource(id = R.drawable.icons8_google_48),
+//                            contentDescription = null,
+//                            contentScale = ContentScale.Crop,
+//                            modifier = Modifier
+//                                .size(40.dp)
+//                                .clip(shape = CircleShape),
+//                        )
 //                        Text(text = homeUiState. ?: "", )
                         Text(text = job.desc ?: "", style = MaterialTheme.typography.bodyLarge)
                     }
@@ -69,7 +61,7 @@ fun JobCard(job: Job) {
             }
             Spacer(modifier = Modifier.height(16.dp))
             Spacer(modifier = Modifier.height(32.dp))
-            Column(modifier = Modifier.padding(bottom = 8.dp)) {
+            Column() {
                 Text(text = job.title ?: "")
 
                 Spacer(modifier = Modifier.height(2.dp))

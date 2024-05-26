@@ -22,9 +22,10 @@ class HomeViewModel @Inject constructor(
     private val _state = MutableStateFlow(WorkerHomeScreenUiState())
     val state = _state.asStateFlow()
 
+
     init {
         fetchJobs()
-//        fetchRecentJobs()
+        fetchRecentJobs()
     }
 
     private fun fetchJobs() {
@@ -66,13 +67,17 @@ class HomeViewModel @Inject constructor(
                     _state.update {
                             it.copy(
                                 isLoading = false,
-                                recentJobs = response.data?.data?.map {recentJobResponse -> mapJobResponseToJob(recentJobResponse) } ?: emptyList()
                             )
                     }
                 }
 
                 is Resource.Success -> {
-                    _state.update { it.copy(isLoading = true) }
+                    _state.update {
+                        it.copy(
+                            isLoading = true,
+                            recentJobs = response.data?.data?.map {recentJobResponse -> mapJobResponseToJob(recentJobResponse) } ?: emptyList()
+                        )
+                    }
                 }
             }
         }
@@ -85,18 +90,28 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun mapJobResponseToJob(jobData: Data ): Job {
-    return Job(
-        id = jobData.id,
-        title = jobData.title,
-        desc = jobData.desc,
-        budget = jobData.budget,
-        location = jobData.location,
-        postedOn = jobData.postedOn,
-        status = jobData.status,
-        business = jobData.business,
-        businessId = jobData.businessId,
-        category = jobData.category,
-        categoryId = jobData.categoryId
-    )
-}
+        return Job(
+            id = jobData.id,
+            title = jobData.title,
+            desc = jobData.desc,
+            budget = jobData.budget,
+            location = jobData.location,
+            postedOn = jobData.postedOn,
+            status = jobData.status,
+            business = jobData.business,
+            businessId = jobData.businessId,
+            category = jobData.category,
+            categoryId = jobData.categoryId
+        )
+    }
+
+    fun refreshAllData() {
+        viewModelScope.launch {
+            fetchJobs()
+            fetchRecentJobs()
+
+            _state.update { it.copy(isRefreshing = false) }
+        }
+
+    }
 }

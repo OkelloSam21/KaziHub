@@ -44,4 +44,8 @@ class BusinessRepositoryImpl @Inject constructor(
             handleException(e)
         }
     }
+
+    override suspend fun fetchBusinessProfileImage() {
+        TODO("Not yet implemented")
+    }
 }

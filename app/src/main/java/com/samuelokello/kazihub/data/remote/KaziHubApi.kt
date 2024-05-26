@@ -25,6 +25,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface KaziHubApi {
     @POST("auth/signup")
@@ -225,8 +226,8 @@ interface KaziHubApi {
         @Path("q") query: String
     ): List<JobResponse>
 
-    @GET("/jobs/Recent")
-    suspend fun getRecentJobs(limit: Int): JobResponse
+    @GET("/jobs/recent/")
+    suspend fun getRecentJobs(@Query("limit") limit: Int): JobResponse
 
 
 
