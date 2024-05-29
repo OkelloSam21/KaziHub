@@ -18,20 +18,22 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.presentation.common.HandleError
 import com.samuelokello.kazihub.presentation.common.HandleLoading
 import com.samuelokello.kazihub.presentation.common.HandleSuccess
+import com.samuelokello.kazihub.presentation.destinations.HomeScreenDestination
 import com.samuelokello.kazihub.presentation.shared.components.CustomButton
 import com.samuelokello.kazihub.presentation.shared.components.EditTextField
 import com.samuelokello.kazihub.presentation.shared.components.LocationDropDown
-import com.samuelokello.kazihub.presentation.shared.destinations.HomeScreenDestination
 import com.samuelokello.kazihub.presentation.worker.data.CreateWorkerProfileViewModel
 import com.samuelokello.kazihub.presentation.worker.state.WorkerEvent
 import com.samuelokello.kazihub.presentation.worker.state.WorkerProfileState
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import com.samuelokello.kazihub.utils.UserRole
 
+@Destination
 @Composable
 fun CreateWorkerProfile(
     navigator: DestinationsNavigator,

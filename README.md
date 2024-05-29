@@ -61,4 +61,4 @@ Please ensure your code adheres to our coding standards and includes appropriate
 
 ## License
 
-KaziHub is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+KaziHub is licensed under the MIT License. See the [LICENSE](LICENSE.md) file for more details.
