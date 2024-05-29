@@ -2,7 +2,7 @@ package com.samuelokello.kazihub.landing
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.samuelokello.kazihub.domain.repositpry.KaziHubRepository
+import com.samuelokello.kazihub.domain.repositpry.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
@@ -20,7 +20,7 @@ data class LandingScreenState (val destination: Destination? = null) {
         HOME
     }
 }
-class LandingScreenViewModel @Inject constructor(val repository: KaziHubRepository):
+class LandingScreenViewModel @Inject constructor(val repository: AuthRepository):
     ViewModel() {
 
         private val _state = MutableStateFlow(LandingScreenState())
