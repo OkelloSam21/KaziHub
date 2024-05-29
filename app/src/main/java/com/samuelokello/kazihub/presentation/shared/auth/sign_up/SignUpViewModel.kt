@@ -6,7 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.samuelokello.kazihub.domain.model.sign_up.SignUpRequest
-import com.samuelokello.kazihub.domain.repositpry.AuthHubRepository
+import com.samuelokello.kazihub.domain.repositpry.AuthRepository
 import com.samuelokello.kazihub.utils.Resource
 import com.samuelokello.kazihub.utils.UserRole
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SignUpViewModel
 @Inject constructor(
-    private val repository: AuthHubRepository,
+    private val repository: AuthRepository,
     savedStateHandle: SavedStateHandle
     ) : ViewModel() {
 
