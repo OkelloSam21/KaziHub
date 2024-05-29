@@ -6,7 +6,7 @@ import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileRequest
-import com.samuelokello.kazihub.domain.repositpry.KaziHubRepository
+import com.samuelokello.kazihub.domain.repositpry.BusinessRepository
 import com.samuelokello.kazihub.presentation.business.state.BusinessEvent
 import com.samuelokello.kazihub.presentation.business.state.BusinessProfileState
 import com.samuelokello.kazihub.utils.LocationManager
@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BusinessProfileViewModel @Inject constructor(
-    private val repository: KaziHubRepository,
+    private val repository: BusinessRepository,
     private val locationManager: LocationManager,
     @ApplicationContext private val context: Context
 ) : ViewModel() {

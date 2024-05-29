@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 @Composable
 fun BusinessProfileScreen() {
     Column {
-        Text(text = "Profile")
-
+        Text(text = "Business Profile")
     }
 }

@@ -17,11 +17,11 @@ data class Business(
     @SerializedName("joined_on")
     val joinedOn: String?,
     @SerializedName("lat")
-    val lat: Double?,
+    val lat: Int?,
     @SerializedName("location")
     val location: String?,
     @SerializedName("lon")
-    val lon: Double?,
+    val lon: Int?,
     @SerializedName("phone")
     val phone: String?,
     @SerializedName("user_id")

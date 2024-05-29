@@ -6,7 +6,7 @@ import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.samuelokello.kazihub.domain.model.worker.WorkerProfileRequest
-import com.samuelokello.kazihub.domain.repositpry.KaziHubRepository
+import com.samuelokello.kazihub.domain.repositpry.WorkerRepository
 import com.samuelokello.kazihub.presentation.worker.state.WorkerEvent
 import com.samuelokello.kazihub.presentation.worker.state.WorkerProfileState
 import com.samuelokello.kazihub.utils.LocationManager
@@ -31,7 +31,7 @@ import javax.inject.Inject
  * */
 @HiltViewModel
 class CreateWorkerProfileViewModel @Inject constructor(
-    private val repository: KaziHubRepository,
+    private val repository: WorkerRepository,
     private val locationProvider: LocationManager,
     @ApplicationContext private val context: Context
 ) : ViewModel() {

@@ -6,7 +6,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.samuelokello.kazihub.data.model.sign_in.SignInRequest
-import com.samuelokello.kazihub.domain.repositpry.KaziHubRepository
+import com.samuelokello.kazihub.domain.repositpry.AuthHubRepository
 import com.samuelokello.kazihub.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -21,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SignInViewModel
 @Inject constructor(
-    private val repository: KaziHubRepository,
+    private val repository: AuthHubRepository,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 

@@ -11,12 +11,12 @@ import com.samuelokello.kazihub.utils.UserRole
  * A composable function that displays the home screen of the app.
  * @param userType the type of user that is currently logged in.
  * */
-
+//@RootNavGraph(start = true)
 @Destination
 @Composable
-fun HomeScreen(userType: UserRole, navigator: DestinationsNavigator) {
+fun HomeScreen(userType: UserRole = UserRole.WORKER, navigator: DestinationsNavigator) {
     when (userType) {
         UserRole.BUSINESS -> BusinessHomeScreen()
-        UserRole.WORKER -> WorkerHomeScreen()
+        UserRole.WORKER -> WorkerHomeScreen(navigator = navigator)
     }
 }

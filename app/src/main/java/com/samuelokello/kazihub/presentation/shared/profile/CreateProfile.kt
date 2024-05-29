@@ -7,7 +7,8 @@ import com.samuelokello.kazihub.presentation.business.CreateBusinessProfile
 import com.samuelokello.kazihub.presentation.worker.ui.profile.CreateWorkerProfile
 import com.samuelokello.kazihub.utils.UserRole
 
-@Suppress("ktlint:standard:function-naming")
+
+//@RootNavGraph(start = true)
 @Destination
 @Composable
 fun CreateProfileScreen(
