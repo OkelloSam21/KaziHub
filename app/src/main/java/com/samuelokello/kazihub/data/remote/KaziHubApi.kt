@@ -25,6 +25,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface KaziHubApi {
     @POST("auth/signup")
@@ -45,7 +46,7 @@ interface KaziHubApi {
     ): BusinessProfileResponse
 
     @GET("/business/profiles/all/")
-    suspend fun getAllBusinessProfiles(): List<BusinessProfileResponse>
+    suspend fun getAllBusinessProfiles(): BusinessProfileResponse
 
     @PUT("/business/profiles/{bus_profile_id}/update")
     suspend fun updateBusinessProfile(
@@ -117,7 +118,7 @@ interface KaziHubApi {
     @GET("/worker/profiles/image/{profile_id}")
     suspend fun getWorkerProfileImage(
         @Path("profile_id") id: Int
-    ): WorkerProfileResponse
+    ): WorkerProfileImageResponse
 
     @POST("/worker/skills/create")
     suspend fun createWorkerSkill(
@@ -165,7 +166,7 @@ interface KaziHubApi {
     ): CreateCategoryResponse
 
     @GET("/jobs/category/list")
-    suspend fun getJobCategories(): List<CategoryResponse>
+    suspend fun getJobCategories(): CategoryResponse
 
     @GET("/jobs/category/{category_id}")
     suspend fun getJobCategoryById(
@@ -179,7 +180,7 @@ interface KaziHubApi {
     ): CreateJobsResponse
 
     @GET("/jobs/list")
-    suspend fun getJobs(): List<JobResponse>
+    suspend fun getJobs(): JobResponse
 
     @GET("/jobs/{job_id}")
     suspend fun getJobById(
@@ -189,12 +190,12 @@ interface KaziHubApi {
     @GET("/jobs/list/category/{category_id}")
     suspend fun getJobsByCategory(
         @Path("category_id") id: Int
-    ): List<JobResponse>
+    ): JobResponse
 
     @GET("/jobs/list/business/{business_id}")
     suspend fun getJobsByBusiness(
         @Path("business_id") id: Int
-    ): List<JobResponse>
+    ): JobResponse
 
     @PUT("/jobs/update/{job_id}")
     suspend fun updateJob(
@@ -213,20 +214,20 @@ interface KaziHubApi {
     suspend fun getJobsNearby(
         @Path("lat") lat: Double,
         @Path("lon") lon: Double
-    ): List<JobResponse>
+    ): JobResponse
 
     @GET("/jobs/list/search/{q}")
     suspend fun searchJobs(
         @Path("q") query: String
-    ): List<JobResponse>
+    ): JobResponse
 
     @GET("/jobs/filter")
     suspend fun filterJobs(
         @Path("q") query: String
     ): List<JobResponse>
 
-    @GET("/jobs/Recent")
-    suspend fun getRecentJobs(): List<JobResponse>
+    @GET("/jobs/recent/")
+    suspend fun getRecentJobs(@Query("limit") limit: Int): JobResponse
 
 
 

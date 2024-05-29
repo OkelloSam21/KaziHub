@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
+import com.ramcosta.composedestinations.annotation.Destination
 import com.samuelokello.kazihub.presentation.shared.components.AppBar
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 

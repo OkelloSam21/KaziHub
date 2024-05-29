@@ -64,7 +64,6 @@ dependencies {
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
-//    implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material:1.6.7")
     implementation("com.google.firebase:firebase-auth:23.0.0")
     implementation("androidx.compose.material3:material3-android:1.2.1")
@@ -135,4 +134,7 @@ dependencies {
     // Firebase UI Library
     implementation("com.firebaseui:firebase-ui-auth:8.0.2")
     implementation("com.firebaseui:firebase-ui-database:8.0.2")
+
+    //swipe refresh
+//    implementation("com.google.accompanist:accompanist-swiperefresh: 0.34.0")
 }
