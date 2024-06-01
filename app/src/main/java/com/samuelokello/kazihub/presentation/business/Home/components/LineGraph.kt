@@ -2,6 +2,7 @@ package com.samuelokello.kazihub.presentation.business.Home.components
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
@@ -24,7 +25,12 @@ import com.samuelokello.kazihub.presentation.worker.data.Job
  */
 @Composable
 fun LineGraph(jobs: List<Job>) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text(
             text = "JOB BUDGET OVER TIME",
             style = MaterialTheme.typography.titleMedium,

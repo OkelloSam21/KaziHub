@@ -38,7 +38,7 @@ fun BusinessHomeScreenContent(
         },
         floatingActionButton = {
             FloatingActionButton(
-                modifier = Modifier.padding(end = 16.dp),
+                modifier = Modifier.padding(end = 16.dp, bottom = 32.dp),
                 onClick = { onEvent(BusinessHomeUiEvents.OnCreateJobClick) }
             ) {
 
@@ -117,3 +117,4 @@ fun NoJobsMessage() {
         )
     }
 }
+
