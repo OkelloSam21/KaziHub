@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.shared.components
+package com.samuelokello.kazihub.presentation.common.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.BottomNavigation

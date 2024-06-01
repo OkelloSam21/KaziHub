@@ -35,8 +35,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.samuelokello.kazihub.presentation.shared.components.AppBar
-import com.samuelokello.kazihub.presentation.shared.components.JobCard
+import com.samuelokello.kazihub.presentation.common.components.AppBar
+import com.samuelokello.kazihub.presentation.common.components.JobCard
 import com.samuelokello.kazihub.presentation.worker.data.HomeViewModel
 import com.samuelokello.kazihub.presentation.worker.data.Job
 import com.samuelokello.kazihub.presentation.worker.data.WorkerHomeScreenUiState

@@ -5,10 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -28,14 +25,9 @@ fun LineGraph(jobs: List<Job>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding( vertical = 8.dp, horizontal = 32.dp),
+//        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "JOB BUDGET OVER TIME",
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
 
         // Define graph dimensions
         val graphHeight = 200.dp
@@ -51,7 +43,7 @@ fun LineGraph(jobs: List<Job>) {
             modifier = Modifier
                 .size(graphWidth, graphHeight)
                 .padding(padding)
-                .align(Alignment.CenterHorizontally)
+//                .align(Alignment.CenterHorizontally)
         ) {
             val paddingPx = padding.toPx()
             val widthPerPoint =
@@ -112,7 +104,7 @@ fun LineGraph(jobs: List<Job>) {
                     size.width / 2,
                     size.height / 2,
                     Paint().asFrameworkPaint().apply {
-                        color = android.graphics.Color.BLACK
+                        color = android.graphics.Color.GRAY
                         textSize = 24f
                         textAlign = android.graphics.Paint.Align.CENTER
                         style = android.graphics.Paint.Style.FILL

@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.shared.components
+package com.samuelokello.kazihub.presentation.common.components
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
