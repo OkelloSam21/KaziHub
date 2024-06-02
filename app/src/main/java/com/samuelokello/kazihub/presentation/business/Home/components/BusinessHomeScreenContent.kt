@@ -22,9 +22,6 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,26 +29,26 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.samuelokello.kazihub.domain.model.job.Category
+import com.samuelokello.kazihub.domain.model.job.Job
 import com.samuelokello.kazihub.presentation.business.Home.BusinessHomeUiEvents
 import com.samuelokello.kazihub.presentation.common.components.AppBar
 import com.samuelokello.kazihub.presentation.common.components.CustomButton
 import com.samuelokello.kazihub.presentation.common.components.EditTextField
 import com.samuelokello.kazihub.presentation.common.components.LocationAutocompleteTextField
-import com.samuelokello.kazihub.presentation.worker.data.Job
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BusinessHomeScreenContent(
-    jobs: List<Job>,
+    jobs: List<Job>? = emptyList(),
     onEvent: (BusinessHomeUiEvents) -> Unit,
+    createJobEvent: (CreateJobUiEvent) -> Unit,
     showModalSheet: Boolean = false,
     setShowModalSheet: (Boolean) -> Unit
 ) {
 
     if (showModalSheet) {
         ModalBottomSheet(onDismissRequest = { setShowModalSheet(false) }) {
-            CreateJobSheet(onEvent, setShowModalSheet)
+            CreateJobSheet(createJobEvent, state = CreateJobSheetState())
         }
     }
 
@@ -94,19 +91,21 @@ fun BusinessHomeScreenContent(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            if (jobs.isEmpty()) {
-                NoJobsMessage()
-            } else {
-                LazyColumn {
-                    items(jobs) { job ->
-                        JobListItem(
-                            job = job,
-                            onJobClick = {
-                                job.id?.let { jobId ->
-                                    onEvent(BusinessHomeUiEvents.OnJobClick(jobId))
+            if (jobs != null) {
+                if (jobs.isEmpty()) {
+                    NoJobsMessage()
+                } else {
+                    LazyColumn {
+                        items(jobs) { job ->
+                            JobListItem(
+                                job = job,
+                                onJobClick = {
+                                    job.id?.let { jobId ->
+                                        onEvent(BusinessHomeUiEvents.OnJobClick(jobId))
+                                    }
                                 }
-                            }
-                        )
+                            )
+                        }
                     }
                 }
             }
@@ -223,17 +222,16 @@ fun CreateJobSheet(
         CustomButton(
             onClick = {
                 // Handle job creation logic
-                onEvent(BusinessHomeUiEvents.OnCreateJobClick(
+                onEvent(CreateJobUiEvent.OnCreateJobClick(
                     title = state.title,
                     description = state.description,
                     budget = state.budget,
                     category = state.category,
                     location = state.location,
-                    qualifications = state.qualification
+                    qualifications = state.qualification.toString()
                 ))
-                setShowModalSheet(false)
             },
-            isEnabled = title.isNotBlank() && description.isNotBlank(),
+            isEnabled = state.title.isNotBlank() && state.description.isNotBlank() && state.budget.isNotBlank() && state.location.isNotBlank() && state.qualification.toString().isNotBlank(),
             text = "Create Job"
         )
     }

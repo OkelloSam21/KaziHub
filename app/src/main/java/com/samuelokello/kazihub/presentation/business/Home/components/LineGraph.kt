@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import com.samuelokello.kazihub.presentation.worker.data.Job
+import com.samuelokello.kazihub.domain.model.job.Job
 
 
 /**
@@ -21,7 +21,7 @@ import com.samuelokello.kazihub.presentation.worker.data.Job
  *  @param jobs list of jobs fetched from kazi hub api
  */
 @Composable
-fun LineGraph(jobs: List<Job>) {
+fun LineGraph(jobs: List<Job>? = emptyList()) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -35,9 +35,9 @@ fun LineGraph(jobs: List<Job>) {
         val padding = 8.dp
 
         // Extract non-null budgets, or use 0 if the budget is null
-        val budgets = jobs.map { it.budget ?: 0 }
-        val maxValue = budgets.maxOrNull() ?: 1
-        val minValue = budgets.minOrNull() ?: 0
+        val budgets = jobs?.map { it.budget ?: 0 }
+        val maxValue = budgets?.maxOrNull() ?: 1
+        val minValue = budgets?.minOrNull() ?: 0
 
         Canvas(
             modifier = Modifier
@@ -47,7 +47,7 @@ fun LineGraph(jobs: List<Job>) {
         ) {
             val paddingPx = padding.toPx()
             val widthPerPoint =
-                if (jobs.size > 1) (size.width - paddingPx * 2) / (jobs.size - 1) else 0f
+                if ((jobs?.size ?: 0) > 1) (size.width - paddingPx * 2) / (jobs?.size?.minus(1)!!) else 0f
             val heightPerPoint =
                 if (maxValue != minValue) (size.height - paddingPx * 2) / (maxValue - minValue) else 1f
 
@@ -82,7 +82,7 @@ fun LineGraph(jobs: List<Job>) {
             }
 
             // draw x axis labels
-            val xAxisLabelInterval = if (jobs.size > 1) jobs.size / 5 else 1
+            val xAxisLabelInterval = if (jobs?.size!! > 1) jobs.size / 5 else 1
             for (i in 0..5) {
                 val xValue = (minValue + i * xAxisLabelInterval).toString()
                 val xOffset = paddingPx + i * (size.width - paddingPx * 2) / 5

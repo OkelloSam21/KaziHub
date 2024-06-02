@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.worker.data
+package com.samuelokello.kazihub.domain.model.job
 
 import androidx.compose.material3.DrawerValue
 

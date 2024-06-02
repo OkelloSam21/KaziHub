@@ -13,8 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.samuelokello.kazihub.presentation.worker.data.Job
-
+import com.samuelokello.kazihub.domain.model.job.Job
 @Composable
 fun JobListItem(job: Job, onJobClick: (Job) -> Unit) {
     Card(

@@ -1,13 +1,17 @@
 package com.samuelokello.kazihub.presentation.worker.data
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.samuelokello.kazihub.domain.model.job.Data
+import com.samuelokello.kazihub.domain.model.job.Job
+import com.samuelokello.kazihub.domain.model.job.WorkerHomeScreenUiState
 import com.samuelokello.kazihub.domain.repositpry.BusinessRepository
 import com.samuelokello.kazihub.domain.repositpry.JobRepository
 import com.samuelokello.kazihub.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -17,6 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val repository: JobRepository,
+    @ApplicationContext private val context: Context,
     private val businessRepository: BusinessRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(WorkerHomeScreenUiState())
@@ -40,10 +45,11 @@ class HomeViewModel @Inject constructor(
                             isLoading = false,
                         )
                     }
+                    Toast.makeText(context, response.message?:"Error occurred", Toast.LENGTH_SHORT).show()
                 }
 
                 is Resource.Success -> {
-                    val allJobs = response.data?.data?.map { mapJobResponseToJob(it) }
+                    val allJobs = response.data?.job?.map { mapJobResponseToJob(it) }
                     Log.e("ViewModel", "fetchJobs: response  job $allJobs")
                     _state.update {
                         it.copy(
@@ -52,6 +58,7 @@ class HomeViewModel @Inject constructor(
                             nearByJobs = allJobs ?: emptyList()
                         )
                     }
+                    Toast.makeText(context, response.message?:"Success", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -75,7 +82,7 @@ class HomeViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             isLoading = true,
-                            recentJobs = response.data?.data?.map {recentJobResponse -> mapJobResponseToJob(recentJobResponse) } ?: emptyList()
+                            recentJobs = response.data?.`job`?.map { recentJobResponse -> mapJobResponseToJob(recentJobResponse) } ?: emptyList()
                         )
                     }
                 }
@@ -83,13 +90,36 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun fetchJobsByCategory(categoryId: String) {
+    fun fetchJobsByCategory(categoryId: Int) {
         viewModelScope.launch {
+            when (val response = repository.fetchJobsByCategory(categoryId)) {
+                is Resource.Error -> {
+                    Log.e("ViewModel", "fetchJobsByCategory: response = ${response.message}")
+                    response.message ?: "An unknown error occurred"
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                        )
+                    }
+                }
+
+                is Resource.Success -> {
+                    val allJobs = response.data?.`job`?.map { mapJobResponseToJob(it) }
+                    Log.e("ViewModel", "fetchJobsByCategory: response  job $allJobs")
+                    _state.update {
+                        it.copy(
+                            isLoading = true,
+                            allJobs = allJobs ?: emptyList(),
+                            nearByJobs = allJobs ?: emptyList()
+                        )
+                    }
+                }
+            }
 
         }
     }
 
-    private fun mapJobResponseToJob(jobData: Data ): Job {
+    private fun mapJobResponseToJob(jobData: Job): Job {
         return Job(
             id = jobData.id,
             title = jobData.title,
