@@ -2,6 +2,7 @@ package com.samuelokello.kazihub.presentation.business.Home.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +15,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.ShoppingBag
+import androidx.compose.material.icons.filled.Work
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -22,6 +25,8 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,11 +48,13 @@ fun BusinessHomeScreenContent(
     onEvent: (BusinessHomeUiEvents) -> Unit,
     createJobEvent: (CreateJobUiEvent) -> Unit,
     showModalSheet: Boolean = false,
-    setShowModalSheet: (Boolean) -> Unit
 ) {
 
-    if (showModalSheet) {
-        ModalBottomSheet(onDismissRequest = { setShowModalSheet(false) }) {
+    val showModalSheetState = remember { mutableStateOf(showModalSheet)
+    }
+
+    if (showModalSheetState.value) {
+        ModalBottomSheet(onDismissRequest = { showModalSheetState.value = false}) {
             CreateJobSheet(createJobEvent, state = CreateJobSheetState())
         }
     }
@@ -59,7 +66,7 @@ fun BusinessHomeScreenContent(
         floatingActionButton = {
             FloatingActionButton(
                 modifier = Modifier.padding(end = 16.dp, bottom = 92.dp),
-                onClick = { setShowModalSheet(true) }
+                onClick = { showModalSheetState.value = !showModalSheetState.value}
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Create Job")
             }
@@ -70,18 +77,37 @@ fun BusinessHomeScreenContent(
             modifier = Modifier
                 .padding(paddingValues)
                 .padding(horizontal = 20.dp)
+                .fillMaxWidth()
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Column {
                 Text( text = "Hello 👋")
             }
+            Spacer(modifier = Modifier.height(16.dp))
+            Column (modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)){
+                Row {
+                    StatsCard(
+                        statIcon = { Icon( Icons.Default.ShoppingBag, contentDescription = null)},
+                        title = "Total Expenditure",
+                        value = "Ksh 100,000",
+                        color = 0xFF3F51B5.toInt()
+                    )
+                    Spacer(modifier = Modifier.size(32.dp))
+                    StatsCard(
+                        statIcon = { Icon(Icons.Default.Work , contentDescription = null) },
+                        title = "Jobs Posted",
+                        value = " 50",
+                        color = 0xFF3F51B5.toInt()
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Column {
                 Text(
-                    text = "JOB BUDGET OVER TIME",
+                    text = "Expenditure Over Time",
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
@@ -91,6 +117,14 @@ fun BusinessHomeScreenContent(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            Column {
+                Text(
+                    text = "Recent Activities",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
             if (jobs != null) {
                 if (jobs.isEmpty()) {
                     NoJobsMessage()
@@ -118,7 +152,7 @@ fun NoJobsMessage() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -141,10 +175,11 @@ fun NoJobsMessage() {
             color = Color.Gray,
             textAlign = TextAlign.Center
         )
+
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateJobSheet(
     onEvent: (CreateJobUiEvent) -> Unit,
@@ -152,8 +187,9 @@ fun CreateJobSheet(
 ) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(16.dp)
+            .padding(bottom = 48.dp)
     ) {
         Text(text = "Create Job", style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.height(8.dp))
@@ -231,7 +267,11 @@ fun CreateJobSheet(
                     qualifications = state.qualification.toString()
                 ))
             },
-            isEnabled = state.title.isNotBlank() && state.description.isNotBlank() && state.budget.isNotBlank() && state.location.isNotBlank() && state.qualification.toString().isNotBlank(),
+            isEnabled = state.title.isNotBlank()
+                    && state.description.isNotBlank()
+                    && state.budget.isNotBlank()
+                    && state.location.isNotBlank()
+                    && state.qualification.toString().isNotBlank(),
             text = "Create Job"
         )
     }

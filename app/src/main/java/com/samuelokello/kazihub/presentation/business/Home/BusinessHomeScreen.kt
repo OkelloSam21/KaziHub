@@ -37,16 +37,12 @@ fun BusinessHomeScreen(viewModel: BusinessHomeViewModel = hiltViewModel()) {
                 jobs = jobs.jobs,
                 onEvent = {
                     when(it) {
-                        BusinessHomeUiEvents.OnCreateJobClick -> {}
+                        BusinessHomeUiEvents.OnFABClick -> { !showBottomSheet}
                         BusinessHomeUiEvents.OnDrawerClick -> {}
                         is BusinessHomeUiEvents.OnJobClick -> {}
-                        is BusinessHomeUiEvents.OnCreateJob -> {
-
-                        }
                     }
                 },
                 showModalSheet = showBottomSheet,
-                setShowModalSheet = { !showBottomSheet },
                 createJobEvent = {
                     when(it) {
                         is CreateJobUiEvent.OnCreateJobClick-> {}
@@ -54,7 +50,7 @@ fun BusinessHomeScreen(viewModel: BusinessHomeViewModel = hiltViewModel()) {
                         is CreateJobUiEvent.OnDescriptionChange -> TODO()
                         is CreateJobUiEvent.OnLocationChange -> TODO()
                         is CreateJobUiEvent.OnQualificationsChange -> TODO()
-                        is CreateJobUiEvent.OnTitleChange -> TODO()
+                        is CreateJobUiEvent.OnTitleChange -> {}
                     }
                 }
             )
