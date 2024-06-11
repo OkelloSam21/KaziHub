@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.shared.components
+package com.samuelokello.kazihub.presentation.common.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape

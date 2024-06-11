@@ -6,8 +6,8 @@ import com.google.gson.annotations.SerializedName
 data class JobResponse(
     @SerializedName("code")
     val code: Int?,
-    @SerializedName("data")
-    val `data`: List<Data>?,
+    @SerializedName("job")
+    val job: List<Job>?,
     @SerializedName("message")
     val message: String?,
     @SerializedName("status")

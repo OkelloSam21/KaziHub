@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.shared.components
+package com.samuelokello.kazihub.presentation.common.components
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.padding

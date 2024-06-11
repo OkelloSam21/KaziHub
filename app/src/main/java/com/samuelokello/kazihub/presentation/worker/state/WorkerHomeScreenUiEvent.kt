@@ -1,6 +1,6 @@
 package com.samuelokello.kazihub.presentation.worker.state
 
-import com.samuelokello.kazihub.presentation.worker.data.Job
+import com.samuelokello.kazihub.domain.model.job.Job
 
 sealed interface WorkerHomeScreenUiEvent {
     data object OpenDrawer : WorkerHomeScreenUiEvent

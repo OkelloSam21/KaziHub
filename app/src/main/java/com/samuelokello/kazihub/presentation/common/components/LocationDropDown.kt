@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.shared.components
+package com.samuelokello.kazihub.presentation.common.components
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column
@@ -60,4 +60,6 @@ fun LocationDropDown(
         }
     }
 }
+
+
 

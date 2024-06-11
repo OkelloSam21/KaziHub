@@ -1,5 +1,6 @@
-package com.samuelokello.kazihub.presentation.shared.components
+package com.samuelokello.kazihub.presentation.common.components
 
+import android.R
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
@@ -33,7 +34,7 @@ fun EditText(
 fun EditTextPreview() {
     KaziHubTheme {
         EditText(
-            icon = android.R.drawable.ic_menu_search,
+            icon = R.drawable.ic_menu_search,
             label = "Search",
             value = "",
             onValueChange = {},
