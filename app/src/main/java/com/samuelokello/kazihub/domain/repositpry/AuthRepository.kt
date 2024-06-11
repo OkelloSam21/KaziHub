@@ -6,7 +6,7 @@ import com.samuelokello.kazihub.domain.model.sign_up.SignUpRequest
 import com.samuelokello.kazihub.domain.model.sign_up.SignUpResponse
 import com.samuelokello.kazihub.utils.Resource
 
-interface AuthHubRepository {
+interface AuthRepository {
     suspend fun signUp(signUpRequest: SignUpRequest): Resource<SignUpResponse>
     suspend fun signIn(signInRequest: SignInRequest): Resource<SignInResponse>
 }

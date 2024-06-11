@@ -58,6 +58,9 @@ class MainActivity : ComponentActivity() {
                     val newBackStackEntry by navController.currentBackStackEntryAsState()
                     val route = newBackStackEntry?.destination?.route
 
+
+
+
                     StandardScaffold(
                         navController = navController,
                         showBottomBar = route in listOf(
