@@ -40,6 +40,7 @@ import com.samuelokello.kazihub.presentation.common.components.AppBar
 import com.samuelokello.kazihub.presentation.common.components.CustomButton
 import com.samuelokello.kazihub.presentation.common.components.EditTextField
 import com.samuelokello.kazihub.presentation.common.components.LocationAutocompleteTextField
+import com.samuelokello.kazihub.ui.theme.primaryLight
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,14 +48,14 @@ fun BusinessHomeScreenContent(
     jobs: List<Job>? = emptyList(),
     onEvent: (BusinessHomeUiEvents) -> Unit,
     createJobEvent: (CreateJobUiEvent) -> Unit,
-    showModalSheet: Boolean = false,
 ) {
 
-    val showModalSheetState = remember { mutableStateOf(showModalSheet)
+    val showModalSheetState = remember {
+        mutableStateOf(false)
     }
 
     if (showModalSheetState.value) {
-        ModalBottomSheet(onDismissRequest = { showModalSheetState.value = false}) {
+        ModalBottomSheet(onDismissRequest = { showModalSheetState.value = false }) {
             CreateJobSheet(createJobEvent, state = CreateJobSheetState())
         }
     }
@@ -65,8 +66,10 @@ fun BusinessHomeScreenContent(
         },
         floatingActionButton = {
             FloatingActionButton(
-                modifier = Modifier.padding(end = 16.dp, bottom = 92.dp),
-                onClick = { showModalSheetState.value = !showModalSheetState.value}
+                modifier = Modifier.padding(end = 16.dp, bottom = 92.dp).size(64.dp),
+                onClick = { showModalSheetState.value = !showModalSheetState.value },
+                contentColor = Color.White,
+                containerColor = primaryLight,
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Create Job")
             }
@@ -82,23 +85,23 @@ fun BusinessHomeScreenContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             Column {
-                Text( text = "Hello 👋")
+                Text(text = "Hello 👋", style = MaterialTheme.typography.titleMedium)
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Column (modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)){
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)) {
                 Row {
                     StatsCard(
-                        statIcon = { Icon( Icons.Default.ShoppingBag, contentDescription = null)},
+                        statIcon = { Icon(Icons.Default.ShoppingBag, contentDescription = null) },
                         title = "Total Expenditure",
-                        value = "Ksh 100,000",
-                        color = 0xFF3F51B5.toInt()
+                        value = "Ksh 0",
                     )
                     Spacer(modifier = Modifier.size(32.dp))
                     StatsCard(
-                        statIcon = { Icon(Icons.Default.Work , contentDescription = null) },
+                        statIcon = { Icon(Icons.Default.Work, contentDescription = null) },
                         title = "Jobs Posted",
-                        value = " 50",
-                        color = 0xFF3F51B5.toInt()
+                        value = " 0",
                     )
                 }
             }
@@ -196,7 +199,7 @@ fun CreateJobSheet(
 
         EditTextField(
             value = state.title,
-            onValueChange = {onEvent(CreateJobUiEvent.OnTitleChange(it))},
+            onValueChange = { onEvent(CreateJobUiEvent.OnTitleChange(it)) },
             label = "Title",
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -209,7 +212,7 @@ fun CreateJobSheet(
 
         EditTextField(
             value = state.description,
-            onValueChange = {onEvent(CreateJobUiEvent.OnDescriptionChange(it))},
+            onValueChange = { onEvent(CreateJobUiEvent.OnDescriptionChange(it)) },
             label = "Description",
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -221,8 +224,8 @@ fun CreateJobSheet(
         Spacer(modifier = Modifier.height(8.dp))
 
         EditTextField(
-            value = state.budget,
-            onValueChange = {onEvent(CreateJobUiEvent.OnBudgetChange(it)) },
+            value = state.budget.toString(),
+            onValueChange = { onEvent(CreateJobUiEvent.OnBudgetChange(it.toInt())) },
             label = "Budget",
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -235,7 +238,7 @@ fun CreateJobSheet(
 
         LocationAutocompleteTextField(
             value = state.location,
-            onValueChange = {onEvent(CreateJobUiEvent.OnLocationChange(it))},
+            onValueChange = { onEvent(CreateJobUiEvent.OnLocationChange(it)) },
             suggestions = emptyList(),
             onSuggestionSelected = {},
             placeholder = "Location",
@@ -245,7 +248,7 @@ fun CreateJobSheet(
 
         EditTextField(
             value = state.qualification.toString(),
-            onValueChange = {onEvent(CreateJobUiEvent.OnQualificationsChange(it))},
+            onValueChange = { onEvent(CreateJobUiEvent.OnQualificationsChange(it)) },
             label = "Qualifications",
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -258,18 +261,20 @@ fun CreateJobSheet(
         CustomButton(
             onClick = {
                 // Handle job creation logic
-                onEvent(CreateJobUiEvent.OnCreateJobClick(
-                    title = state.title,
-                    description = state.description,
-                    budget = state.budget,
-                    category = state.category,
-                    location = state.location,
-                    qualifications = state.qualification.toString()
-                ))
+                onEvent(
+                    CreateJobUiEvent.OnCreateJobClick(
+                        title = state.title,
+                        description = state.description,
+                        budget = state.budget,
+                        category = state.category,
+                        location = state.location,
+                        qualifications = state.qualification.toString()
+                    )
+                )
             },
             isEnabled = state.title.isNotBlank()
                     && state.description.isNotBlank()
-                    && state.budget.isNotBlank()
+                    && state.budget.toString().isNotBlank()
                     && state.location.isNotBlank()
                     && state.qualification.toString().isNotBlank(),
             text = "Create Job"

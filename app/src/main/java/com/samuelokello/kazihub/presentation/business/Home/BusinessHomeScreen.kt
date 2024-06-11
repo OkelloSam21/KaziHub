@@ -21,14 +21,13 @@ import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun BusinessHomeScreen(viewModel: BusinessHomeViewModel = hiltViewModel()) {
-//    val navController = rememberNavController()
-//    val drawerState = rememberDrawerState(DrawerValue.Closed)
+
     val showBottomSheet by rememberSaveable { mutableStateOf(false) }
     val jobs by viewModel.jobs.collectAsState()
     Scaffold(
         topBar = { AppBar(onNavigationIconClick = {}) },
 //        modifier = Modifier.padding(bottom = 32.dp)
-    ) {
+    ) { event ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -36,21 +35,20 @@ fun BusinessHomeScreen(viewModel: BusinessHomeViewModel = hiltViewModel()) {
             BusinessHomeScreenContent(
                 jobs = jobs.jobs,
                 onEvent = {
-                    when(it) {
-                        BusinessHomeUiEvents.OnFABClick -> { !showBottomSheet}
+                    when (it) {
+                        BusinessHomeUiEvents.OnFABClick -> { !showBottomSheet }
                         BusinessHomeUiEvents.OnDrawerClick -> {}
                         is BusinessHomeUiEvents.OnJobClick -> {}
                     }
                 },
-                showModalSheet = showBottomSheet,
-                createJobEvent = {
-                    when(it) {
-                        is CreateJobUiEvent.OnCreateJobClick-> {}
-                        is CreateJobUiEvent.OnBudgetChange -> TODO()
-                        is CreateJobUiEvent.OnDescriptionChange -> TODO()
-                        is CreateJobUiEvent.OnLocationChange -> TODO()
-                        is CreateJobUiEvent.OnQualificationsChange -> TODO()
-                        is CreateJobUiEvent.OnTitleChange -> {}
+                createJobEvent = {event ->
+                    when (event) {
+                        is CreateJobUiEvent.OnCreateJobClick -> viewModel.onCreateJobClick()
+                        is CreateJobUiEvent.OnBudgetChange -> viewModel.onBudgetChange(event.budget)
+                        is CreateJobUiEvent.OnDescriptionChange -> viewModel.onDescriptionChange(event.description)
+                        is CreateJobUiEvent.OnLocationChange -> viewModel.onLocationChange(event.location)
+                        is CreateJobUiEvent.OnQualificationsChange -> viewModel.onQualificationsChange(event.qualifications)
+                        is CreateJobUiEvent.OnTitleChange -> viewModel.onTitleChange(event.title)
                     }
                 }
             )

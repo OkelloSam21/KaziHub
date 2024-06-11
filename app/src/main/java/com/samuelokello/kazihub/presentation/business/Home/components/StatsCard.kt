@@ -21,14 +21,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.samuelokello.kazihub.ui.theme.primaryLight
 
 @Composable
 fun StatsCard(
     statIcon: @Composable () -> Unit,
     title: String,
     value: String,
-    color: Int
 ) {
+
+    val containerColor: Color = primaryLight
+    val contentColor: Color = Color.White
     Box(
         modifier = Modifier
             .size(width = 200.dp, height = 120.dp),
@@ -38,8 +41,8 @@ fun StatsCard(
             modifier = Modifier
                 .fillMaxSize(),
             colors = CardDefaults.cardColors(
-                containerColor = Color(color),
-                contentColor = Color.White
+                containerColor = containerColor,
+                contentColor = contentColor
             ),
             elevation = CardDefaults.elevatedCardElevation(
                 defaultElevation = 4.dp
@@ -69,6 +72,5 @@ private fun StatsCardPreview() {
         statIcon = { Icons.Default.ShoppingBag},
         title = "Total Expenditure",
         value = "Ksh 100,000",
-        color = 0xFF3F51B5.toInt()
     )
 }
