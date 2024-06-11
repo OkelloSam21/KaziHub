@@ -34,6 +34,9 @@ interface KaziHubApi {
     @POST("auth/signin")
     suspend fun signIn(@Body signInRequest: SignInRequest): SignInResponse
 
+    @GET("/auth/token/refresh")
+    suspend fun refreshToken(@Header("Authorization") token: String): SignInResponse
+
     @POST("/business/profiles/create")
     suspend fun createBusinessProfile(
         @Header("Authorization") token: String,
