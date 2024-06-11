@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -21,7 +20,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -48,9 +46,9 @@ import com.samuelokello.kazihub.R
 import com.samuelokello.kazihub.presentation.common.HandleError
 import com.samuelokello.kazihub.presentation.common.HandleLoading
 import com.samuelokello.kazihub.presentation.common.HandleSuccess
+import com.samuelokello.kazihub.presentation.common.components.CustomButton
+import com.samuelokello.kazihub.presentation.common.components.EditTextField
 import com.samuelokello.kazihub.presentation.destinations.CreateProfileScreenDestination
-import com.samuelokello.kazihub.presentation.shared.components.CustomButton
-import com.samuelokello.kazihub.presentation.shared.components.EditTextField
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import com.samuelokello.kazihub.utils.UserRole
 
@@ -157,15 +155,14 @@ fun SignInForm(
     ) {
         Spacer(modifier = Modifier.height(32.dp))
 
-        OutlinedTextField(
+        EditTextField(
             value = state.userName,
             onValueChange = { email ->
                 onEvent(SignInEvent.OnUserName(email))
             },
-            label = { Text(text = "User Name") },
+            label = "User Name",
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             singleLine = true,
-            shape = RoundedCornerShape(10.dp),
             modifier = Modifier.fillMaxWidth()
         )
 
