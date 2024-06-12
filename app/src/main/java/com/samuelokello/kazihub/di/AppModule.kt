@@ -7,7 +7,7 @@ import com.samuelokello.kazihub.data.repository.AuthRepositoryImpl
 import com.samuelokello.kazihub.data.repository.BusinessRepositoryImpl
 import com.samuelokello.kazihub.data.repository.JobRepositoryImpl
 import com.samuelokello.kazihub.data.repository.WorkerRepositoryImp
-import com.samuelokello.kazihub.domain.repositpry.AuthHubRepository
+import com.samuelokello.kazihub.domain.repositpry.AuthRepository
 import com.samuelokello.kazihub.domain.repositpry.BusinessRepository
 import com.samuelokello.kazihub.domain.repositpry.JobRepository
 import com.samuelokello.kazihub.domain.repositpry.WorkerRepository
@@ -66,7 +66,7 @@ object AppModule {
     fun provideAuthRepository(
         api: KaziHubApi,
         @ApplicationContext context: Context,
-    ): AuthHubRepository {
+    ): AuthRepository {
         return AuthRepositoryImpl(api, context)
     }
 

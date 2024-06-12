@@ -35,11 +35,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.samuelokello.kazihub.presentation.shared.components.AppBar
-import com.samuelokello.kazihub.presentation.shared.components.JobCard
+import com.samuelokello.kazihub.domain.model.job.WorkerHomeScreenUiState
+import com.samuelokello.kazihub.presentation.common.components.AppBar
+import com.samuelokello.kazihub.presentation.common.components.JobCard
 import com.samuelokello.kazihub.presentation.worker.data.HomeViewModel
-import com.samuelokello.kazihub.presentation.worker.data.Job
-import com.samuelokello.kazihub.presentation.worker.data.WorkerHomeScreenUiState
+import com.samuelokello.kazihub.domain.model.job.Job
 import com.samuelokello.kazihub.presentation.worker.state.WorkerHomeScreenUiEvent
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import kotlinx.coroutines.CoroutineScope
@@ -246,7 +246,7 @@ fun RecentPost(
 //                    )
                     Column {
                         Text(text = job.title.toString())
-                        Text(text = job.time.toString())
+                        Text(text = job.location.toString())
                     }
 
                     Text(text = "ksh ${job.budget}")

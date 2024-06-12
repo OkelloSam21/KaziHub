@@ -25,7 +25,7 @@ import com.samuelokello.kazihub.presentation.destinations.HomeScreenDestination
 import com.samuelokello.kazihub.presentation.destinations.MessagesScreenDestination
 import com.samuelokello.kazihub.presentation.destinations.ProfileScreenDestination
 import com.samuelokello.kazihub.presentation.destinations.SettingsScreenDestination
-import com.samuelokello.kazihub.presentation.shared.components.StandardScaffold
+import com.samuelokello.kazihub.presentation.common.components.StandardScaffold
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import com.samuelokello.kazihub.utils.LocationManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,6 +54,9 @@ class MainActivity : ComponentActivity() {
 
                     val newBackStackEntry by navController.currentBackStackEntryAsState()
                     val route = newBackStackEntry?.destination?.route
+
+
+
 
                     StandardScaffold(
                         navController = navController,

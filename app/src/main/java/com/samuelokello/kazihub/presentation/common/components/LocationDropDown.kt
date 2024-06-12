@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.shared.components
+package com.samuelokello.kazihub.presentation.common.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.text.KeyboardOptions
@@ -53,4 +53,6 @@ fun LocationAutocompleteTextField(
         }
     }
 }
+
+
 

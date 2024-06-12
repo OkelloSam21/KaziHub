@@ -33,11 +33,11 @@ fun EditText(
 fun EditTextPreview() {
     KaziHubTheme {
         EditText(
-            icon = R.drawable.baseline_person_24,
+            icon = R.drawable.ic_menu_search,
             label = "Search",
             value = "",
             onValueChange = {},
-            keyboardOption = KeyboardOptions.Default,
+            keyboardOption = KeyboardOptions.Default
         )
     }
 }

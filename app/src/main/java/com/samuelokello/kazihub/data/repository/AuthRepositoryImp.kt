@@ -6,7 +6,7 @@ import com.samuelokello.kazihub.data.model.sign_in.SignInResponse
 import com.samuelokello.kazihub.data.remote.KaziHubApi
 import com.samuelokello.kazihub.domain.model.sign_up.SignUpRequest
 import com.samuelokello.kazihub.domain.model.sign_up.SignUpResponse
-import com.samuelokello.kazihub.domain.repositpry.AuthHubRepository
+import com.samuelokello.kazihub.domain.repositpry.AuthRepository
 import com.samuelokello.kazihub.utils.Resource
 import com.samuelokello.kazihub.utils.handleException
 import com.samuelokello.kazihub.utils.storeAccessToken
@@ -19,7 +19,7 @@ class AuthRepositoryImpl
 @Inject constructor(
     private val api: KaziHubApi,
     @ApplicationContext private val context: Context
-) : AuthHubRepository{
+) : AuthRepository{
     override suspend fun signUp(signUpRequest: SignUpRequest):Resource<SignUpResponse> = withContext(Dispatchers.IO) {
         return@withContext try {
             val response = api.signUp(signUpRequest)

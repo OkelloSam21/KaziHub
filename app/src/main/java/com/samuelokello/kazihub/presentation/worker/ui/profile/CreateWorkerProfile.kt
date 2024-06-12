@@ -1,6 +1,5 @@
 package com.samuelokello.kazihub.presentation.worker.ui.profile
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +12,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -24,10 +22,10 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.presentation.common.HandleError
 import com.samuelokello.kazihub.presentation.common.HandleLoading
 import com.samuelokello.kazihub.presentation.common.HandleSuccess
+import com.samuelokello.kazihub.presentation.common.components.CustomButton
+import com.samuelokello.kazihub.presentation.common.components.LocationAutocompleteTextField
 import com.samuelokello.kazihub.presentation.destinations.HomeScreenDestination
-import com.samuelokello.kazihub.presentation.shared.components.CustomButton
 import com.samuelokello.kazihub.presentation.shared.components.EditTextField
-import com.samuelokello.kazihub.presentation.shared.components.LocationAutocompleteTextField
 import com.samuelokello.kazihub.presentation.worker.data.CreateWorkerProfileViewModel
 import com.samuelokello.kazihub.presentation.worker.state.WorkerEvent
 import com.samuelokello.kazihub.presentation.worker.state.WorkerProfileState
@@ -52,7 +50,8 @@ fun CreateWorkerProfile(
                 state = state,
                 onEvent = viewModel::onEvent,
                 navigateToHome = { navigator.navigate(HomeScreenDestination(userRole)) },
-                isFormComplete = viewModel.isFormComplete()
+                isFormComplete = viewModel.isFormComplete(),
+                viewModel = viewModel
             )
         }
     }
@@ -61,6 +60,7 @@ fun CreateWorkerProfile(
 @Composable
 fun WorkerProfileForm(
     state: WorkerProfileState,
+    viewModel: CreateWorkerProfileViewModel,
     onEvent: (WorkerEvent) -> Unit,
     navigateToHome: () -> Unit,
     isFormComplete: Boolean
@@ -76,9 +76,7 @@ fun WorkerProfileForm(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(16.dp)
     ) {
         Spacer(modifier = Modifier.height(8.dp))
         Column {
@@ -139,6 +137,7 @@ fun WorkerProfileForm(
                 modifier = Modifier
             )
         }
+        Spacer(modifier = Modifier.weight(1.5f))
         Column {
             CustomButton(
                 onClick = {
