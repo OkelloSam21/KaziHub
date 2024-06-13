@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.google.android.libraries.places.api.model.Place
+import com.samuelokello.kazihub.presentation.shared.components.EditTextField
 
 @Composable
 fun LocationAutocompleteTextField(

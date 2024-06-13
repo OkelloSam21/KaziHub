@@ -38,8 +38,8 @@ import com.samuelokello.kazihub.domain.model.job.Job
 import com.samuelokello.kazihub.presentation.business.Home.BusinessHomeUiEvents
 import com.samuelokello.kazihub.presentation.common.components.AppBar
 import com.samuelokello.kazihub.presentation.common.components.CustomButton
-import com.samuelokello.kazihub.presentation.common.components.EditTextField
 import com.samuelokello.kazihub.presentation.common.components.LocationAutocompleteTextField
+import com.samuelokello.kazihub.presentation.shared.components.EditTextField
 import com.samuelokello.kazihub.ui.theme.primaryLight
 
 @OptIn(ExperimentalMaterial3Api::class)
