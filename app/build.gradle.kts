@@ -3,7 +3,6 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("com.google.gms.google-services")
-//    id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
 }
 
@@ -136,6 +135,8 @@ dependencies {
     // Firebase UI Library
     implementation("com.firebaseui:firebase-ui-auth:8.0.2")
     implementation("com.firebaseui:firebase-ui-database:8.0.2")
+
+    implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
     //swipe refresh
 //    implementation("com.google.accompanist:accompanist-swiperefresh: 0.34.0")
