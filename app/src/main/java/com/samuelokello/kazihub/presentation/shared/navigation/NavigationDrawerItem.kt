@@ -12,22 +12,22 @@ sealed class NavigationDrawerItem(
     val icon: ImageVector,
     val badgeCount: Int? = null
 ) {
-    object Home : NavigationDrawerItem(
+    data object Home : NavigationDrawerItem(
         route = "home",
         icon = Icons.Default.Home
     )
 
-    object Messages : NavigationDrawerItem(
+    data object Messages : NavigationDrawerItem(
         route = "messages",
         icon = Icons.AutoMirrored.Filled.Message
     )
 
-    object Profile : NavigationDrawerItem(
+    data object Profile : NavigationDrawerItem(
         route = "profile",
         icon = Icons.Default.Person
     )
 
-    object Settings : NavigationDrawerItem(
+    data object Settings : NavigationDrawerItem(
         route = "settings",
         icon = Icons.Default.Settings
     )

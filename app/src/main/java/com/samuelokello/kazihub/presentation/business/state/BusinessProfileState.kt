@@ -1,6 +1,5 @@
 package com.samuelokello.kazihub.presentation.business.state
 
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.Place
 import com.samuelokello.kazihub.presentation.common.AuthState
 
@@ -10,10 +9,9 @@ data class BusinessProfileState(
     val email: String = "sam@example.com",
     val phone: String = "0759876321",
     val bio: String = "bio",
-    val location: String = "Tuuti",
-    val locationLatLng: LatLng? = null,
-    val placeId: String = "",
-    val locationSuggestion: List<Place> = listOf(),
+    val location: String = "",
+    val locationSuggestion: List<Place> = emptyList(),
+    val selectedLocation: Place = Place.builder().build(),
     val navigateToHome: Boolean = false
 ): AuthState
 

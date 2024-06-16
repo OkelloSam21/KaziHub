@@ -3,10 +3,10 @@ package com.samuelokello.kazihub.presentation.common.components
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.painterResource
@@ -23,7 +23,7 @@ fun StandardScaffold(
     items: List<BottomNavItem> = listOf(
         BottomNavItem.Home,
         BottomNavItem.Messages,
-        BottomNavItem.Profile,
+//        BottomNavItem.Profile,
         BottomNavItem.Settings
     ),
     content: @Composable (paddingValues: PaddingValues) -> Unit,
@@ -32,14 +32,15 @@ fun StandardScaffold(
         bottomBar = {
             if (showBottomBar) {
                 BottomNavigation(
-                    backgroundColor = MaterialTheme.colors.surface,
-                    contentColor = MaterialTheme.colors.onSurface,
-                    elevation = 8.dp,
+                    backgroundColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.onSurface,
+                    elevation = 16.dp,
                 ) {
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
                     val currentDestination = navBackStackEntry?.destination
                     items.forEach { item ->
                         BottomNavigationItem(
+
                             icon = {
                                 Icon(
                                     painter = painterResource(id = item.icon),
@@ -49,13 +50,13 @@ fun StandardScaffold(
                             label = {
                                 Text(
                                     text = item.title,
-                                    fontSize = 9.sp
+                                    fontSize = 16.sp
                                 )
                             },
                             selected = currentDestination?.route?.contains(item.destination.route)== true,
                             onClick = {
                                 navController.navigate(item.destination.route) {
-                                    navController.graph.startDestinationId?.let { screenRoute ->
+                                    navController.graph.startDestinationId.let { screenRoute ->
                                         popUpTo(screenRoute) {
                                             saveState = true
                                         }
