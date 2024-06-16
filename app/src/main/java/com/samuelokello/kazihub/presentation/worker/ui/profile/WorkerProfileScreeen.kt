@@ -21,7 +21,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -36,9 +35,10 @@ import androidx.compose.ui.unit.dp
 import com.samuelokello.kazihub.presentation.common.components.ProfileImage
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import com.samuelokello.kazihub.ui.theme.primaryLight
+import com.samuelokello.kazihub.utils.UserRole
 
 @Composable
-fun WorkerProfileScreen() {
+fun WorkerProfileScreen(userRole: UserRole) {
     Surface(
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize()
@@ -169,12 +169,4 @@ fun WorkerProfileScreenContent() {
 @Composable
 fun WorkerProfileScreenPreview() {
     WorkerProfileScreenContent()
-}
-
-@Preview
-@Composable
-fun WorkerProfileScreenPreviewDark() {
-    KaziHubTheme(darkTheme = true) {
-        WorkerProfileScreen()
-    }
 }
