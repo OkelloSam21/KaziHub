@@ -12,3 +12,8 @@ fun BusinessProfileScreen(userRole: UserRole) {
         Text(text = "Business Profile")
     }
 }
+
+/**
+ *  ensure job creation works and job biding works
+ *
+ */
