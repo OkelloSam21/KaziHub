@@ -24,7 +24,7 @@ import com.samuelokello.kazihub.presentation.NavGraphs
 import com.samuelokello.kazihub.presentation.common.components.StandardScaffold
 import com.samuelokello.kazihub.presentation.destinations.HomeScreenDestination
 import com.samuelokello.kazihub.presentation.destinations.MessagesScreenDestination
-import com.samuelokello.kazihub.presentation.destinations.SettingsScreenDestination
+import com.samuelokello.kazihub.presentation.destinations.NotificationsScreenDestination
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import com.samuelokello.kazihub.utils.LocationManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +32,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val LOCATION_PERMISSION_REQUEST_CODE = 1
+//    private val LOCATION_PERMISSION_REQUEST_CODE = 1
     private lateinit var locationManager: LocationManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,8 +59,7 @@ class MainActivity : ComponentActivity() {
                         showBottomBar = route in listOf(
                             HomeScreenDestination.route,
                             MessagesScreenDestination.route,
-//                            ProfileScreenDestination.route,
-                            SettingsScreenDestination.route
+                            NotificationsScreenDestination.route,
                         )
                     ) {
                         DestinationsNavHost(
