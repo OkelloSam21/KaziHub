@@ -5,8 +5,8 @@ import com.samuelokello.kazihub.R
 import com.samuelokello.kazihub.presentation.destinations.Destination
 import com.samuelokello.kazihub.presentation.destinations.HomeScreenDestination
 import com.samuelokello.kazihub.presentation.destinations.MessagesScreenDestination
+import com.samuelokello.kazihub.presentation.destinations.NotificationsScreenDestination
 import com.samuelokello.kazihub.presentation.destinations.ProfileScreenDestination
-import com.samuelokello.kazihub.presentation.destinations.SettingsScreenDestination
 
 sealed class BottomNavItem(var title: String, var icon: Int, var destination: Destination) {
     data object Home : BottomNavItem(
@@ -27,6 +27,6 @@ sealed class BottomNavItem(var title: String, var icon: Int, var destination: De
     data object Settings: BottomNavItem(
         title = "Notifications",
         icon = R.drawable.baseline_notifications_none_24,
-        destination = SettingsScreenDestination
+        destination = NotificationsScreenDestination
     )
 }
