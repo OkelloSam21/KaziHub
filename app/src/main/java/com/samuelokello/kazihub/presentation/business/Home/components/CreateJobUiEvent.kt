@@ -15,4 +15,5 @@ sealed interface CreateJobUiEvent {
         val qualifications: String
     ): CreateJobUiEvent
 
+    data class OnCategoryChange(val item: String) : CreateJobUiEvent
 }

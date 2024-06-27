@@ -6,5 +6,7 @@ data class CreateJobState(
     val budget: Int = 0,
     val location: String = "",
     val categoryId: Int = 0,
+    val category: String = "",
+    val categories: List<String> = emptyList(),
     val qualifications: List<String> = emptyList()
 )
