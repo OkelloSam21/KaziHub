@@ -49,7 +49,7 @@ interface KaziHubApi {
     ): BusinessProfileResponse
 
     @GET("/business/profiles/all/")
-    suspend fun getAllBusinessProfiles(): BusinessProfileResponse
+    suspend fun getAllBusinessProfiles(): List<BusinessProfileResponse>
 
     @PUT("/business/profiles/{bus_profile_id}/update")
     suspend fun updateBusinessProfile(
