@@ -75,8 +75,7 @@ class SignInViewModel
                             _state.update {
                                 it.copy(
                                     isLoading = true,
-                                    signInSuccess = true,
-                                    navigateToProfileCreation = true
+                                    signInSuccess = true
                                 )
                             }
                             val accessToken = result.data?.data?.accessToken
@@ -86,6 +85,7 @@ class SignInViewModel
                             }
                             Log.d("SignInViewModel", "onEvent: ${result.data}")
                             hideLoading()
+                            checkProfile()
                         }
 
                         is Resource.Error -> {
@@ -146,9 +146,9 @@ class SignInViewModel
     }
 
     // check if user has already created a profile
-    fun checkProfile() {
+    private fun checkProfile() {
         viewModelScope.launch {
-            when (val response = repository.checkProfile()) {
+            when (val response = repository.getCurrentUser()) {
                 is Resource.Success -> {
                     _state.update {
                         it.copy(
