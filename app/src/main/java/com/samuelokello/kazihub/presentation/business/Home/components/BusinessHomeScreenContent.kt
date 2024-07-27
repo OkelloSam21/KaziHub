@@ -57,14 +57,14 @@ import com.samuelokello.kazihub.ui.theme.primaryLight
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BusinessHomeScreenContent(
-    jobs: List<Job>? = emptyList(),
+    jobs: List<Job> = emptyList(),
     createJobState: CreateJobSheetState,
     showSheet: Boolean = false,
     onSheetDismissRequest: () -> Unit,
     onBusinessUiEvent: (BusinessHomeUiEvents) -> Unit,
     onCreateJobUiEvent: (CreateJobUiEvent) -> Unit,
-    categories: List<CategoryResponse?> = emptyList(),
-    selectedCategory: CategoryResponse? = null,
+    categories: List<CategoryResponse> = emptyList(),
+    selectedCategory: CategoryResponse,
 ) {
     // Create a SheetState object
     val sheetState = rememberModalBottomSheetState()
@@ -269,21 +269,19 @@ fun BusinessHomeScreenContent(
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
-            if (jobs != null) {
-                if (jobs.isEmpty()) {
-                    NoJobsMessage()
-                } else {
-                    LazyColumn {
-                        items(jobs) { job ->
-                            JobListItem(
-                                job = job,
-                                onJobClick = {
-                                    job.id?.let { jobId ->
-                                        onBusinessUiEvent(BusinessHomeUiEvents.OnJobClick(jobId))
-                                    }
-                                },
-                            )
-                        }
+            if (jobs.isEmpty()) {
+                NoJobsMessage()
+            } else {
+                LazyColumn {
+                    items(jobs) { job ->
+                        JobListItem(
+                            job = job,
+                            onJobClick = {
+                                job.id?.let { jobId ->
+                                    onBusinessUiEvent(BusinessHomeUiEvents.OnJobClick(jobId))
+                                }
+                            },
+                        )
                     }
                 }
             }
