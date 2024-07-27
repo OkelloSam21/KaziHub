@@ -52,6 +52,7 @@ import com.samuelokello.kazihub.presentation.common.HandleLoading
 import com.samuelokello.kazihub.presentation.common.HandleSuccess
 import com.samuelokello.kazihub.presentation.common.components.CustomButton
 import com.samuelokello.kazihub.presentation.destinations.CreateProfileScreenDestination
+import com.samuelokello.kazihub.presentation.destinations.HomeScreenDestination
 import com.samuelokello.kazihub.presentation.shared.components.EditTextField
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import com.samuelokello.kazihub.utils.UserRole
@@ -78,6 +79,13 @@ fun SignInScreen(navigator: DestinationsNavigator, userType: UserRole = UserRole
                         )
                     )
                 },
+                navigateToHome = {
+                    navigator.navigate(
+                        HomeScreenDestination(
+                            userType
+                        )
+                    )
+                },
                 navigateToSignUp = { navigator.popBackStack() }
             )
         }
@@ -89,10 +97,11 @@ private fun SignInContent(
     state: SignInState,
     onEvent: (SignInEvent) -> Unit,
     navigateToProfileCreation: () -> Unit,
-    navigateToSignUp: () -> Unit
+    navigateToSignUp: () -> Unit,
+    navigateToHome: () -> Unit
 ) {
     val isPasswordVisible = remember { mutableStateOf(false) }
-    val isFormComplete  = state.userName.isNotEmpty() && state.password.isNotEmpty()
+    val isFormComplete = state.userName.isNotEmpty() && state.password.isNotEmpty()
 
     HandleLoading(state)
     HandleError(state)
@@ -103,6 +112,13 @@ private fun SignInContent(
             navigateToProfileCreation()
         }
     }
+
+    LaunchedEffect(state.navigateToHome) {
+        if (state.navigateToHome) {
+            navigateToHome()
+        }
+    }
+
     LaunchedEffect(state.navigateToSignUp) {
         if (state.navigateToProfileCreation) {
             navigateToSignUp()
