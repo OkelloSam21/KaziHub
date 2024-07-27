@@ -1,17 +1,15 @@
 package com.samuelokello.kazihub.data.model.profile
 
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 
-@Serializable
 data class ProfileResponse(
-    @SerialName("code")
+    @SerializedName("code")
     val code: Int,
-    @SerialName("data")
+    @SerializedName("data")
     val `data`: Data,
-    @SerialName("message")
+    @SerializedName("message")
     val message: String,
-    @SerialName("status")
+    @SerializedName("status")
     val status: String
 )

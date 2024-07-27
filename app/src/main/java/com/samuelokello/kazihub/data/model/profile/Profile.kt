@@ -1,33 +1,31 @@
 package com.samuelokello.kazihub.data.model.profile
 
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 
-@Serializable
 data class Profile(
-    @SerialName("bio")
+    @SerializedName("bio")
     val bio: String,
-    @SerialName("email")
+    @SerializedName("email")
     val email: String,
-    @SerialName("id")
+    @SerializedName("id")
     val id: Int,
-    @SerialName("img")
+    @SerializedName("img")
     val img: Any,
-    @SerialName("is_verified")
+    @SerializedName("is_verified")
     val isVerified: Boolean,
-    @SerialName("joined_on")
+    @SerializedName("joined_on")
     val joinedOn: String,
-    @SerialName("lat")
+    @SerializedName("lat")
     val lat: Double,
-    @SerialName("location")
+    @SerializedName("location")
     val location: String,
-    @SerialName("lon")
+    @SerializedName("lon")
     val lon: Double,
-    @SerialName("phone")
+    @SerializedName("phone")
     val phone: String,
-    @SerialName("user_id")
+    @SerializedName("user_id")
     val userId: Int,
-    @SerialName("verification_code")
+    @SerializedName("verification_code")
     val verificationCode: String
 )

@@ -1,21 +1,19 @@
 package com.samuelokello.kazihub.data.model.profile
 
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 
-@Serializable
 data class Data(
-    @SerialName("fname")
+    @SerializedName("fname")
     val fname: String,
-    @SerialName("id")
+    @SerializedName("id")
     val id: Int,
-    @SerialName("lname")
+    @SerializedName("lname")
     val lname: String,
-    @SerialName("profile")
+    @SerializedName("profile")
     val profile: Profile,
-    @SerialName("role")
+    @SerializedName("role")
     val role: String,
-    @SerialName("username")
+    @SerializedName("username")
     val username: String
 )
