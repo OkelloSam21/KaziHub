@@ -44,13 +44,13 @@ class AuthRepositoryImpl
 
     // check if user profile exist
     override suspend fun checkProfile(): Resource<Boolean> {
-//        return try {
-//            val response = api.checkProfile()
-//            Log.d("AuthRepository", "checkProfile: $response")
-//            Resource.Success(response.data)
-//        } catch (e: Exception) {
-//            handleException(e)
-//        }
+        return try {
+            val response = api.getAllWorkerProfiles()
+            Log.d("AuthRepository", "checkProfile: $response")
+            Resource.Success(response.size > 0)
+        } catch (e: Exception) {
+            handleException(e)
+        }
     }
 
 
