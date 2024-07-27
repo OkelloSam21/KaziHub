@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.samuelokello.kazihub.domain.model.sign_up.SignUpRequest
+import com.samuelokello.kazihub.domain.model.shared.auth.sign_up.SignUpRequest
 import com.samuelokello.kazihub.domain.repositpry.AuthRepository
 import com.samuelokello.kazihub.utils.Resource
 import com.samuelokello.kazihub.utils.UserRole

@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.domain.model.sign_up
+package com.samuelokello.kazihub.domain.model.shared.auth.sign_up
 
 data class SignUpRequest(
     val username: String,

@@ -9,6 +9,7 @@ data class SignInState(
     val userName: String = "",
     val password: String = "",
     val navigateToProfileCreation: Boolean = false,
+    val navigateToHome: Boolean = false,
     override val isLoading: Boolean = false,
     val navigateToSignUp: Boolean = false,
 ): AuthState

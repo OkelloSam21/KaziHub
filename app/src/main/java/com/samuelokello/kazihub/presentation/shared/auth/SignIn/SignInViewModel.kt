@@ -144,4 +144,31 @@ class SignInViewModel
             }
         }
     }
+
+    // check if user has already created a profile
+    fun checkProfile() {
+        viewModelScope.launch {
+            when (val response = repository.checkProfile()) {
+                is Resource.Success -> {
+                    _state.update {
+                        it.copy(
+                            navigateToProfileCreation = false,
+                            navigateToHome = true
+                        )
+                    }
+                    Log.d("SignInViewModel", "checkProfile: ${response.data}")
+                }
+
+                is Resource.Error -> {
+                    _state.update {
+                        it.copy(
+                            navigateToProfileCreation = true,
+                            navigateToHome = false
+                        )
+                    }
+                    Log.d("SignInViewModel", "checkProfile: ${response.message}")
+                }
+            }
+        }
+    }
 }
