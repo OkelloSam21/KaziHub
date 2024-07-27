@@ -1,5 +1,6 @@
 package com.samuelokello.kazihub.data.remote
 
+import com.samuelokello.kazihub.data.model.profile.ProfileResponse
 import com.samuelokello.kazihub.data.model.sign_in.SignInRequest
 import com.samuelokello.kazihub.data.model.sign_in.SignInResponse
 import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileRequest
@@ -36,6 +37,9 @@ interface KaziHubApi {
 
     @GET("/auth/token/refresh")
     suspend fun refreshToken(@Header("Authorization") token: String): SignInResponse
+
+    @GET("/auth/user/profile")
+    suspend fun getCurrentUser(@Header("Authorization") token: String): ProfileResponse
 
     @POST("/business/profiles/create")
     suspend fun createBusinessProfile(
