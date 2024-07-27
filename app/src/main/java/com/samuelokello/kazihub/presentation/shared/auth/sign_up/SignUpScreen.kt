@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,9 +46,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.R
-import com.samuelokello.kazihub.presentation.common.HandleError
-import com.samuelokello.kazihub.presentation.common.HandleLoading
-import com.samuelokello.kazihub.presentation.common.HandleSuccess
+import com.samuelokello.kazihub.presentation.common.ShowErrorDialog
+import com.samuelokello.kazihub.presentation.common.ShowErrorToast
+import com.samuelokello.kazihub.presentation.common.ShowLoadingDialog
 import com.samuelokello.kazihub.presentation.common.components.CustomButton
 import com.samuelokello.kazihub.presentation.destinations.SignInScreenDestination
 import com.samuelokello.kazihub.presentation.shared.components.EditTextField
@@ -60,9 +61,8 @@ import com.samuelokello.kazihub.utils.UserRole
 fun SignUpScreen(userType: UserRole  = UserRole.WORKER, navigator: DestinationsNavigator) {
 
     val viewModel: SignUpViewModel = hiltViewModel()
-    val state by viewModel.state
+    val state by viewModel.state.collectAsState()
 
-    viewModel.onEvent(SignUpEvent.OnUserRoleChanged(userType))
 
     KaziHubTheme {
         Surface(
@@ -74,8 +74,7 @@ fun SignUpScreen(userType: UserRole  = UserRole.WORKER, navigator: DestinationsN
             SignUpContent(
                 state = state,
                 onEvent = viewModel::onEvent,
-                navigateToSIgnIn = { navigator.navigate(SignInScreenDestination(userType)) },
-                userType = userType
+                navigateToSIgnIn = { navigator.navigate(SignInScreenDestination()) },
             )
         }
     }
@@ -86,7 +85,6 @@ private fun SignUpContent(
     state: SignUpState,
     onEvent: (SignUpEvent) -> Unit,
     navigateToSIgnIn: () -> Unit,
-    userType: UserRole
 ) {
     val isPasswordVisible = remember { mutableStateOf(false) }
     val isFormValid =
@@ -95,9 +93,15 @@ private fun SignUpContent(
                 state.lastName.isNotBlank() &&
                 state.password.length > 8
 
-    HandleLoading(state)
-    HandleError(state)
-    HandleSuccess(state, "Sign Up Successful")
+    if (state.error != null){
+        ShowErrorToast(state.error)
+        ShowErrorDialog(error = state.error)
+    }
+
+    if (state.isLoading) {
+        ShowLoadingDialog()
+    }
+
     HandleNavigation(state, navigateToSIgnIn)
 
     SignUpForm(
@@ -105,8 +109,7 @@ private fun SignUpContent(
         isPasswordVisible = isPasswordVisible,
         isFormValid = isFormValid,
         onEvent = onEvent,
-        onClick = navigateToSIgnIn,
-        userRole = userType
+        onClick = navigateToSIgnIn
     )
 
 }
@@ -118,7 +121,6 @@ fun SignUpForm(
     isFormValid: Boolean,
     onEvent: (SignUpEvent) -> Unit,
     onClick: () -> Unit,
-    userRole: UserRole
 ) {
     Column(
         modifier = Modifier
@@ -150,7 +152,7 @@ fun SignUpForm(
             EditTextField(
                 label = "User Name",
                 value = state.userName,
-                onValueChange = {onEvent(SignUpEvent.OnUserNameChanged(it))},
+                onValueChange = {onEvent(SignUpEvent.UserNameChanged(it))},
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
@@ -192,7 +194,7 @@ fun SignUpForm(
             OutlinedTextField(
                 value = state.password,
                 onValueChange = { password ->
-                    onEvent(SignUpEvent.OnPasswordChanged(password))
+                    onEvent(SignUpEvent.PasswordChanged(password))
                 },
                 label = { Text(text = "Password") },
                 trailingIcon = {
@@ -228,13 +230,7 @@ fun SignUpForm(
                 onClick = {
                     if (isFormValid) {
                         onEvent(
-                            SignUpEvent.OnSignUpClicked(
-                                state.userName,
-                                state.firstName,
-                                state.lastName,
-                                state.password,
-                                role = userRole.name
-                            )
+                            SignUpEvent.SignUpClicked
                         )
                     }
                 },
@@ -324,7 +320,7 @@ fun SignUpForm(
 
 @Composable
 fun HandleNavigation(state: SignUpState, navigate: () -> Unit) {
-    if (state.navigateCreateProfile) {
+    if (state.isSignUpSuccessful) {
         navigate()
     }
 }

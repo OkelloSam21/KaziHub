@@ -1,6 +1,7 @@
 package com.samuelokello.kazihub.presentation.shared.auth.SignIn
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,7 +28,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -47,46 +48,46 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.R
-import com.samuelokello.kazihub.presentation.common.HandleError
-import com.samuelokello.kazihub.presentation.common.HandleLoading
-import com.samuelokello.kazihub.presentation.common.HandleSuccess
+import com.samuelokello.kazihub.presentation.common.ShowLoadingDialog
 import com.samuelokello.kazihub.presentation.common.components.CustomButton
-import com.samuelokello.kazihub.presentation.destinations.CreateProfileScreenDestination
-import com.samuelokello.kazihub.presentation.destinations.HomeScreenDestination
 import com.samuelokello.kazihub.presentation.shared.components.EditTextField
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
-import com.samuelokello.kazihub.utils.UserRole
 
 @Destination
 @Composable
-fun SignInScreen(navigator: DestinationsNavigator, userType: UserRole = UserRole.WORKER) {
+fun SignInScreen(
+    viewModel: SignInViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator
+) {
 
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
         KaziHubTheme {
-            val viewModel: SignInViewModel = hiltViewModel()
             val state by viewModel.state.collectAsState()
+
+            LaunchedEffect(state.navigateToProfileCreation) {
+                if (state.navigateToProfileCreation) {
+//                    navigator.navigate(com.samuelokello.kazihub.presentation.destinations.CreateProfileScreenDestination())
+                }
+            }
+
+            LaunchedEffect(state.navigateToHome) {
+                if (state.navigateToHome) {
+//                    navigator.navigate(HomeScreenDestination())
+                }
+            }
+
+            LaunchedEffect(state.navigateToSignUp) {
+                if (state.navigateToSignUp) {
+                    navigator.popBackStack()
+                }
+            }
 
             SignInContent(
                 state = state,
                 onEvent = viewModel::onEvent,
-                navigateToProfileCreation = {
-                    navigator.navigate(
-                        CreateProfileScreenDestination(
-                            userType
-                        )
-                    )
-                },
-                navigateToHome = {
-                    navigator.navigate(
-                        HomeScreenDestination(
-                            userType
-                        )
-                    )
-                },
-                navigateToSignUp = { navigator.popBackStack() }
             )
         }
     }
@@ -96,45 +97,24 @@ fun SignInScreen(navigator: DestinationsNavigator, userType: UserRole = UserRole
 private fun SignInContent(
     state: SignInState,
     onEvent: (SignInEvent) -> Unit,
-    navigateToProfileCreation: () -> Unit,
-    navigateToSignUp: () -> Unit,
-    navigateToHome: () -> Unit
 ) {
-    val isPasswordVisible = remember { mutableStateOf(false) }
-    val isFormComplete = state.userName.isNotEmpty() && state.password.isNotEmpty()
-
-    HandleLoading(state)
-    HandleError(state)
-    HandleSuccess(state = state, successMessage = state.error)
-
-    LaunchedEffect(state.navigateToProfileCreation) {
-        if (state.navigateToProfileCreation) {
-            navigateToProfileCreation()
-        }
-    }
-
-    LaunchedEffect(state.navigateToHome) {
-        if (state.navigateToHome) {
-            navigateToHome()
-        }
-    }
-
-    LaunchedEffect(state.navigateToSignUp) {
-        if (state.navigateToProfileCreation) {
-            navigateToSignUp()
-        }
-    }
-
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(20.dp),
     ) {
         SignInHeader()
-        SignInForm(state, isPasswordVisible, onEvent, isFormComplete)
-        SignInFooter(navigateToSignUp)
+        SignInForm(state, onEvent)
+        SignInFooter(onEvent)
     }
+
+    if (state.isLoading) {
+        ShowLoadingDialog()
+    }
+
+    state.error?.let { error ->
+        Toast.makeText(LocalContext.current, error, Toast.LENGTH_LONG).show()
+        }
 }
 
 @Composable
@@ -157,18 +137,16 @@ fun SignInHeader() {
 /**
  * A composable function that displays the sign in form
  * @param state: SignInState - the state of the sign in screen
- * @param isPasswordVisible: MutableState<Boolean> - the state of the password visibility
  * @param onEvent: (SignInEvent) -> Unit - the event handler
- * @param isFormValid boolean variable for checking if form is filled
  *
  */
 @Composable
 fun SignInForm(
     state: SignInState,
-    isPasswordVisible: MutableState<Boolean>,
-    onEvent: (SignInEvent) -> Unit,
-    isFormValid: Boolean
+    onEvent: (SignInEvent) -> Unit
 ) {
+
+    val isPasswordVisible = remember { mutableStateOf(false) }
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -177,7 +155,7 @@ fun SignInForm(
         EditTextField(
             value = state.userName,
             onValueChange = { email ->
-                onEvent(SignInEvent.OnUserName(email))
+                onEvent(SignInEvent.UserNameChanged(email))
             },
             label = "User Name",
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -189,7 +167,7 @@ fun SignInForm(
         OutlinedTextField(
             value = state.password,
             onValueChange = { password ->
-                onEvent(SignInEvent.OnPasswordChanged(password))
+                onEvent(SignInEvent.PasswordChanged(password))
             },
             label = { Text(text = "Password") },
             trailingIcon = {
@@ -229,13 +207,10 @@ fun SignInForm(
         CustomButton(
             onClick = {
                 onEvent(
-                    SignInEvent.OnSignInClicked(
-                        state.userName,
-                        state.password
-                    )
+                    SignInEvent.SignInClicked
                 )
             },
-            isEnabled = isFormValid,
+            isEnabled = state.userName.isNotBlank() && state.password.isNotBlank(),
             text = "SIGN IN"
         )
 
@@ -244,10 +219,10 @@ fun SignInForm(
 
 /**
  * A composable function that displays the sign in footer
- * @param navigateToSignUp: () -> Unit - the event handler for navigating to the sign up screen
+ * @param createAccountClicked: () -> Unit - the event handler for navigating to the sign up screen
  */
 @Composable
-fun SignInFooter(navigateToSignUp: () -> Unit) {
+fun SignInFooter(onEvent: (SignInEvent) -> Unit) {
     Spacer(modifier = Modifier.height(32.dp))
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -313,7 +288,7 @@ fun SignInFooter(navigateToSignUp: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = "New User ? ")
-                TextButton(onClick = { navigateToSignUp() }) {
+                TextButton(onClick =  {onEvent(SignInEvent.CreateAccountClicked)} ) {
                     Text(
                         text = "Create Account",
                         style = MaterialTheme.typography.bodyLarge,

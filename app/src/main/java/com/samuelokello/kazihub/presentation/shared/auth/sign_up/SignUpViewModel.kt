@@ -1,117 +1,87 @@
 package com.samuelokello.kazihub.presentation.shared.auth.sign_up
 
-import android.util.Log
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.samuelokello.kazihub.domain.model.shared.auth.sign_up.SignUpRequest
-import com.samuelokello.kazihub.domain.repositpry.AuthRepository
+import com.samuelokello.kazihub.domain.uscase.SignUpUseCase
 import com.samuelokello.kazihub.utils.Resource
-import com.samuelokello.kazihub.utils.UserRole
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SignUpViewModel
-@Inject constructor(
-    private val repository: AuthRepository,
-    savedStateHandle: SavedStateHandle
-    ) : ViewModel() {
+class SignUpViewModel @Inject constructor(private val signUpUseCase: SignUpUseCase) : ViewModel() {
 
-    var state = mutableStateOf(SignUpState())
-        private set
-
-    private var userRole: UserRole
-    init {
-        savedStateHandle["userRole"] = UserRole.WORKER.name
-        userRole = try {
-            UserRole.valueOf(savedStateHandle.get<String>("userRole")?: "")
-        } catch (e: Exception) {
-            null
-        }?: UserRole.WORKER
-    }
-
-    private fun showLoading() {
-        state.value.copy(isLoading = true).also { state.value = it }
-    }
-
-    private fun hideLoading() {
-        state.value.copy(isLoading = false).also { state.value = it }
-    }
+    private val _state = MutableStateFlow(SignUpState())
+    val state: StateFlow<SignUpState> = _state
 
     fun onEvent(event: SignUpEvent) {
         when (event) {
-            is SignUpEvent.OnUserRoleChanged -> {
-                userRole = event.role
-            }
-            is SignUpEvent.OnUserNameChanged -> {
-                state.value.copy(userName = event.userName).also { state.value = it }
-            }
+            is SignUpEvent.UserNameChanged -> _state.update { it.copy(userName = event.userName) }
+            is SignUpEvent.FirstNameChanged -> _state.update { it.copy(firstName = event.firstName) }
+            is SignUpEvent.LastNameChanged -> _state.update { it.copy(lastName = event.lastName) }
+            is SignUpEvent.PasswordChanged -> _state.update { it.copy(password = event.password) }
+            is SignUpEvent.UserRoleChanged -> _state.update { it.copy(userRole = event.role) }
+            is SignUpEvent.SignUpClicked -> signUp()
+        }
+    }
 
-            is SignUpEvent.FirstNameChanged -> {
-                state.value.copy(firstName = event.firstName).also { state.value = it }
-            }
+    private fun signUp() {
+        val currentState = _state.value
+        if (!validateInputs()) return
 
-            is SignUpEvent.LastNameChanged -> {
-                state.value.copy(lastName = event.lastName).also { state.value = it }
-            }
-
-            is SignUpEvent.OnPasswordChanged -> {
-                state.value.copy(password = event.password).also { state.value = it }
-            }
-
-            is SignUpEvent.OnSignUpClicked -> {
-                val userName = state.value.userName
-                val firstName = state.value.firstName
-                val lastName = state.value.lastName
-                val password = state.value.password
-                val signUpState = SignUpRequest(
-                    username = userName,
-                    fname = firstName,
-                    lname = lastName,
-                    role = userRole.name,
-                    password = password
+        viewModelScope.launch {
+            signUpUseCase(
+                SignUpRequest(
+                    username = currentState.userName,
+                    fname = currentState.firstName,
+                    lname = currentState.lastName,
+                    role = currentState.userRole.name,
+                    password = currentState.password
                 )
-                viewModelScope.launch(Dispatchers.IO){
-                    showLoading()
-                    validate()
-                    when(val response = repository.signUp(signUpState)) {
-                        is Resource.Success -> {
-                            state.value.copy(
-                                navigateCreateProfile = true,
-                                signUpSuccess = true,
-                                signUpError = null
-                            ).also { state.value = it }
-                            hideLoading()
-                            Log.d("SignUpViewModel", "onEvent: ${response.data}")
+            ).collect { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        _state.update {
+                            it.copy(isLoading = false, isSignUpSuccessful = true, error = null)
                         }
-
-                        is Resource.Error -> {
-                            state.value.copy(
-                                signUpError = response.message ?: "An error occurred"
-                            ).also { state.value = it }
-                            hideLoading()
+                    }
+                    is Resource.Error -> {
+                        _state.update {
+                            it.copy(isLoading = false, error = result.message)
                         }
+                    }
+                    is Resource.Loading -> {
+                        _state.update { it.copy(isLoading = true) }
                     }
                 }
             }
         }
     }
 
-    private fun validate() {
-
-        if (state.value.userName.isEmpty() || state.value.firstName.isEmpty() || state.value.lastName.isEmpty() || state.value.password.isEmpty()) {
-            state.value.copy(
-                signUpError = "All fields are required"
-            ).also { state.value = it }
-        }
-        else {
-            state.value.copy(
-                signUpError = null
-            ).also { state.value = it }
+    private fun validateInputs(): Boolean {
+        val currentState = _state.value
+        return when {
+            currentState.userName.isBlank() -> {
+                _state.update { it.copy(error = "Username cannot be empty") }
+                false
+            }
+            currentState.firstName.isBlank() -> {
+                _state.update { it.copy(error = "First name cannot be empty") }
+                false
+            }
+            currentState.lastName.isBlank() -> {
+                _state.update { it.copy(error = "Last name cannot be empty") }
+                false
+            }
+            currentState.password.length < 8 -> {
+                _state.update { it.copy(error = "Password must be at least 8 characters long") }
+                false
+            }
+            else -> true
         }
     }
 }

@@ -1,15 +1,14 @@
 package com.samuelokello.kazihub.presentation.shared.auth.sign_up
 
-import com.samuelokello.kazihub.presentation.common.AuthState
+import com.samuelokello.kazihub.utils.UserRole
 
-data class SignUpState (
-    val signUpError: String? = null,
-    val signUpSuccess: Boolean = false,
+data class SignUpState(
     val userName: String = "",
     val firstName: String = "",
     val lastName: String = "",
     val password: String = "",
-    val navigateToHome: Boolean = false,
-    override val isLoading: Boolean = false,
-    val navigateCreateProfile: Boolean = false
-): AuthState
+    val userRole: UserRole = UserRole.WORKER,
+    val isLoading: Boolean = false,
+    val error: String? = null,
+    val isSignUpSuccessful: Boolean = false
+)

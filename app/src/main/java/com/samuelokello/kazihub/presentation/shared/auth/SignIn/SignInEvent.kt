@@ -1,8 +1,8 @@
 package com.samuelokello.kazihub.presentation.shared.auth.SignIn
 
-sealed interface SignInEvent {
-    data class OnUserName(val userName: String): SignInEvent
-    data class OnPasswordChanged(val password: String): SignInEvent
-    data class OnSignInClicked(val userName:String, val password: String): SignInEvent
-    data class OnCreateAccountClicked(val navigateToSignUp: Boolean): SignInEvent
+sealed class SignInEvent {
+    data class UserNameChanged(val userName: String) : SignInEvent()
+    data class PasswordChanged(val password: String) : SignInEvent()
+    data object SignInClicked : SignInEvent()
+    data object CreateAccountClicked : SignInEvent()
 }
