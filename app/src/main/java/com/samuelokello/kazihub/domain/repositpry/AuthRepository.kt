@@ -11,4 +11,5 @@ interface AuthRepository {
     suspend fun signUp(signUpRequest: SignUpRequest): Resource<SignUpResponse>
     suspend fun signIn(signInRequest: SignInRequest): Resource<SignInResponse>
     suspend fun getCurrentUser(): Resource<ProfileResponse>
+    suspend fun refreshToken(): Resource<SignInResponse>
 }

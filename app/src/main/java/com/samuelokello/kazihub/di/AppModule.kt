@@ -1,8 +1,8 @@
 package com.samuelokello.kazihub.di
 
-import KaziHubApi
 import android.content.Context
 import androidx.lifecycle.ViewModelProvider
+import com.samuelokello.kazihub.data.remote.KaziHubApi
 import com.samuelokello.kazihub.data.repository.AuthRepositoryImpl
 import com.samuelokello.kazihub.data.repository.BusinessRepositoryImpl
 import com.samuelokello.kazihub.data.repository.JobRepositoryImpl
@@ -87,36 +87,33 @@ object AppModule {
     @Singleton
     fun provideAuthRepository(
         api: KaziHubApi,
-        @ApplicationContext context: Context,
+        token: TokenManager
     ): AuthRepository {
-        return AuthRepositoryImpl(api, context)
+        return AuthRepositoryImpl(api, token)
     }
 
     @Provides
     @Singleton
     fun provideBusinessRepository(
         api: KaziHubApi,
-        @ApplicationContext context: Context
     ): BusinessRepository {
-        return BusinessRepositoryImpl(api,context)
+        return BusinessRepositoryImpl(api)
     }
 
     @Provides
     @Singleton
     fun provideWorkerRepository(
         api: KaziHubApi,
-        @ApplicationContext context: Context
     ): WorkerRepository {
-        return WorkerRepositoryImp(api,context)
+        return WorkerRepositoryImp(api)
     }
 
     @Provides
     @Singleton
     fun provideJobRepository(
         api: KaziHubApi,
-        context: Context
     ): JobRepository {
-        return JobRepositoryImpl(api = api, context = context)
+        return JobRepositoryImpl(api)
     }
 
     @Provides
