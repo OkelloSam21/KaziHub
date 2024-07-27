@@ -32,8 +32,11 @@ class CreateJobViewModel @Inject constructor(
     val createJobState = _createJobRequest.asStateFlow() // Exposing an immutable StateFlow for observing the state
 
     // MutableStateFlow to hold the list of job categories
-    private val _categories = MutableStateFlow<List<CategoryResponse?>>(emptyList())
+    private val _categories = MutableStateFlow<List<CategoryResponse>>(emptyList())
     val categories = _categories.asStateFlow() // Exposing an immutable StateFlow for observing the categories
+
+    private val _selectedCategory = MutableStateFlow<CategoryResponse?>(null)
+    val selectedCategory = _selectedCategory.asStateFlow()
 
     // Function to handle the Create Job button click
     fun onCreateJobClick() {
@@ -108,9 +111,10 @@ class CreateJobViewModel @Inject constructor(
         }
     }
 
-    fun onCategoryChange(item: String) {
+    fun onCategoryChange(category: CategoryResponse) {
+        _selectedCategory.value = category
         _createJobRequest.update {
-            it.copy(category = item)
+            it.copy(categoryId = category.id!!)
         }
     }
 
@@ -120,12 +124,11 @@ class CreateJobViewModel @Inject constructor(
             when (val response = repository.fetchJobCategory()) {
                 is Resource.Success -> {
                     // Updating the _categories state with the fetched categories
-                    _categories.value = listOf(response.data)
+                    _categories.value = listOf(response.data!!)
                 }
 
                 is Resource.Error -> {
                     // Handling the error response
-                    val error = response.message
                 }
             }
         }
