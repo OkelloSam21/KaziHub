@@ -30,7 +30,7 @@ import com.samuelokello.kazihub.presentation.destinations.UserTYpeScreenDestinat
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 import com.samuelokello.kazihub.ui.theme.primaryLight
 
-//@RootNavGraph(start = true)
+@RootNavGraph(start = true)
 @Destination
 @Composable
 fun OnBoardingScreen(navigator:DestinationsNavigator) {
@@ -45,7 +45,6 @@ fun OnBoardingScreen(navigator:DestinationsNavigator) {
 
 }
 
-@Destination
 @Composable
 fun OnBoardingContent(
     onclick: () -> Unit
