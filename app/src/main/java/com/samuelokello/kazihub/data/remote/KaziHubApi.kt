@@ -1,4 +1,3 @@
-package com.samuelokello.kazihub.data.remote
 
 import com.samuelokello.kazihub.data.model.profile.ProfileResponse
 import com.samuelokello.kazihub.data.model.sign_in.SignInRequest
@@ -22,222 +21,157 @@ import com.samuelokello.kazihub.domain.model.worker.skill.WorkerSkillResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface KaziHubApi {
+    // Authentication
     @POST("auth/signup")
-    suspend fun signUp(@Body signUpRequest: SignUpRequest): SignUpResponse
+    suspend fun signUp(@Body request: SignUpRequest): SignUpResponse
 
     @POST("auth/signin")
-    suspend fun signIn(@Body signInRequest: SignInRequest): SignInResponse
+    suspend fun signIn(@Body request: SignInRequest): SignInResponse
 
-    @GET("/auth/token/refresh")
-    suspend fun refreshToken(@Header("Authorization") token: String): SignInResponse
+    @POST("auth/token/refresh")
+    suspend fun refreshToken(@Body refreshToken: String): SignInResponse
 
-    @GET("/auth/user/profile")
-    suspend fun getCurrentUser(@Header("Authorization") token: String): ProfileResponse
+    @GET("auth/user/profile")
+    suspend fun getCurrentUser(): ProfileResponse
 
-    @POST("/business/profiles/create")
-    suspend fun createBusinessProfile(
-        @Header("Authorization") token: String,
-        @Body businessProfile: BusinessProfileRequest
-    ): BusinessProfileResponse
+    // Business Profile
+    @POST("business/profiles/create")
+    suspend fun createBusinessProfile(@Body profile: BusinessProfileRequest): BusinessProfileResponse
 
-    @GET("/business/profiles/{bus_profile_id}")
-    suspend fun getBusinessProfile(
-        @Path("bus_profile_id") id: Int
-    ): BusinessProfileResponse
+    @GET("business/profiles/{bus_profile_id}")
+    suspend fun getBusinessProfile(@Path("bus_profile_id") id: Int): BusinessProfileResponse
 
-    @GET("/business/profiles/all/")
+    @GET("business/profiles/all")
     suspend fun getAllBusinessProfiles(): List<BusinessProfileResponse>
 
-    @PUT("/business/profiles/{bus_profile_id}/update")
+    @PUT("business/profiles/{bus_profile_id}/update")
     suspend fun updateBusinessProfile(
-        @Header("Authorization") token: String,
         @Path("bus_profile_id") id: Int,
-        @Body businessProfile: BusinessProfileRequest
+        @Body profile: BusinessProfileRequest
     ): BusinessProfileResponse
 
-    @PUT("/business/profiles/{bus_profile_id}/update/image")
+    @PUT("business/profiles/{bus_profile_id}/update/image")
     suspend fun updateBusinessProfileImage(
-        @Header("Authorization") token: String,
         @Path("bus_profile_id") id: Int,
-        @Body businessProfile: BusinessProfileRequest
+        @Body profile: BusinessProfileRequest
     ): BusinessProfileResponse
 
-    @PUT("/business/profiles/image/{profile_id}")
-    suspend fun getBusinessProfileImage(
-        @Path("profile_id") id: Int
-    ): BusinessProfileResponse
+    @GET("business/profiles/image/{profile_id}")
+    suspend fun getBusinessProfileImage(@Path("profile_id") id: Int): BusinessProfileResponse
 
-    @GET("/business/verify/with_email/")
-    suspend fun verifyBusinessByEmail(
-        @Path("bus_profile_id") id: Int,
-        @Body businessProfile: BusinessProfileRequest
-    ): BusinessProfileResponse
+    @POST("business/verify/with_email")
+    suspend fun verifyBusinessByEmail(@Body email: String): BusinessProfileResponse
 
-    @GET("/business/verify/with_phone/")
-    suspend fun verifyBusinessByPhone(
-        @Path("bus_profile_id") id: Int,
-        @Body businessProfile: BusinessProfileRequest
-    ): BusinessProfileResponse
+    @POST("business/verify/with_phone")
+    suspend fun verifyBusinessByPhone(@Body phone: String): BusinessProfileResponse
 
-    @GET("/business/profile/verify/")
-    suspend fun verifyBusinessByCode(
-        @Path("bus_profile_id") id: Int,
-        @Body businessProfile: BusinessProfileRequest
-    ): BusinessProfileResponse
+    @POST("business/profile/verify")
+    suspend fun verifyBusinessByCode(@Body code: String): BusinessProfileResponse
 
+    // Worker Profile
+    @POST("worker/profiles/create")
+    suspend fun createWorkerProfile(@Body profile: WorkerProfileRequest): WorkerProfileResponse
 
-    // worker
-    @POST("/worker/profiles/create")
-    suspend fun createWorkerProfile(
-        @Header("Authorization") token: String,
-        @Body workerProfile: WorkerProfileRequest
-    ): WorkerProfileResponse
+    @GET("worker/profiles/{worker_profile_id}")
+    suspend fun getWorkerProfile(@Path("worker_profile_id") id: Int): WorkerProfileResponse
 
-    @GET("/worker/profiles/{worker_profile_id}")
-    suspend fun getWorkerProfile(
-        @Path("worker_profile_id") id: Int
-    ): WorkerProfileResponse
-
-    @GET("/worker/profiles/all/")
+    @GET("worker/profiles/all")
     suspend fun getAllWorkerProfiles(): List<WorkerProfileResponse>
 
-    @PUT("/worker/profiles/{worker_profile_id}/update")
+    @PUT("worker/profiles/{worker_profile_id}/update")
     suspend fun updateWorkerProfile(
-        @Header("Authorization") token: String,
         @Path("worker_profile_id") id: Int,
-        @Body workerProfile: WorkerProfileRequest
+        @Body profile: WorkerProfileRequest
     ): WorkerProfileResponse
 
-    @PUT("/worker/profiles/{worker_profile_id}/update/image")
+    @PUT("worker/profiles/{worker_profile_id}/update/image")
     suspend fun updateWorkerProfileImage(
-        @Header("Authorization") token: String,
         @Path("worker_profile_id") id: Int,
-        @Body workerProfile: WorkerProfileImageRequest
+        @Body request: WorkerProfileImageRequest
     ): WorkerProfileImageResponse
 
-    @GET("/worker/profiles/image/{profile_id}")
-    suspend fun getWorkerProfileImage(
-        @Path("profile_id") id: Int
-    ): WorkerProfileImageResponse
+    @GET("worker/profiles/image/{profile_id}")
+    suspend fun getWorkerProfileImage(@Path("profile_id") id: Int): WorkerProfileImageResponse
 
-    @POST("/worker/skills/create")
-    suspend fun createWorkerSkill(
-        @Header("Authorization") token: String,
-        @Body workerSkill: WorkerSkillRequest
-    ): WorkerSkillResponse
+    // Worker Skills
+    @POST("worker/skills/create")
+    suspend fun createWorkerSkill(@Body skill: WorkerSkillRequest): WorkerSkillResponse
 
-    @GET("/worker/skills/worker/{worker_profile_id}")
-    suspend fun getWorkerSkills(
-        @Path("worker_profile_id") id: Int
-    ): List<WorkerSkillResponse>
+    @GET("worker/skills/worker/{worker_profile_id}")
+    suspend fun getWorkerSkills(@Path("worker_profile_id") id: Int): List<WorkerSkillResponse>
 
-    @PUT("/worker/skills/{skill_id}/update")
+    @PUT("worker/skills/{skill_id}/update")
     suspend fun updateWorkerSkill(
-        @Header("Authorization") token: String,
         @Path("skill_id") id: Int,
-        @Body workerSkill: WorkerSkillRequest
+        @Body skill: WorkerSkillRequest
     ): WorkerSkillResponse
 
-    @DELETE("/worker/skills/{skill_id}/delete")
-    suspend fun deleteWorkerSkill(
-        @Header("Authorization") token: String,
-        @Path("skill_id") id: Int
-    ): WorkerSkillResponse
+    @DELETE("worker/skills/{skill_id}/delete")
+    suspend fun deleteWorkerSkill(@Path("skill_id") id: Int): WorkerSkillResponse
 
-    @GET("/worker/verify/with_email/")
-    suspend fun verifyWorkerByEmail(
-        @Header("Authorization") token: String,
-    ): WorkerProfileResponse
+    // Worker Verification
+    @POST("worker/verify/with_email")
+    suspend fun verifyWorkerByEmail(@Body email: String): WorkerProfileResponse
 
-    @GET("/worker/verify/with_phone/")
-    suspend fun verifyWorkerByPhone(
-        @Header("Authorization") token: String,
-    ): WorkerProfileResponse
+    @POST("worker/verify/with_phone")
+    suspend fun verifyWorkerByPhone(@Body phone: String): WorkerProfileResponse
 
-    @POST("/worker/verify/{code}")
-    suspend fun verifyWorkerByCode(
-        @Header("Authorization") token: String,
-    ): WorkerProfileResponse
+    @POST("worker/verify/{code}")
+    suspend fun verifyWorkerByCode(@Path("code") code: String): WorkerProfileResponse
 
-    // jobs endpoints
-    @POST("/jobs/category/create")
-    suspend fun createJobCategory(
-        @Body jobCategory: CreateCategoryRequest
-    ): CreateCategoryResponse
+    // Job Categories
+    @POST("jobs/category/create")
+    suspend fun createJobCategory(@Body category: CreateCategoryRequest): CreateCategoryResponse
 
-    @GET("/jobs/category/list")
+    @GET("jobs/category/list")
     suspend fun getJobCategories(): CategoryResponse
 
-    @GET("/jobs/category/{category_id}")
-    suspend fun getJobCategoryById(
-        @Path("category_id") id: Int
-    ): CategoryResponse
+    @GET("jobs/category/{category_id}")
+    suspend fun getJobCategoryById(@Path("category_id") id: Int): CategoryResponse
 
-    @POST("/jobs/create")
-    suspend fun createJob(
-        @Header("Authorization") token: String,
-        @Body job: CreateJobRequest
-    ): CreateJobsResponse
+    // Jobs
+    @POST("jobs/create")
+    suspend fun createJob(@Body job: CreateJobRequest): CreateJobsResponse
 
-    @GET("/jobs/list")
+    @GET("jobs/list")
     suspend fun getJobs(): JobResponse
 
-    @GET("/jobs/{job_id}")
-    suspend fun getJobById(
-        @Path("job_id") id: Int
-    ): JobResponse
+    @GET("jobs/{job_id}")
+    suspend fun getJobById(@Path("job_id") id: Int): JobResponse
 
-    @GET("/jobs/list/category/{category_id}")
-    suspend fun getJobsByCategory(
-        @Path("category_id") id: Int
-    ): JobResponse
+    @GET("jobs/list/category/{category_id}")
+    suspend fun getJobsByCategory(@Path("category_id") id: Int): JobResponse
 
-    @GET("/jobs/list/business/{business_id}")
-    suspend fun getJobsByBusiness(
-        @Path("business_id") id: Int
-    ): JobResponse
+    @GET("jobs/list/business/{business_id}")
+    suspend fun getJobsByBusiness(@Path("business_id") id: Int): JobResponse
 
-    @PUT("/jobs/update/{job_id}")
+    @PUT("jobs/update/{job_id}")
     suspend fun updateJob(
-        @Header("Authorization") token: String,
         @Path("job_id") id: Int,
         @Body job: CreateJobRequest
     ): CreateJobsResponse
 
-    @DELETE("/jobs/delete/{job_id}")
-    suspend fun deleteJob(
-        @Header("Authorization") token: String,
-        @Path("job_id") id: Int
-    ): CreateJobsResponse
+    @DELETE("jobs/delete/{job_id}")
+    suspend fun deleteJob(@Path("job_id") id: Int): CreateJobsResponse
 
-    @GET("/jobs/list/nearby/{lat}/{lon}")
+    @GET("jobs/list/nearby/{lat}/{lon}")
     suspend fun getJobsNearby(
         @Path("lat") lat: Double,
         @Path("lon") lon: Double
     ): JobResponse
 
-    @GET("/jobs/list/search/{q}")
-    suspend fun searchJobs(
-        @Path("q") query: String
-    ): JobResponse
+    @GET("jobs/list/search/{q}")
+    suspend fun searchJobs(@Path("q") query: String): JobResponse
 
-    @GET("/jobs/filter")
-    suspend fun filterJobs(
-        @Path("q") query: String
-    ): List<JobResponse>
+    @GET("jobs/filter")
+    suspend fun filterJobs(@Query("q") query: String): List<JobResponse>
 
-    @GET("/jobs/recent/")
+    @GET("jobs/recent")
     suspend fun getRecentJobs(@Query("limit") limit: Int): JobResponse
-
-
-
-
-
 }
