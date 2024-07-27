@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.Log
 import com.samuelokello.kazihub.data.model.sign_in.SignInResponse
 import com.samuelokello.kazihub.data.remote.KaziHubApi
-import com.samuelokello.kazihub.domain.model.sign_up.SignUpRequest
-import com.samuelokello.kazihub.domain.model.sign_up.SignUpResponse
+import com.samuelokello.kazihub.domain.model.shared.auth.sign_up.SignUpRequest
+import com.samuelokello.kazihub.domain.model.shared.auth.sign_up.SignUpResponse
 import com.samuelokello.kazihub.domain.repositpry.AuthRepository
 import com.samuelokello.kazihub.utils.Resource
 import com.samuelokello.kazihub.utils.handleException
@@ -40,6 +40,17 @@ class AuthRepositoryImpl
         } catch (e: Exception) {
             handleException(e)
         }
+    }
+
+    // check if user profile exist
+    override suspend fun checkProfile(): Resource<Boolean> {
+//        return try {
+//            val response = api.checkProfile()
+//            Log.d("AuthRepository", "checkProfile: $response")
+//            Resource.Success(response.data)
+//        } catch (e: Exception) {
+//            handleException(e)
+//        }
     }
 
 
