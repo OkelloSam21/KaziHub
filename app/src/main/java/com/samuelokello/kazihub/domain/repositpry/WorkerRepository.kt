@@ -15,8 +15,7 @@ interface WorkerRepository {
     suspend fun fetchWorkerImage(id: Int): Resource<WorkerProfileImageResponse>
     suspend fun createSkills(request: WorkerSkillRequest): Resource<WorkerSkillResponse>
     suspend fun deleteSkill(id: Int): Resource<WorkerSkillResponse>
-    suspend fun verifyWorkerWithEmail() : Resource<WorkerProfileResponse>
-    suspend fun verifyWorkerWithPhone() : Resource<WorkerProfileResponse>
-    suspend fun verifyWorkerWithCode() : Resource<WorkerProfileResponse>
-
+    suspend fun verifyWorkerWithEmail(email: String) : Resource<WorkerProfileResponse>
+    suspend fun verifyWorkerWithPhone(phone: String) : Resource<WorkerProfileResponse>
+    suspend fun verifyWorkerWithCode(code: String) : Resource<WorkerProfileResponse>
 }
