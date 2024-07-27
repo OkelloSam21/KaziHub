@@ -27,7 +27,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -48,7 +47,6 @@ import androidx.compose.ui.unit.dp
 import com.samuelokello.kazihub.domain.model.job.Job
 import com.samuelokello.kazihub.domain.model.job.category.CategoryResponse
 import com.samuelokello.kazihub.presentation.business.Home.BusinessHomeUiEvents
-import com.samuelokello.kazihub.presentation.common.components.AppBar
 import com.samuelokello.kazihub.presentation.common.components.CustomButton
 import com.samuelokello.kazihub.presentation.common.components.LocationAutocompleteTextField
 import com.samuelokello.kazihub.presentation.shared.components.EditTextField
@@ -79,129 +77,20 @@ fun BusinessHomeScreenContent(
     }
 
     if (showSheet) {
-        ModalBottomSheet(
-            onDismissRequest = { onSheetDismissRequest() },
-            sheetState = sheetState,
-        ) {
-            Column(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        .padding(bottom = 48.dp),
-            ) {
-                Text(text = "Create Job", style = MaterialTheme.typography.titleMedium)
-                Spacer(modifier = Modifier.height(8.dp))
-
-                EditTextField(
-                    value = createJobState.title,
-                    onValueChange = { onCreateJobUiEvent(CreateJobUiEvent.OnTitleChange(it)) },
-                    label = "Title",
-                    singleLine = true,
-                    keyboardOptions =
-                        KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Next,
-                        ),
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-
-                EditTextField(
-                    value = createJobState.description,
-                    onValueChange = { onCreateJobUiEvent(CreateJobUiEvent.OnDescriptionChange(it)) },
-                    label = "Description",
-                    singleLine = true,
-                    keyboardOptions =
-                        KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Next,
-                        ),
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-
-                EditTextField(
-                    value = createJobState.budget.toString(),
-                    onValueChange = { onCreateJobUiEvent(CreateJobUiEvent.OnBudgetChange(it.toInt())) },
-                    label = "Budget",
-                    singleLine = true,
-                    keyboardOptions =
-                        KeyboardOptions(
-                            keyboardType = KeyboardType.Number,
-                            imeAction = ImeAction.Next,
-                        ),
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-
-                LocationAutocompleteTextField(
-                    value = createJobState.location,
-                    onValueChange = { onCreateJobUiEvent(CreateJobUiEvent.OnLocationChange(it)) },
-                    suggestions = emptyList(),
-                    onSuggestionSelected = {},
-                    placeholder = "Location",
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-
-                EditTextField(
-                    value = createJobState.qualifications.joinToString(", "),
-                    onValueChange = { onCreateJobUiEvent(CreateJobUiEvent.OnQualificationsChange(it)) },
-                    label = "Qualifications",
-                    singleLine = true,
-                    keyboardOptions =
-                        KeyboardOptions(
-                            imeAction = ImeAction.Done,
-                        ),
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-
-                CategoryDropDown(
-                    categories = categories,
-                    selectedCategory = selectedCategory,
-                    onCreateJobUiEvent = onCreateJobUiEvent,
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                CustomButton(
-                    onClick = {
-                        // Handle job creation logic
-                        onCreateJobUiEvent(
-                            CreateJobUiEvent.OnCreateJobClick(
-                                title = createJobState.title,
-                                description = createJobState.description,
-                                budget = createJobState.budget,
-                                category = createJobState.category,
-                                location = createJobState.location,
-                                qualifications = createJobState.qualifications.toString(),
-                            ),
-                        )
-                    },
-                    isEnabled =
-                        createJobState.title.isNotBlank() &&
-                            createJobState.description.isNotBlank() &&
-                            createJobState.budget.toString().isNotBlank() &&
-                            createJobState.location.isNotBlank() &&
-                            createJobState.qualifications.toString().isNotBlank(),
-                    text = "Create Job",
-                )
-            }
-        }
+        CreateJobUi(
+            createJobState = createJobState,
+            onCreateJobUiEvent = onCreateJobUiEvent,
+            categories = categories,
+            selectedCategory = selectedCategory,
+        )
     }
-
     Scaffold(
-        topBar = {
-            AppBar(onNavigationIconClick = { onBusinessUiEvent(BusinessHomeUiEvents.OnDrawerClick) })
-        },
         floatingActionButton = {
             FloatingActionButton(
                 modifier =
-                    Modifier
-                        .padding(end = 16.dp, bottom = 92.dp)
-                        .size(64.dp),
+                Modifier
+                    .padding(end = 16.dp, bottom = 92.dp)
+                    .size(64.dp),
                 onClick = { onBusinessUiEvent(BusinessHomeUiEvents.OnFABClick) },
                 contentColor = Color.White,
                 containerColor = primaryLight,
@@ -213,10 +102,10 @@ fun BusinessHomeScreenContent(
 
         Column(
             modifier =
-                Modifier
-                    .padding(paddingValues)
-                    .padding(horizontal = 20.dp)
-                    .fillMaxWidth(),
+            Modifier
+                .padding(paddingValues)
+                .padding(horizontal = 20.dp)
+                .fillMaxWidth(),
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -228,9 +117,9 @@ fun BusinessHomeScreenContent(
 
             Column(
                 modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
             ) {
                 Row {
                     StatsCard(
@@ -293,9 +182,9 @@ fun BusinessHomeScreenContent(
 fun NoJobsMessage() {
     Column(
         modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(8.dp),
+        Modifier
+            .fillMaxSize()
+            .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -323,46 +212,120 @@ fun NoJobsMessage() {
     }
 }
 
-//@Composable
-//fun CategoryDropDown(
-//    state: CreateJobSheetState,
-//    onEvent: (CreateJobUiEvent) -> Unit,
-//) {
-//    val expanded by remember { mutableStateOf(false) }
-//    val categories = state.category
-//    val selectedCategory by remember { mutableStateOf(categories.firstOrNull()) }
-//    val icon = if (expanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown
-//    Column {
-//        Text(text = "Category", style = MaterialTheme.typography.bodyMedium)
-//        Spacer(modifier = Modifier.height(8.dp))
-//        // Implement category dropdown here
-//
-//        Box(
-//            modifier =
-//                Modifier
-//                    .fillMaxWidth()
-//                    .padding(8.dp),
-//        ) {
-//            OutlinedTextField(
-//                value = (selectedCategory ?: "").toString(),
-//                onValueChange = { onEvent(CreateJobUiEvent.OnCategoryChange(it)) },
-////                label = "Category",
-//                singleLine = true,
-//                keyboardOptions =
-//                    KeyboardOptions(
-//                        keyboardType = KeyboardType.Text,
-//                        imeAction = ImeAction.Next,
-//                    ),
-//                modifier = Modifier.fillMaxWidth(),
-//            )
-//            Icon(
-//                imageVector = icon,
-//                contentDescription = null,
-//                modifier = Modifier.align(Alignment.CenterEnd),
-//            )
-//        }
-//    }
-//}
+@Composable
+fun CreateJobUi(
+    createJobState: CreateJobSheetState,
+    onCreateJobUiEvent: (CreateJobUiEvent) -> Unit,
+    categories: List<CategoryResponse> = emptyList(),
+    selectedCategory: CategoryResponse,
+) {
+    Column(
+        modifier =
+        Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .padding(bottom = 48.dp),
+    ) {
+        Text(text = "Create Job", style = MaterialTheme.typography.titleMedium)
+        Spacer(modifier = Modifier.height(8.dp))
+
+        EditTextField(
+            value = createJobState.title,
+            onValueChange = { onCreateJobUiEvent(CreateJobUiEvent.OnTitleChange(it)) },
+            label = "Title",
+            singleLine = true,
+            keyboardOptions =
+            KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next,
+            ),
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        EditTextField(
+            value = createJobState.description,
+            onValueChange = { onCreateJobUiEvent(CreateJobUiEvent.OnDescriptionChange(it)) },
+            label = "Description",
+            singleLine = true,
+            keyboardOptions =
+            KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next,
+            ),
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        EditTextField(
+            value = createJobState.budget.toString(),
+            onValueChange = { onCreateJobUiEvent(CreateJobUiEvent.OnBudgetChange(it.toInt())) },
+            label = "Budget",
+            singleLine = true,
+            keyboardOptions =
+            KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Next,
+            ),
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        LocationAutocompleteTextField(
+            value = createJobState.location,
+            onValueChange = { onCreateJobUiEvent(CreateJobUiEvent.OnLocationChange(it)) },
+            suggestions = emptyList(),
+            onSuggestionSelected = {},
+            placeholder = "Location",
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        EditTextField(
+            value = createJobState.qualifications.joinToString(", "),
+            onValueChange = { onCreateJobUiEvent(CreateJobUiEvent.OnQualificationsChange(it)) },
+            label = "Qualifications",
+            singleLine = true,
+            keyboardOptions =
+            KeyboardOptions(
+                imeAction = ImeAction.Done,
+            ),
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        CategoryDropDown(
+            categories = categories,
+            selectedCategory = selectedCategory,
+            onCreateJobUiEvent = onCreateJobUiEvent,
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        CustomButton(
+            onClick = {
+                // Handle job creation logic
+                onCreateJobUiEvent(
+                    CreateJobUiEvent.OnCreateJobClick(
+                        title = createJobState.title,
+                        description = createJobState.description,
+                        budget = createJobState.budget,
+                        category = createJobState.category,
+                        location = createJobState.location,
+                        qualifications = createJobState.qualifications.toString(),
+                    ),
+                )
+            },
+            isEnabled =
+            createJobState.title.isNotBlank() &&
+                    createJobState.description.isNotBlank() &&
+                    createJobState.budget.toString().isNotBlank() &&
+                    createJobState.location.isNotBlank() &&
+                    createJobState.qualifications.toString().isNotBlank(),
+            text = "Create Job",
+        )
+    }
+}
 
 @Composable
 fun CategoryDropDown(
@@ -375,9 +338,9 @@ fun CategoryDropDown(
 
     Box(
         modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
+        Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
     ) {
         OutlinedTextField(
             value = selectedCategory?.name ?: "",
@@ -385,10 +348,10 @@ fun CategoryDropDown(
             label = { Text("Category") },
             singleLine = true,
             keyboardOptions =
-                KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next,
-                ),
+            KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next,
+            ),
             modifier = Modifier.fillMaxWidth(),
             trailingIcon = {
                 Icon(
@@ -408,7 +371,11 @@ fun CategoryDropDown(
                 DropdownMenuItem(
                     onClick = {
                         if (category != null) {
-                            onCreateJobUiEvent(CreateJobUiEvent.OnCategoryChange(category.name ?: ""))
+                            onCreateJobUiEvent(
+                                CreateJobUiEvent.OnCategoryChange(
+                                    category.name ?: ""
+                                )
+                            )
                         }
                         expanded = false
                     },
