@@ -31,7 +31,7 @@ fun LandingScreenContent(
 
     LaunchedEffect(state.destination) {
         when(state.destination) {
-            LandingScreenState.Destination.SIGN_IN -> { navigator.navigate(SignInScreenDestination(userType = userType)) }
+            LandingScreenState.Destination.SIGN_IN -> { navigator.navigate(SignInScreenDestination()) }
             LandingScreenState.Destination.ON_BOARDING -> { navigator.navigate(OnBoardingScreenDestination())}
             LandingScreenState.Destination.CREATE_PROFILE -> { navigator.navigate(CreateProfileScreenDestination(userType = userType)) }
             LandingScreenState.Destination.SIGN_UP -> { navigator.navigate(SignUpScreenDestination())}

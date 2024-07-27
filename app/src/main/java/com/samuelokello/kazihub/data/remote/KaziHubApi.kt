@@ -1,3 +1,4 @@
+package com.samuelokello.kazihub.data.remote
 
 import com.samuelokello.kazihub.data.model.profile.ProfileResponse
 import com.samuelokello.kazihub.data.model.sign_in.SignInRequest
