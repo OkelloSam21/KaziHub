@@ -10,8 +10,8 @@ import com.samuelokello.kazihub.domain.model.job.category.create.CreateCategoryR
 import com.samuelokello.kazihub.domain.model.job.category.create.CreateCategoryResponse
 import com.samuelokello.kazihub.domain.model.job.create.CreateJobRequest
 import com.samuelokello.kazihub.domain.model.job.create.CreateJobsResponse
-import com.samuelokello.kazihub.domain.model.sign_up.SignUpRequest
-import com.samuelokello.kazihub.domain.model.sign_up.SignUpResponse
+import com.samuelokello.kazihub.domain.model.shared.auth.sign_up.SignUpRequest
+import com.samuelokello.kazihub.domain.model.shared.auth.sign_up.SignUpResponse
 import com.samuelokello.kazihub.domain.model.worker.WorkerProfileRequest
 import com.samuelokello.kazihub.domain.model.worker.WorkerProfileResponse
 import com.samuelokello.kazihub.domain.model.worker.image.WorkerProfileImageRequest
