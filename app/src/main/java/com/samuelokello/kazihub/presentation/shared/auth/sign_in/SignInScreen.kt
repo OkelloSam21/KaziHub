@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.shared.auth.SignIn
+package com.samuelokello.kazihub.presentation.shared.auth.sign_in
 
 import android.util.Log
 import android.widget.Toast
@@ -50,6 +50,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.R
 import com.samuelokello.kazihub.presentation.common.ShowLoadingDialog
 import com.samuelokello.kazihub.presentation.common.components.CustomButton
+import com.samuelokello.kazihub.presentation.destinations.HomeScreenDestination
 import com.samuelokello.kazihub.presentation.shared.components.EditTextField
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 
@@ -69,13 +70,13 @@ fun SignInScreen(
 
             LaunchedEffect(state.navigateToProfileCreation) {
                 if (state.navigateToProfileCreation) {
-//                    navigator.navigate(com.samuelokello.kazihub.presentation.destinations.CreateProfileScreenDestination())
+//                    navigator.navigate(CreateProfileScreenDestination(userType))
                 }
             }
 
             LaunchedEffect(state.navigateToHome) {
                 if (state.navigateToHome) {
-//                    navigator.navigate(HomeScreenDestination())
+                    navigator.navigate(HomeScreenDestination())
                 }
             }
 

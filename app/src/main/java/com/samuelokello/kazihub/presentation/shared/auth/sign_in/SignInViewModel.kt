@@ -1,5 +1,6 @@
-package com.samuelokello.kazihub.presentation.shared.auth.SignIn
+package com.samuelokello.kazihub.presentation.shared.auth.sign_in
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.samuelokello.kazihub.domain.uscase.GetCurrentUserUseCase
@@ -35,16 +36,20 @@ class SignInViewModel @Inject constructor(
         if (!validateInputs()) return
 
         viewModelScope.launch {
+            Log.d("SignInViewModel", "initiate signIn: ${currentState.userName}")
             signInUseCase(currentState.userName, currentState.password).collect { result ->
                 when (result) {
                     is Resource.Success -> {
+                        Log.d("SignInViewModel", "signIn successful")
                         _state.update { it.copy(isLoading = false, isSignInSuccessful = true) }
                         checkProfile()
                     }
                     is Resource.Error -> {
+                        Log.d("SignInViewModel", "signIn error: ${result.message}")
                         _state.update { it.copy(isLoading = false, error = result.message) }
                     }
                     is Resource.Loading -> {
+                        Log.d("SignInViewModel", "signIn loading")
                         _state.update { it.copy(isLoading = true) }
                     }
                 }
@@ -57,9 +62,11 @@ class SignInViewModel @Inject constructor(
             getCurrentUserUseCase().collect { result ->
                 when (result) {
                     is Resource.Success -> {
+                        Log.d("SignInViewModel", "checkProfile successful")
                         _state.update { it.copy(navigateToHome = true) }
                     }
                     is Resource.Error -> {
+                        Log.d("SignInViewModel", "checkProfile error: ${result.message}")
                         _state.update { it.copy(navigateToProfileCreation = true) }
                     }
                     is Resource.Loading -> {
