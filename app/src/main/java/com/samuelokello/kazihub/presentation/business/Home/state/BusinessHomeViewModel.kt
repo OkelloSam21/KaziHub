@@ -4,9 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.samuelokello.kazihub.data.model.profile.ProfileResponse
 import com.samuelokello.kazihub.domain.model.job.Job
-import com.samuelokello.kazihub.domain.repositpry.AuthRepository
-import com.samuelokello.kazihub.domain.repositpry.BusinessRepository
 import com.samuelokello.kazihub.domain.repositpry.JobRepository
+import com.samuelokello.kazihub.domain.uscase.GetCurrentUserUseCase
 import com.samuelokello.kazihub.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,9 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BusinessHomeViewModel @Inject constructor(
-    private val businessRepository: BusinessRepository,
+    val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val jobRepository: JobRepository,
-    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val _businessProfile = MutableStateFlow<ProfileResponse?>(null)
@@ -42,16 +40,22 @@ class BusinessHomeViewModel @Inject constructor(
     private fun getCurrentBusinessProfile() {
         viewModelScope.launch {
             _isLoading.value = true
-            when (val result = authRepository.getCurrentUser()) {
-                is Resource.Success -> {
-                    _businessProfile.value = result.data
-
-                    result.data?.let {
-                        fetchJobsForBusiness(it.data.id)
+            getCurrentUserUseCase().collect { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        _businessProfile.value = result.data
+                        result.data?.let {
+                            fetchJobsForBusiness(it.data.profile.id)
+                        }
                     }
-                }
-                is Resource.Error -> {
-                    _error.value = result.message
+
+                    is Resource.Error -> {
+                        _error.value = result.message
+                    }
+
+                    is Resource.Loading -> {
+                        _error.value = null
+                    }
                 }
             }
             _isLoading.value = false
@@ -62,11 +66,13 @@ class BusinessHomeViewModel @Inject constructor(
     private fun fetchJobsForBusiness(businessId: Int) {
         viewModelScope.launch {
             _isLoading.value = true
-            when (val result = jobRepository.fetchJobById(businessId)) {
+            when (val result = jobRepository.fetchJobByBusiness(businessId)) {
+                is Resource.Loading -> {}
                 is Resource.Success -> {
                     _jobs.value = result.data?.job ?: emptyList()
                     _error.value = null
                 }
+
                 is Resource.Error -> _error.value = result.message
             }
             _isLoading.value = false

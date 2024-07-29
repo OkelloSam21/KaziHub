@@ -110,7 +110,7 @@ fun BusinessHomeScreenContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             Column {
-                Text(text = "Hello 👋", style = MaterialTheme.typography.titleMedium)
+                Text(text = "Hello 👋 !", style = MaterialTheme.typography.titleMedium)
             }
 
             Spacer(modifier = Modifier.height(16.dp))

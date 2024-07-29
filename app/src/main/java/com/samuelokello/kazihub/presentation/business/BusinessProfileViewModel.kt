@@ -1,6 +1,5 @@
 package com.samuelokello.kazihub.presentation.business
 
-import android.content.Context
 import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
@@ -12,7 +11,6 @@ import com.samuelokello.kazihub.presentation.business.state.BusinessProfileState
 import com.samuelokello.kazihub.utils.LocationManager
 import com.samuelokello.kazihub.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelChildren
@@ -27,7 +25,6 @@ import javax.inject.Inject
 class BusinessProfileViewModel @Inject constructor(
     private val repository: BusinessRepository,
     private val locationManager: LocationManager,
-    @ApplicationContext private val context: Context
 ) : ViewModel() {
     private val _state = MutableStateFlow(BusinessProfileState())
     val state = _state.asStateFlow()
@@ -143,6 +140,14 @@ class BusinessProfileViewModel @Inject constructor(
             showLoading()
             Log.e("BusinessProfileModel", "Making API call to create profile")
             when (val response = repository.createBusinessProfile(request)) {
+                is Resource.Loading -> {
+                    Log.e("createProfile: ", "loading")
+                    _state.update {
+                        it.copy(
+                            isLoading = true
+                        )
+                    }
+                }
                 is Resource.Success -> {
                     Log.e("createProfile: ", "success")
                     _state.update {
