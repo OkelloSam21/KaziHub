@@ -148,6 +148,8 @@ class CreateWorkerProfileViewModel @Inject constructor(
                     _state.value =
                         _state.value.copy(error = response.message ?: "An error occurred")
                 }
+
+                is Resource.Loading -> {}
             }
 
         }
