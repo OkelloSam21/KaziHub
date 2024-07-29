@@ -26,7 +26,7 @@ class AuthRepositoryImpl @Inject constructor(
         safeApiCall {
             api.signIn(signInRequest)
         }.also { signInResponse ->
-            tokenManager.setToken(signInResponse.data?.data?.accessToken!!, signInResponse.data.data.refreshToken!!)
+            tokenManager.setToken(signInResponse.data?.data?.accessToken ?: "", signInResponse.data?.data?.refreshToken ?: "")
         }
 
 
