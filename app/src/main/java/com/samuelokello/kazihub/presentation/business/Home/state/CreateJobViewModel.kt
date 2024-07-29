@@ -61,6 +61,9 @@ class CreateJobViewModel @Inject constructor(
 
             // Making the API call to create a job
             when (val response = repository.createJob(request)) {
+                is Resource.Loading -> {
+                    // Handling the loading state
+                }
                 is Resource.Success -> {
                     // Handling the success response
                     val successMessage = response.message
@@ -122,6 +125,9 @@ class CreateJobViewModel @Inject constructor(
     private fun fetchJobCategory() {
         viewModelScope.launch {
             when (val response = repository.fetchJobCategory()) {
+                is Resource.Loading -> {
+                    // Handling the loading state
+                }
                 is Resource.Success -> {
                     // Updating the _categories state with the fetched categories
                     _categories.value = listOf(response.data!!)

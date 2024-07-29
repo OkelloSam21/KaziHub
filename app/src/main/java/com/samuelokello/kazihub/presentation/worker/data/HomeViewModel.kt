@@ -37,6 +37,7 @@ class HomeViewModel @Inject constructor(
         _state.value = WorkerHomeScreenUiState(isLoading = true)
         viewModelScope.launch {
             when (val response = repository.fetchAllJobs()) {
+
                 is Resource.Error -> {
                     Log.e("ViewModel", "fetchJobs: response = ${response.message}")
                     response.message ?: "An unknown error occurred"
@@ -60,6 +61,9 @@ class HomeViewModel @Inject constructor(
                     }
                     Toast.makeText(context, response.message?:"Success", Toast.LENGTH_SHORT).show()
                 }
+
+                is Resource.Loading -> {}
+                else -> {}
             }
         }
     }
@@ -82,10 +86,13 @@ class HomeViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             isLoading = true,
-                            recentJobs = response.data?.`job`?.map { recentJobResponse -> mapJobResponseToJob(recentJobResponse) } ?: emptyList()
+                            recentJobs = response.data?.job?.map { recentJobResponse -> mapJobResponseToJob(recentJobResponse) } ?: emptyList()
                         )
                     }
                 }
+
+                is Resource.Loading -> {}
+                else -> {}
             }
         }
     }
@@ -114,6 +121,9 @@ class HomeViewModel @Inject constructor(
                         )
                     }
                 }
+
+                is Resource.Loading -> {}
+                else -> {}
             }
 
         }

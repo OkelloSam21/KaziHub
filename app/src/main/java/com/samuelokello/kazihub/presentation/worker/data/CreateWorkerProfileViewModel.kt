@@ -90,7 +90,6 @@ class CreateWorkerProfileViewModel @Inject constructor(
                                 )
                             }
                         }
-
                     )
                 }
             }
