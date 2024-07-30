@@ -2,7 +2,10 @@
 
 ## Overview
 
-KaziHub is a mobile application designed to bridge the gap between job posters and workers looking for casual jobs. Whether you need a quick gig done or you're seeking short-term employment, KaziHub provides an easy-to-use platform to connect and collaborate. 
+KaziHub is a mobile application designed to bridge the gap between job posters and workers looking for casual jobs. Whether you need a quick gig done or you're seeking short-term employment, KaziHub provides an easy-to-use platform to connect and collaborate.
+
+## Screenshots
+![register.jpg](images%2Fregister.jpg)![signIn.jpg](images%2FsignIn.jpg)![usertype.jpg](images%2Fusertype.jpg)
 
 ## Features
 
