@@ -4,10 +4,6 @@
 
 KaziHub is a mobile application designed to bridge the gap between job posters and workers looking for casual jobs. Whether you need a quick gig done or you're seeking short-term employment, KaziHub provides an easy-to-use platform to connect and collaborate.
 
-## Screenshots
-
-![onboarding.jpg](images%2Fonboarding.jpg)![register.jpg](images%2Fregister.jpg)![signIn.jpg](images%2FsignIn.jpg)![usertype.jpg](images%2Fusertype.jpg)
-
 ## Features
 
 - **Authentication:** Secure user login and registration system.
@@ -66,3 +62,11 @@ Please ensure your code adheres to our coding standards and includes appropriate
 ## License
 
 KaziHub is licensed under the MIT License. See the [LICENSE](LICENSE.md) file for more details.
+
+## Screenshots
+
+<div style="display: flex; justify-content: space-between;">
+  <div> <img src="images/onboarding.jpg" alt="Onboarding" style="width: 24%;"/> <img src="images/usertype.jpg" alt="User Type" style="width: 24%;"/></div>
+  <div><img src="images/register.jpg" alt="Register" style="width: 24%;"/> <img src="images/signIn.jpg" alt="Sign In" style="width: 24%;"/></div>
+</div>
+
