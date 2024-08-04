@@ -44,15 +44,15 @@ class BusinessHomeViewModel @Inject constructor(
                 when (result) {
                     is Resource.Success -> {
                         _businessProfile.value = result.data
-                        result.data?.let {
-                            fetchJobsForBusiness(it.data.profile.id)
+                        result.data?.data?.profile?.id?.let { profileId ->
+                            fetchJobsForBusiness(profileId)
+                        } ?: run {
+                            _error.value = "Profile data is incomplete or missing"
                         }
                     }
-
                     is Resource.Error -> {
                         _error.value = result.message
                     }
-
                     is Resource.Loading -> {
                         _error.value = null
                     }
@@ -60,7 +60,6 @@ class BusinessHomeViewModel @Inject constructor(
             }
             _isLoading.value = false
         }
-
     }
 
     private fun fetchJobsForBusiness(businessId: Int) {
