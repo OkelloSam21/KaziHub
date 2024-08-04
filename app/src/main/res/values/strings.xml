@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">KaziHub</string>
-    <string name="web_client_id">495714618693-04l4a2o6taut0m8rgal719fn2urctr6f.apps.googleusercontent.com</string>
+    <string name="web_client_id">495714618693–04l4a2o6taut0m8rgal719fn2urctr6f.apps.googleusercontent.com</string>
 
-    <string name="find_your_dream_job">Find your dream job</string>
+    <string name="find_your_dream_job">Find your dream data</string>
 
     <string name="welcome_back">Welcome Back</string>
     <string name="fill_your_details_or_continue_with_social_media">Fill your details or continue with social media</string>
@@ -31,5 +31,7 @@
     <string name="or_connect_with">Or Connect with</string>
     <string name="register_account">Register Account</string>
     <string name="maps_api_key">AIzaSyBT6Jitcm4NBH36CzJeWdZR50yx_p4fAOw</string>
+    <string name="click_the_button_to_create_your_first_job">Click the \'+\' button to create your first data.</string>
+    <string name="no_jobs_message">Sorry there are no jobs yet</string>
 
 </resources>

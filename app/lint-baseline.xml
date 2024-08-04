@@ -750,7 +750,7 @@
     <issue
         id="UnusedResources"
         message="The resource `R.string.find_your_dream_job` appears to be unused"
-        errorLine1="    &lt;string name=&quot;find_your_dream_job&quot;>Find your dream job&lt;/string>"
+        errorLine1="    &lt;string name=&quot;find_your_dream_job&quot;>Find your dream data&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"

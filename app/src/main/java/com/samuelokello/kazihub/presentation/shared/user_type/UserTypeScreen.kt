@@ -81,7 +81,7 @@ fun UserTypeContent(
         ){
             UserTypeCard(
                 image = R.drawable.undraw_software_engineer_re_tnjc,
-                title = "I am a Job Provider",
+                title = "I am a data Provider",
                 userRole = UserRole.BUSINESS,
                 onClick = {
                     onClick(UserRole.BUSINESS)
@@ -90,7 +90,7 @@ fun UserTypeContent(
             Spacer(modifier = Modifier.width(32.dp))
             UserTypeCard(
                 image = R.drawable.worker,
-                title = "I am a Job Seeker",
+                title = "I am a data Seeker",
                 userRole = UserRole.WORKER,
                 onClick = { onClick(UserRole.WORKER)}
             )
