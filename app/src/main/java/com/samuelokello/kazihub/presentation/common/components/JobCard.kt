@@ -20,11 +20,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.samuelokello.kazihub.domain.model.job.Job
+import com.samuelokello.kazihub.domain.model.job.data
 
 @Composable
 fun JobCard(
-    job: Job,
+    job: data,
     onClick: () -> Unit
 ) {
     ElevatedCard(
@@ -47,7 +47,7 @@ fun JobCard(
                     Column(modifier = Modifier.weight(1f)) {
 //                        AsyncImage(
 //                            model = ImageRequest.Builder(LocalContext.current)
-//                                .data(job.imageUrl)
+//                                .data(data.imageUrl)
 //                                .crossfade(true),
 //                            placeholder = painterResource(id = R.drawable.icons8_google_48),
 //                            error = painterResource(id = R.drawable.icons8_google_48),

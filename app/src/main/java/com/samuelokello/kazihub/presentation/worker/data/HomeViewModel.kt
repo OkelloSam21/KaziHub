@@ -5,8 +5,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.samuelokello.kazihub.domain.model.job.Job
 import com.samuelokello.kazihub.domain.model.job.WorkerHomeScreenUiState
+import com.samuelokello.kazihub.domain.model.job.data
 import com.samuelokello.kazihub.domain.repositpry.BusinessRepository
 import com.samuelokello.kazihub.domain.repositpry.JobRepository
 import com.samuelokello.kazihub.utils.Resource
@@ -38,8 +38,13 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             when (val response = repository.fetchAllJobs()) {
                 is Resource.Error -> handleError(response.message)
-                is Resource.Success -> handleJobsFetchSuccess(response.data?.job)
-                is Resource.Loading -> {}
+                is Resource.Success -> {
+                    Log.d("HomeViewModel", "fetchJobs Success: ${response.data?.job}")
+                    handleJobsFetchSuccess(response.data?.job)
+                }
+                is Resource.Loading -> {
+                    Log.d("HomeViewModel", "fetchJobs Loading")
+                }
             }
         }
     }
@@ -49,7 +54,7 @@ class HomeViewModel @Inject constructor(
             val limit = 5
             when (val response = repository.fetchRecentJobs(limit = limit)) {
                 is Resource.Error -> handleError(response.message)
-                is Resource.Success -> handleRecentJobsFetchSuccess(response.data?.job)
+                is Resource.Success -> handleRecentJobsFetchSuccess(response.data?.job ?: emptyList())
                 is Resource.Loading -> {}
             }
         }
@@ -63,22 +68,25 @@ class HomeViewModel @Inject constructor(
         Toast.makeText(context, _state.value.error, Toast.LENGTH_SHORT).show()
     }
 
-    private fun handleJobsFetchSuccess(jobs: List<Job>?) {
+    private fun handleJobsFetchSuccess(jobs: List<data>?) {
         val mappedJobs = jobs?.map { mapJobResponseToJob(it) } ?: emptyList()
+        Log.d("HomeViewModel", "All jobs fetched: ${mappedJobs.size}")
         _state.update { it.copy(
             isLoading = false,
-            allJobs = mappedJobs,
+            allData = mappedJobs,
             nearByJobs = mappedJobs
         ) }
     }
 
-    private fun handleRecentJobsFetchSuccess(jobs: List<Job>?) {
+    private fun handleRecentJobsFetchSuccess(jobs: List<data>?) {
         val mappedJobs = jobs?.map { mapJobResponseToJob(it) } ?: emptyList()
+        Log.d("HomeViewModel", "Recent jobs fetched: ${mappedJobs.size}")
         _state.update { it.copy(
             isLoading = false,
             recentJobs = mappedJobs
         ) }
     }
+
     fun fetchJobsByCategory(categoryId: Int) {
         viewModelScope.launch {
             when (val response = repository.fetchJobsByCategory(categoryId)) {
@@ -93,12 +101,12 @@ class HomeViewModel @Inject constructor(
                 }
 
                 is Resource.Success -> {
-                    val allJobs = response.data?.`job`?.map { mapJobResponseToJob(it) }
-                    Log.e("ViewModel", "fetchJobsByCategory: response  job $allJobs")
+                    val allJobs = response.data?.job?.map { mapJobResponseToJob(it) }
+                    Log.e("ViewModel", "fetchJobsByCategory: response  data $allJobs")
                     _state.update {
                         it.copy(
                             isLoading = true,
-                            allJobs = allJobs ?: emptyList(),
+                            allData = allJobs ?: emptyList(),
                             nearByJobs = allJobs ?: emptyList()
                         )
                     }
@@ -110,8 +118,8 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun mapJobResponseToJob(jobData: Job): Job {
-        return Job(
+    private fun mapJobResponseToJob(jobData: data): data {
+        return data(
             id = jobData.id,
             title = jobData.title,
             desc = jobData.desc,

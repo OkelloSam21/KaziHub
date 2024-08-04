@@ -3,7 +3,7 @@ package com.samuelokello.kazihub.domain.model.job
 
 import com.google.gson.annotations.SerializedName
 
-data class Job(
+data class data(
     @SerializedName("budget")
     val budget: Int?,
     @SerializedName("business")

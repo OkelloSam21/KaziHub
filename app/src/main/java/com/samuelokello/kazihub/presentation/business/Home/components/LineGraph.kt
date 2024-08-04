@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import com.samuelokello.kazihub.domain.model.job.Job
+import com.samuelokello.kazihub.domain.model.job.data
 
 
 /**
@@ -23,7 +23,7 @@ import com.samuelokello.kazihub.domain.model.job.Job
  *  @param jobs list of jobs fetched from kazi hub api
  */
 @Composable
-fun LineGraph(jobs: List<Job> = emptyList()) {
+fun LineGraph(jobs: List<data> = emptyList()) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
