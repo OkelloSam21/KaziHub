@@ -126,7 +126,7 @@ interface KaziHubApi {
     @POST("worker/verify/{code}")
     suspend fun verifyWorkerByCode(@Path("code") code: String): WorkerProfileResponse
 
-    // Job Categories
+    // data Categories
     @POST("jobs/category/create")
     suspend fun createJobCategory(@Body category: CreateCategoryRequest): CreateCategoryResponse
 
