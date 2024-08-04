@@ -81,7 +81,7 @@ fun OnBoardingContent(
                 verticalArrangement = Arrangement.Center,
             ){
                 Text(
-                    text = "Find a Perfect Job Match",
+                    text = "Find a Perfect data Match",
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier
                 )
@@ -89,7 +89,7 @@ fun OnBoardingContent(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Finding your dream job is more easier and faster with Kazihub",
+                    text = "Finding your dream data is more easier and faster with Kazihub",
                     style = MaterialTheme.typography.titleLarge.copy(color = Color.Gray),
                     modifier = Modifier
                 )
