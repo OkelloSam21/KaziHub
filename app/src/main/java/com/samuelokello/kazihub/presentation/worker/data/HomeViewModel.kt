@@ -37,33 +37,9 @@ class HomeViewModel @Inject constructor(
         _state.value = WorkerHomeScreenUiState(isLoading = true)
         viewModelScope.launch {
             when (val response = repository.fetchAllJobs()) {
-
-                is Resource.Error -> {
-                    Log.e("ViewModel", "fetchJobs: response = ${response.message}")
-                    response.message ?: "An unknown error occurred"
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                        )
-                    }
-                    Toast.makeText(context, response.message?:"Error occurred", Toast.LENGTH_SHORT).show()
-                }
-
-                is Resource.Success -> {
-                    val allJobs = response.data?.job?.map { mapJobResponseToJob(it) }
-                    Log.e("ViewModel", "fetchJobs: response  job $allJobs")
-                    _state.update {
-                        it.copy(
-                            isLoading = true,
-                            allJobs = allJobs ?: emptyList(),
-                            nearByJobs = allJobs ?: emptyList()
-                        )
-                    }
-                    Toast.makeText(context, response.message?:"Success", Toast.LENGTH_SHORT).show()
-                }
-
+                is Resource.Error -> handleError(response.message)
+                is Resource.Success -> handleJobsFetchSuccess(response.data?.job)
                 is Resource.Loading -> {}
-                else -> {}
             }
         }
     }
@@ -72,31 +48,37 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             val limit = 5
             when (val response = repository.fetchRecentJobs(limit = limit)) {
-                is Resource.Error -> {
-                    Log.e("ViewModel", "fetchRecentJobs: response = ${response.data}")
-
-                    _state.update {
-                            it.copy(
-                                isLoading = false,
-                            )
-                    }
-                }
-
-                is Resource.Success -> {
-                    _state.update {
-                        it.copy(
-                            isLoading = true,
-                            recentJobs = response.data?.job?.map { recentJobResponse -> mapJobResponseToJob(recentJobResponse) } ?: emptyList()
-                        )
-                    }
-                }
-
+                is Resource.Error -> handleError(response.message)
+                is Resource.Success -> handleRecentJobsFetchSuccess(response.data?.job)
                 is Resource.Loading -> {}
-                else -> {}
             }
         }
     }
 
+    private fun handleError(message: String?) {
+        _state.update { it.copy(
+            isLoading = false,
+            error = message ?: "An unknown error occurred"
+        ) }
+        Toast.makeText(context, _state.value.error, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun handleJobsFetchSuccess(jobs: List<Job>?) {
+        val mappedJobs = jobs?.map { mapJobResponseToJob(it) } ?: emptyList()
+        _state.update { it.copy(
+            isLoading = false,
+            allJobs = mappedJobs,
+            nearByJobs = mappedJobs
+        ) }
+    }
+
+    private fun handleRecentJobsFetchSuccess(jobs: List<Job>?) {
+        val mappedJobs = jobs?.map { mapJobResponseToJob(it) } ?: emptyList()
+        _state.update { it.copy(
+            isLoading = false,
+            recentJobs = mappedJobs
+        ) }
+    }
     fun fetchJobsByCategory(categoryId: Int) {
         viewModelScope.launch {
             when (val response = repository.fetchJobsByCategory(categoryId)) {
@@ -123,7 +105,6 @@ class HomeViewModel @Inject constructor(
                 }
 
                 is Resource.Loading -> {}
-                else -> {}
             }
 
         }
