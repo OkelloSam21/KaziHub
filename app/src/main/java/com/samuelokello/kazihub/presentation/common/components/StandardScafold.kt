@@ -1,16 +1,15 @@
 package com.samuelokello.kazihub.presentation.common.components
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -31,16 +30,14 @@ fun StandardScaffold(
     Scaffold(
         bottomBar = {
             if (showBottomBar) {
-                BottomNavigation(
-                    backgroundColor = MaterialTheme.colorScheme.surface,
+                NavigationBar (
+                    containerColor = MaterialTheme.colorScheme.background,
                     contentColor = MaterialTheme.colorScheme.onSurface,
-                    elevation = 16.dp,
                 ) {
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
                     val currentDestination = navBackStackEntry?.destination
                     items.forEach { item ->
-                        BottomNavigationItem(
-
+                        NavigationBarItem(
                             icon = {
                                 Icon(
                                     painter = painterResource(id = item.icon),
