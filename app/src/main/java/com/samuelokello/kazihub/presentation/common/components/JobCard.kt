@@ -1,5 +1,6 @@
 package com.samuelokello.kazihub.presentation.common.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,7 +23,10 @@ import androidx.compose.ui.unit.dp
 import com.samuelokello.kazihub.domain.model.job.Job
 
 @Composable
-fun JobCard(job: Job) {
+fun JobCard(
+    job: Job,
+    onClick: () -> Unit
+) {
     ElevatedCard(
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(
@@ -30,6 +34,7 @@ fun JobCard(job: Job) {
         ),
         modifier = Modifier
             .size(width = 200.dp, height = 150.dp)
+            .clickable { onClick() }
     ) {
         Column(
             modifier = Modifier.padding(8.dp)
