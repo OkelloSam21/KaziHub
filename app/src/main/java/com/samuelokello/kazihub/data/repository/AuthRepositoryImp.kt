@@ -9,6 +9,7 @@ import com.samuelokello.kazihub.domain.model.shared.auth.sign_up.SignUpResponse
 import com.samuelokello.kazihub.domain.repositpry.AuthRepository
 import com.samuelokello.kazihub.utils.Resource
 import com.samuelokello.kazihub.utils.TokenManager
+import com.samuelokello.kazihub.utils.UserRole
 import com.samuelokello.kazihub.utils.safeApiCall
 import javax.inject.Inject
 
@@ -36,5 +37,20 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun refreshToken(): Resource<SignInResponse> =
         safeApiCall { api.refreshToken(tokenManager.getAccessToken()) }
+
+    override suspend fun signOut() {
+        tokenManager.clearTokens()
+    }
+
+    override suspend fun isUserLoggedIn(): Boolean {
+        return tokenManager.hasAccessToken()
+    }
+
+    override suspend fun getUserType(): UserRole {
+        return when {
+            tokenManager.hasAccessToken() -> UserRole.WORKER
+            else -> UserRole.BUSINESS
+        }
+    }
 
 }

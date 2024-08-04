@@ -1,6 +1,5 @@
 package com.samuelokello.kazihub.presentation.shared.auth.sign_up
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,6 +25,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -58,7 +58,7 @@ import com.samuelokello.kazihub.utils.UserRole
 
 @Destination
 @Composable
-fun SignUpScreen(userType: UserRole  = UserRole.WORKER, navigator: DestinationsNavigator) {
+fun SignUpScreen(userType: UserRole = UserRole.WORKER, navigator: DestinationsNavigator) {
 
     val viewModel: SignUpViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
@@ -67,14 +67,17 @@ fun SignUpScreen(userType: UserRole  = UserRole.WORKER, navigator: DestinationsN
     KaziHubTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.surface
+            color = MaterialTheme.colorScheme.background
         ) {
-            Log.d("SignUpScreen", "SignUpScreen: ${userType.name}")
-
+            LaunchedEffect(state.isSignInClicked) {
+                if (state.isSignInClicked) {
+                    navigator.navigate(SignInScreenDestination(userType))
+                }
+            }
             SignUpContent(
                 state = state,
                 onEvent = viewModel::onEvent,
-                navigateToSIgnIn = { navigator.navigate(SignInScreenDestination()) },
+                navigateToSIgnIn = { navigator.navigate(SignInScreenDestination(userType)) },
             )
         }
     }
@@ -93,7 +96,7 @@ private fun SignUpContent(
                 state.lastName.isNotBlank() &&
                 state.password.length > 8
 
-    if (state.error != null){
+    if (state.error != null) {
         ShowErrorToast(state.error)
         ShowErrorDialog(error = state.error)
     }
@@ -103,15 +106,42 @@ private fun SignUpContent(
     }
 
     HandleNavigation(state, navigateToSIgnIn)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(20.dp),
+    ) {
 
-    SignUpForm(
-        state = state,
-        isPasswordVisible = isPasswordVisible,
-        isFormValid = isFormValid,
-        onEvent = onEvent,
-        onClick = navigateToSIgnIn
-    )
+        SignUpHeader()
+        SignUpForm(
+            state = state,
+            isPasswordVisible = isPasswordVisible,
+            isFormValid = isFormValid,
+            onEvent = onEvent,
+            onClick = navigateToSIgnIn
+        )
+        SignUpFooter(onEvent)
+    }
 
+}
+
+@Composable
+fun SignUpHeader() {
+    Column {
+        Spacer(modifier = Modifier.height(64.dp))
+
+        Text(
+            text = stringResource(R.string.register_account),
+            style = MaterialTheme.typography.titleLarge
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = stringResource(id = R.string.fill_your_details_or_continue_with_social_media),
+            style = MaterialTheme.typography.titleMedium
+        )
+    }
 }
 
 @Composable
@@ -123,196 +153,176 @@ fun SignUpForm(
     onClick: () -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 16.dp),
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            Text(
-                text = stringResource(R.string.register_account),
-                style = MaterialTheme.typography.titleLarge
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = stringResource(id = R.string.fill_your_details_or_continue_with_social_media),
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
+        EditTextField(
+            label = "User Name",
+            value = state.userName,
+            onValueChange = { onEvent(SignUpEvent.UserNameChanged(it)) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next,
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Column(
+        EditTextField(
+            label = "First Name",
+            value = state.firstName,
+            onValueChange = { onEvent(SignUpEvent.FirstNameChanged(it)) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next,
+            ),
             modifier = Modifier.fillMaxWidth()
-        ) {
-            EditTextField(
-                label = "User Name",
-                value = state.userName,
-                onValueChange = {onEvent(SignUpEvent.UserNameChanged(it))},
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next,
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
+        )
 
-            Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-            EditTextField(
-                label = "First Name",
-                value = state.firstName,
-                onValueChange = {onEvent(SignUpEvent.FirstNameChanged(it))},
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next,
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
+        EditTextField(
+            label = "Last Name",
+            value = state.lastName,
+            onValueChange = { onEvent(SignUpEvent.LastNameChanged(it)) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next,
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
 
-            Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-            EditTextField(
-                label = "Last Name",
-                value = state.lastName,
-                onValueChange = {onEvent(SignUpEvent.LastNameChanged(it))},
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next,
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            OutlinedTextField(
-                value = state.password,
-                onValueChange = { password ->
-                    onEvent(SignUpEvent.PasswordChanged(password))
-                },
-                label = { Text(text = "Password") },
-                trailingIcon = {
-                    IconButton(
-                        onClick = {
-                            isPasswordVisible.value = !isPasswordVisible.value
-                        }
-                    ) {
-                        Icon(
-                            imageVector = if (isPasswordVisible.value)
-                                Icons.Default.VisibilityOff
-                            else Icons.Default.Visibility,
-                            contentDescription = null,
-                        )
+        OutlinedTextField(
+            value = state.password,
+            onValueChange = { password ->
+                onEvent(SignUpEvent.PasswordChanged(password))
+            },
+            label = { Text(text = "Password") },
+            trailingIcon = {
+                IconButton(
+                    onClick = {
+                        isPasswordVisible.value = !isPasswordVisible.value
                     }
-                },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done
-                ),
-                singleLine = true,
-                shape = RoundedCornerShape(10.dp),
-                visualTransformation = if (isPasswordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth()
-            )
-            TextButton(onClick ={ onClick()}, modifier = Modifier.align(Alignment.End)) {
-                Text(
-                    text = "Forgot password?",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-            CustomButton(
-                onClick = {
-                    if (isFormValid) {
-                        onEvent(
-                            SignUpEvent.SignUpClicked
-                        )
-                    }
-                },
-                isEnabled = isFormValid,
-                text = "Sign Up"
+                ) {
+                    Icon(
+                        imageVector = if (isPasswordVisible.value)
+                            Icons.Default.VisibilityOff
+                        else Icons.Default.Visibility,
+                        contentDescription = null,
+                    )
+                }
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done
+            ),
+            singleLine = true,
+            shape = RoundedCornerShape(10.dp),
+            visualTransformation = if (isPasswordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth()
+        )
+        TextButton(onClick = { onClick() }, modifier = Modifier.align(Alignment.End)) {
+            Text(
+                text = "Forgot password?",
+                style = MaterialTheme.typography.bodyLarge
             )
         }
+        CustomButton(
+            onClick = {
+                if (isFormValid) {
+                    onEvent(
+                        SignUpEvent.SignUpClicked
+                    )
+                }
+            },
+            isEnabled = isFormValid,
+            text = "Sign Up"
+        )
 
-        Spacer(modifier = Modifier.height(16.dp))
+    }
+}
 
-        Column(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
-            ) {
-                HorizontalDivider(
-                    modifier = Modifier
-                        .weight(1f)
-                        .width(4.dp)
-                        .padding(top = 8.dp),
-                    thickness = 0.5.dp,
-                    color = Color.Gray
-                )
-                Text(
-                    text = "Or Connect with",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                HorizontalDivider(
-                    modifier = Modifier
-                        .weight(1f)
-                        .width(4.dp)
-                        .padding(top = 8.dp),
-                    thickness = 0.5.dp,
-                    color = Color.Gray
-                )
-            }
-        }
+@Composable
+fun SignUpFooter(onEvent: (SignUpEvent) -> Unit) {
 
-        Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(32.dp))
 
-        Column(
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
-            ) {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Image(
-                        painter = painterResource(id = R.drawable.icons8_google_48),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.size(64.dp)
-                    )
-                }
-                IconButton(onClick = { /*TODO*/ }) {
-                    Image(
-                        painter = painterResource(id = R.drawable.icons8_facebook_circled_48),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.size(64.dp)
-                    )
-                }
+            HorizontalDivider(
+                modifier = Modifier
+                    .weight(1f)
+                    .width(4.dp)
+                    .padding(top = 8.dp),
+                thickness = 0.5.dp,
+                color = Color.Gray
+            )
+            Text(
+                text = "Or Connect with",
+                style = MaterialTheme.typography.bodyLarge
+            )
+            HorizontalDivider(
+                modifier = Modifier
+                    .weight(1f)
+                    .width(4.dp)
+                    .padding(top = 8.dp),
+                thickness = 0.5.dp,
+                color = Color.Gray
+            )
+        }
+    }
+
+    Spacer(modifier = Modifier.height(32.dp))
+
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+        ) {
+            IconButton(onClick = { /*TODO*/ }) {
+                Image(
+                    painter = painterResource(id = R.drawable.icons8_google_48),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(64.dp)
+                )
             }
+            IconButton(onClick = { /*TODO*/ }) {
+                Image(
+                    painter = painterResource(id = R.drawable.icons8_facebook_circled_48),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(64.dp)
+                )
+            }
+        }
 
-            Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = "Already have an Account ? ")
-                TextButton(onClick = { onClick() }) {
-                    Text(
-                        text = "Sign In",
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier,
-                    )
-                }
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = "Already have an Account ? ")
+            TextButton(onClick = { onEvent(SignUpEvent.SignInClicked) }) {
+                Text(
+                    text = "Sign In",
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier,
+                )
             }
         }
     }

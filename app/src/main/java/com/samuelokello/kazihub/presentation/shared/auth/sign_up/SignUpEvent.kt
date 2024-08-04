@@ -8,5 +8,6 @@ sealed class SignUpEvent {
     data class LastNameChanged(val lastName: String) : SignUpEvent()
     data class PasswordChanged(val password: String) : SignUpEvent()
     data class UserRoleChanged(val role: UserRole) : SignUpEvent()
-    object SignUpClicked : SignUpEvent()
+    data object SignUpClicked : SignUpEvent()
+    data object SignInClicked: SignUpEvent()
 }

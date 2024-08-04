@@ -50,15 +50,17 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.R
 import com.samuelokello.kazihub.presentation.common.ShowLoadingDialog
 import com.samuelokello.kazihub.presentation.common.components.CustomButton
-import com.samuelokello.kazihub.presentation.destinations.HomeScreenDestination
+import com.samuelokello.kazihub.presentation.destinations.*
 import com.samuelokello.kazihub.presentation.shared.components.EditTextField
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
+import com.samuelokello.kazihub.utils.UserRole
 
 @Destination
 @Composable
 fun SignInScreen(
     viewModel: SignInViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
+    userType: UserRole
 ) {
 
     Surface(
@@ -70,13 +72,13 @@ fun SignInScreen(
 
             LaunchedEffect(state.navigateToProfileCreation) {
                 if (state.navigateToProfileCreation) {
-//                    navigator.navigate(CreateProfileScreenDestination(userType))
+                    navigator.navigate(CreateProfileScreenDestination(userType))
                 }
             }
 
             LaunchedEffect(state.navigateToHome) {
                 if (state.navigateToHome) {
-                    navigator.navigate(HomeScreenDestination())
+                    navigator.navigate(HomeScreenDestination(userType))
                 }
             }
 
@@ -115,7 +117,7 @@ private fun SignInContent(
 
     state.error?.let { error ->
         Toast.makeText(LocalContext.current, error, Toast.LENGTH_LONG).show()
-        }
+    }
 }
 
 @Composable
@@ -289,7 +291,7 @@ fun SignInFooter(onEvent: (SignInEvent) -> Unit) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(text = "New User ? ")
-                TextButton(onClick =  {onEvent(SignInEvent.CreateAccountClicked)} ) {
+                TextButton(onClick = { onEvent(SignInEvent.CreateAccountClicked) }) {
                     Text(
                         text = "Create Account",
                         style = MaterialTheme.typography.bodyLarge,

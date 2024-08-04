@@ -26,6 +26,7 @@ class SignUpViewModel @Inject constructor(private val signUpUseCase: SignUpUseCa
             is SignUpEvent.PasswordChanged -> _state.update { it.copy(password = event.password) }
             is SignUpEvent.UserRoleChanged -> _state.update { it.copy(userRole = event.role) }
             is SignUpEvent.SignUpClicked -> signUp()
+            SignUpEvent.SignInClicked -> _state.update { it.copy(isSignInClicked = true) }
         }
     }
 

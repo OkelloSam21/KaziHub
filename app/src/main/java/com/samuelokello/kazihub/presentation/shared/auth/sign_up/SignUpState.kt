@@ -10,5 +10,7 @@ data class SignUpState(
     val userRole: UserRole = UserRole.WORKER,
     val isLoading: Boolean = false,
     val error: String? = null,
-    val isSignUpSuccessful: Boolean = false
+    val isSignUpSuccessful: Boolean = false,
+    val isSignInClicked: Boolean = false
+
 )
