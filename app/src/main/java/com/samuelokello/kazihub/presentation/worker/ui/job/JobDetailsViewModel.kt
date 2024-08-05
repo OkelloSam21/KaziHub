@@ -6,16 +6,19 @@ import com.samuelokello.kazihub.domain.model.job.fetchById.Business
 import com.samuelokello.kazihub.domain.model.job.fetchById.Category
 import com.samuelokello.kazihub.domain.model.job.fetchById.Data
 import com.samuelokello.kazihub.domain.repositpry.JobRepository
+import com.samuelokello.kazihub.domain.repositpry.ProposalRepository
 import com.samuelokello.kazihub.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class JobDetailsViewModel @Inject constructor(
-    private val repository: JobRepository
+    private val repository: JobRepository,
+    private val proposalRepository: ProposalRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(JobDetailsUiState())
     val state = _state.asStateFlow()
@@ -64,10 +67,21 @@ class JobDetailsViewModel @Inject constructor(
         _state.value = JobDetailsUiState(error = message ?: "An unknown error occurred")
     }
 
-    fun onApplyClicked() {
+    private fun onApplyClicked() {
         viewModelScope.launch {
             // Handle apply click
-//            repository.
+            _state.update {
+                it.copy(
+                    isLoading = true,
+                    applied = true
+                )
+            }
+        }
+    }
+
+    fun onEvent(event: JobDetailsUiEvent) {
+        when (event) {
+            is JobDetailsUiEvent.ApplyClicked -> onApplyClicked()
         }
     }
 }
@@ -75,6 +89,7 @@ class JobDetailsViewModel @Inject constructor(
 data class JobDetailsUiState(
     val isLoading: Boolean = false,
     val error: String = "",
+    val applied: Boolean = false,
     val job: Data = Data(
         budget = 0,
         business = Business(

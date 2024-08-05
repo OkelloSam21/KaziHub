@@ -20,6 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,9 +43,19 @@ fun JobDetailsScreen(
     viewModel: JobDetailsViewModel = hiltViewModel(),
     navigator: DestinationsNavigator
 ) {
+    var showBottomSheet by rememberSaveable{ mutableStateOf(false) }
+    var canDismiss by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(key1 = true) {
         viewModel.fetchJobById(jobId)
+    }
+
+    if (showBottomSheet) {
+        CreateProposal(
+            onDismiss = {if(canDismiss) showBottomSheet = false},
+            onSubmit = {navigator.popBackStack(HomeScreenDestination.route, inclusive = false)},
+//            viewModel = hiltViewModel()
+        )
     }
 
     val state by viewModel.state.collectAsState()
@@ -156,7 +169,7 @@ fun JobDetailsScreen(
 
         // Apply Now Button
         CustomButton(
-            onClick = { /* Handle apply action */ },
+            onClick = { showBottomSheet = true },
             text = "Apply Now",
             isEnabled = true,
         )

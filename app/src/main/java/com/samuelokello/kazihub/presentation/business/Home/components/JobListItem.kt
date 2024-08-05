@@ -13,14 +13,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.samuelokello.kazihub.domain.model.job.Job
+import com.samuelokello.kazihub.domain.model.job.data
 @Composable
-fun JobListItem(job: Job, onJobClick: (Job) -> Unit) {
+fun JobListItem(data: data, onJobClick: (data) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable { onJobClick(job) },
+            .clickable { onJobClick(data) },
         elevation = CardDefaults.elevatedCardElevation(
             defaultElevation = 4.dp
         )
@@ -30,9 +30,9 @@ fun JobListItem(job: Job, onJobClick: (Job) -> Unit) {
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Text(text = job.title.toString(), style = MaterialTheme.typography.bodyLarge)
+            Text(text = data.title.toString(), style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = job.desc.toString(), style = MaterialTheme.typography.bodyLarge)
+            Text(text = data.desc.toString(), style = MaterialTheme.typography.bodyLarge)
         }
     }
 }
