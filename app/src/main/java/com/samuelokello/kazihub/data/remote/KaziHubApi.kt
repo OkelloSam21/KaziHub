@@ -12,6 +12,9 @@ import com.samuelokello.kazihub.domain.model.job.category.create.CreateCategoryR
 import com.samuelokello.kazihub.domain.model.job.create.CreateJobRequest
 import com.samuelokello.kazihub.domain.model.job.create.CreateJobsResponse
 import com.samuelokello.kazihub.domain.model.job.fetchById.JobDetailsResponse
+import com.samuelokello.kazihub.domain.model.proposal.createProposal.CreateProposalResponse
+import com.samuelokello.kazihub.domain.model.proposal.createProposal.ProposalRequest
+import com.samuelokello.kazihub.domain.model.proposal.proposalResponse.ProposalResponse
 import com.samuelokello.kazihub.domain.model.shared.auth.sign_up.SignUpRequest
 import com.samuelokello.kazihub.domain.model.shared.auth.sign_up.SignUpResponse
 import com.samuelokello.kazihub.domain.model.worker.WorkerProfileRequest
@@ -176,4 +179,14 @@ interface KaziHubApi {
 
     @GET("jobs/recent")
     suspend fun getRecentJobs(@Query("limit") limit: Int): JobResponse
+
+    // Proposals
+    @GET("/proposals/")
+    suspend fun getProposals(): ProposalResponse
+
+    @POST("/proposals/create/{job_id}")
+    suspend fun createProposal(
+        @Path("job_id") jobId: Int,
+        @Body proposal: ProposalRequest
+    ): CreateProposalResponse
 }
