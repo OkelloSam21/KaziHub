@@ -64,7 +64,7 @@ fun WorkerHomeScreen(
                 event = { event ->
                     when (event) {
                         is WorkerHomeScreenUiEvent.JobSelected -> {
-                            navigator.navigate(JobDetailsScreenDestination)
+                            navigator.navigate(JobDetailsScreenDestination(event.data.id ?: 0))
                         }
                         is WorkerHomeScreenUiEvent.OnViewAllClick -> { }
                         is WorkerHomeScreenUiEvent.OpenDrawer ->{}
@@ -93,9 +93,17 @@ fun WorkerHomeScreenContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .pullRefresh(state = pullRefreshState)
+
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .pullRefresh(
+                    state = pullRefreshState,
+                    enabled = true
+                )
+//                .pu
+        ) {
             AppBar { scope.launch { state.drawerState } }
 
             Column(
