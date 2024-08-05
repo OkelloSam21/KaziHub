@@ -24,30 +24,30 @@ class CreateJobViewModel @Inject constructor(
 ) : ViewModel(){
 
     init {
-        fetchJobCategory() // Fetching job categories when ViewModel is initialized
+        fetchJobCategory() // Fetching data categories when ViewModel is initialized
     }
 
-    // MutableStateFlow to hold the state of the Create Job form
-    private val _createJobRequest = MutableStateFlow(CreateJobSheetState())
-    val createJobState = _createJobRequest.asStateFlow() // Exposing an immutable StateFlow for observing the state
+    // MutableStateFlow to hold the state of the Create data form
+    private val _createDataRequest = MutableStateFlow(CreateJobSheetState())
+    val createJobState = _createDataRequest.asStateFlow() // Exposing an immutable StateFlow for observing the state
 
-    // MutableStateFlow to hold the list of job categories
+    // MutableStateFlow to hold the list of data categories
     private val _categories = MutableStateFlow<List<CategoryResponse>>(emptyList())
     val categories = _categories.asStateFlow() // Exposing an immutable StateFlow for observing the categories
 
     private val _selectedCategory = MutableStateFlow<CategoryResponse?>(null)
     val selectedCategory = _selectedCategory.asStateFlow()
 
-    // Function to handle the Create Job button click
+    // Function to handle the Create data button click
     fun onCreateJobClick() {
         viewModelScope.launch {
             // Extracting the form data from the state
-            val title = _createJobRequest.value.title
-            val description = _createJobRequest.value.description
-            val budget = _createJobRequest.value.budget
-            val location = _createJobRequest.value.location
-            val categoryId = _createJobRequest.value.categoryId
-            val qualifications = _createJobRequest.value.qualifications
+            val title = _createDataRequest.value.title
+            val description = _createDataRequest.value.description
+            val budget = _createDataRequest.value.budget
+            val location = _createDataRequest.value.location
+            val categoryId = _createDataRequest.value.categoryId
+            val qualifications = _createDataRequest.value.qualifications
 
             // Creating the CreateJobRequest object
             val request = CreateJobRequest(
@@ -59,7 +59,7 @@ class CreateJobViewModel @Inject constructor(
                 qualifications = qualifications.toString()
             )
 
-            // Making the API call to create a job
+            // Making the API call to create a data
             when (val response = repository.createJob(request)) {
                 is Resource.Loading -> {
                     // Handling the loading state
@@ -69,7 +69,7 @@ class CreateJobViewModel @Inject constructor(
                     val successMessage = response.message
                     Toast.makeText(
                         context,
-                        successMessage ?: "Job created successfully",
+                        successMessage ?: "data created successfully",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -85,43 +85,43 @@ class CreateJobViewModel @Inject constructor(
 
     // Functions to handle changes in the form fields
     fun onBudgetChange(budget: Int) {
-        _createJobRequest.update {
+        _createDataRequest.update {
             it.copy(budget = budget)
         }
     }
 
     fun onDescriptionChange(description: String) {
-        _createJobRequest.update {
+        _createDataRequest.update {
             it.copy(description = description)
         }
     }
 
     fun onLocationChange(location: String) {
-        _createJobRequest.update {
+        _createDataRequest.update {
             it.copy(location = location)
         }
     }
 
     fun onQualificationsChange(qualifications: String) {
-        _createJobRequest.update {
+        _createDataRequest.update {
             it.copy(qualifications = listOf(qualifications))
         }
     }
 
     fun onTitleChange(title: String) {
-        _createJobRequest.update {
+        _createDataRequest.update {
             it.copy(title = title)
         }
     }
 
     fun onCategoryChange(category: CategoryResponse) {
         _selectedCategory.value = category
-        _createJobRequest.update {
+        _createDataRequest.update {
             it.copy(categoryId = category.id!!)
         }
     }
 
-    // Function to fetch job categories from the API
+    // Function to fetch data categories from the API
     private fun fetchJobCategory() {
         viewModelScope.launch {
             when (val response = repository.fetchJobCategory()) {

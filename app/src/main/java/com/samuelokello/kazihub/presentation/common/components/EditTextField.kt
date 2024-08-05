@@ -15,6 +15,7 @@ fun EditTextField(
     value: String,
     onValueChange: (String) -> Unit,
     error: Boolean? = false,
+    readOnly: Boolean? = false,
     singleLine: Boolean?,
     trailingIcon: @Composable (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions,
@@ -29,6 +30,7 @@ fun EditTextField(
         isError = error ?: false,
         trailingIcon = trailingIcon,
         singleLine = singleLine ?: true,
+        readOnly = readOnly ?: false,
         shape = RoundedCornerShape(10.dp),
         modifier = modifier.fillMaxWidth()
     )
