@@ -64,9 +64,12 @@ Please ensure your code adheres to our coding standards and includes appropriate
 KaziHub is licensed under the MIT License. See the [LICENSE](LICENSE.md) file for more details.
 
 ## Screenshots
+<image src = "images/onboarding.jpg" height = "350.px"> <image src = "images/usertype.jpg" height = "350.px">
+<image src = "images/register.jpg" height = "350.px">
+<image src = "images/signIn.jpg" height = "350.px">
+<image src = "images/workerHome.jpg" height = "350.px">
+<image src = "images/JobDetails.jpg" height = "350.px">
+<image src = "images/submitProposal.jpg" height = "350.px">
 
-<div style="display: flex; justify-content: space-between;">
-  <div> <img src="images/onboarding.jpg" alt="Onboarding" style="width: 24%;"/> <img src="images/usertype.jpg" alt="User Type" style="width: 24%;"/></div>
-  <div><img src="images/register.jpg" alt="Register" style="width: 24%;"/> <img src="images/signIn.jpg" alt="Sign In" style="width: 24%;"/></div>
-</div>
+
 
