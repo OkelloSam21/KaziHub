@@ -6,10 +6,12 @@ import com.samuelokello.kazihub.data.remote.KaziHubApi
 import com.samuelokello.kazihub.data.repository.AuthRepositoryImpl
 import com.samuelokello.kazihub.data.repository.BusinessRepositoryImpl
 import com.samuelokello.kazihub.data.repository.JobRepositoryImpl
+import com.samuelokello.kazihub.data.repository.ProposalRepositoryImpl
 import com.samuelokello.kazihub.data.repository.WorkerRepositoryImp
 import com.samuelokello.kazihub.domain.repositpry.AuthRepository
 import com.samuelokello.kazihub.domain.repositpry.BusinessRepository
 import com.samuelokello.kazihub.domain.repositpry.JobRepository
+import com.samuelokello.kazihub.domain.repositpry.ProposalRepository
 import com.samuelokello.kazihub.domain.repositpry.WorkerRepository
 import com.samuelokello.kazihub.utils.AuthInterceptor
 import com.samuelokello.kazihub.utils.TokenManager
@@ -120,5 +122,14 @@ object AppModule {
     @Singleton
     fun providesContext(@ApplicationContext appContext: Context): Context {
         return appContext
+    }
+
+    // provide proposal repository
+    @Provides
+    @Singleton
+    fun provideProposalRepository(
+        api: KaziHubApi
+    ): ProposalRepository {
+        return ProposalRepositoryImpl(api)
     }
 }
