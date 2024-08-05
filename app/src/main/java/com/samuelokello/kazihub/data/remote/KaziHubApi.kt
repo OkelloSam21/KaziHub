@@ -11,6 +11,7 @@ import com.samuelokello.kazihub.domain.model.job.category.create.CreateCategoryR
 import com.samuelokello.kazihub.domain.model.job.category.create.CreateCategoryResponse
 import com.samuelokello.kazihub.domain.model.job.create.CreateJobRequest
 import com.samuelokello.kazihub.domain.model.job.create.CreateJobsResponse
+import com.samuelokello.kazihub.domain.model.job.fetchById.JobDetailsResponse
 import com.samuelokello.kazihub.domain.model.shared.auth.sign_up.SignUpRequest
 import com.samuelokello.kazihub.domain.model.shared.auth.sign_up.SignUpResponse
 import com.samuelokello.kazihub.domain.model.worker.WorkerProfileRequest
@@ -143,8 +144,8 @@ interface KaziHubApi {
     @GET("jobs/list")
     suspend fun getJobs(): JobResponse
 
-    @GET("jobs/{job_id}")
-    suspend fun getJobById(@Path("job_id") id: Int): JobResponse
+    @GET("jobs/list/{job_id}")
+    suspend fun getJobById(@Path("job_id") id: Int): JobDetailsResponse
 
     @GET("jobs/list/category/{category_id}")
     suspend fun getJobsByCategory(@Path("category_id") id: Int): JobResponse

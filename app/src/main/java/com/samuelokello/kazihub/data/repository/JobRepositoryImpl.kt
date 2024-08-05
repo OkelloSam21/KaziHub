@@ -8,6 +8,7 @@ import com.samuelokello.kazihub.domain.model.job.category.create.CreateCategoryR
 import com.samuelokello.kazihub.domain.model.job.category.create.CreateCategoryResponse
 import com.samuelokello.kazihub.domain.model.job.create.CreateJobRequest
 import com.samuelokello.kazihub.domain.model.job.create.CreateJobsResponse
+import com.samuelokello.kazihub.domain.model.job.fetchById.JobDetailsResponse
 import com.samuelokello.kazihub.domain.repositpry.JobRepository
 import com.samuelokello.kazihub.utils.Resource
 import com.samuelokello.kazihub.utils.safeApiCall
@@ -24,7 +25,7 @@ class JobRepositoryImpl @Inject constructor(
     override suspend fun fetchRecentJobs(limit: Int): Resource<JobResponse> =
         safeApiCall { api.getRecentJobs(limit) }
 
-    override suspend fun fetchJobById(id: Int): Resource<JobResponse> =
+    override suspend fun fetchJobById(id: Int): Resource<JobDetailsResponse> =
         safeApiCall { api.getJobById(id) }
 
     override suspend fun fetchJobCategory(): Resource<CategoryResponse> =

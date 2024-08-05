@@ -7,12 +7,13 @@ import com.samuelokello.kazihub.domain.model.job.category.create.CreateCategoryR
 import com.samuelokello.kazihub.domain.model.job.category.create.CreateCategoryResponse
 import com.samuelokello.kazihub.domain.model.job.create.CreateJobRequest
 import com.samuelokello.kazihub.domain.model.job.create.CreateJobsResponse
+import com.samuelokello.kazihub.domain.model.job.fetchById.JobDetailsResponse
 import com.samuelokello.kazihub.utils.Resource
 
 interface JobRepository {
     suspend fun fetchAllJobs(): Resource<JobResponse>
     suspend fun fetchRecentJobs(limit: Int): Resource<JobResponse>
-    suspend fun fetchJobById(id: Int): Resource<JobResponse>
+    suspend fun fetchJobById(id: Int): Resource<JobDetailsResponse>
     suspend fun fetchJobCategory(): Resource<CategoryResponse>
     suspend fun fetchJobCategoryById(id: Int): Resource<CategoryResponse>
     suspend fun fetchJobsByCategory(categoryId: Int): Resource<JobResponse>
