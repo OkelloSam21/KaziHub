@@ -3,7 +3,7 @@ package com.samuelokello.kazihub.presentation.business.Home.state
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.samuelokello.kazihub.data.model.profile.ProfileResponse
-import com.samuelokello.kazihub.domain.model.job.Job
+import com.samuelokello.kazihub.domain.model.job.data
 import com.samuelokello.kazihub.domain.repositpry.JobRepository
 import com.samuelokello.kazihub.domain.uscase.GetCurrentUserUseCase
 import com.samuelokello.kazihub.utils.Resource
@@ -22,7 +22,7 @@ class BusinessHomeViewModel @Inject constructor(
     private val _businessProfile = MutableStateFlow<ProfileResponse?>(null)
     val businessProfile = _businessProfile.asStateFlow()
 
-    private val _jobs = MutableStateFlow<List<Job>>(emptyList())
+    private val _jobs = MutableStateFlow<List<data>>(emptyList())
     val jobs = _jobs.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)

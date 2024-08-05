@@ -1,7 +1,6 @@
 package com.samuelokello.kazihub.presentation.business.Home.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,7 +17,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material.icons.filled.Work
 import androidx.compose.material3.DropdownMenu
@@ -37,25 +35,25 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.samuelokello.kazihub.domain.model.job.Job
+import com.samuelokello.kazihub.R
+import com.samuelokello.kazihub.domain.model.job.data
 import com.samuelokello.kazihub.domain.model.job.category.CategoryResponse
 import com.samuelokello.kazihub.presentation.business.Home.BusinessHomeUiEvents
 import com.samuelokello.kazihub.presentation.common.components.CustomButton
 import com.samuelokello.kazihub.presentation.common.components.LocationAutocompleteTextField
+import com.samuelokello.kazihub.presentation.common.components.NoJobsMessage
 import com.samuelokello.kazihub.presentation.shared.components.EditTextField
 import com.samuelokello.kazihub.ui.theme.primaryLight
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BusinessHomeScreenContent(
-    jobs: List<Job> = emptyList(),
+    jobs: List<data> = emptyList(),
     createJobState: CreateJobSheetState,
     showSheet: Boolean = false,
     onSheetDismissRequest: () -> Unit,
@@ -95,7 +93,7 @@ fun BusinessHomeScreenContent(
                 contentColor = Color.White,
                 containerColor = primaryLight,
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Create Job")
+                Icon(Icons.Default.Add, contentDescription = "Create data")
             }
         },
     ) { paddingValues ->
@@ -159,12 +157,12 @@ fun BusinessHomeScreenContent(
             }
             Spacer(modifier = Modifier.height(8.dp))
             if (jobs.isEmpty()) {
-                NoJobsMessage()
+                NoJobsMessage(R.string.click_the_button_to_create_your_first_job)
             } else {
                 LazyColumn {
                     items(jobs) { job ->
                         JobListItem(
-                            job = job,
+                            data = job,
                             onJobClick = {
                                 job.id?.let { jobId ->
                                     onBusinessUiEvent(BusinessHomeUiEvents.OnJobClick(jobId))
@@ -175,40 +173,6 @@ fun BusinessHomeScreenContent(
                 }
             }
         }
-    }
-}
-
-@Composable
-fun NoJobsMessage() {
-    Column(
-        modifier =
-        Modifier
-            .fillMaxSize()
-            .padding(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Icon(
-            imageVector = Icons.Default.Info,
-            contentDescription = null,
-            modifier = Modifier.size(64.dp),
-            tint = Color.Gray,
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "No jobs posted yet",
-            style = MaterialTheme.typography.bodyLarge,
-            color = Color.Gray,
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "Click the '+' button to create your first job.",
-            style = MaterialTheme.typography.bodyLarge,
-            color = Color.Gray,
-            textAlign = TextAlign.Center,
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
     }
 }
 
@@ -226,7 +190,7 @@ fun CreateJobUi(
             .padding(16.dp)
             .padding(bottom = 48.dp),
     ) {
-        Text(text = "Create Job", style = MaterialTheme.typography.titleMedium)
+        Text(text = "Create data", style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.height(8.dp))
 
         EditTextField(
@@ -304,7 +268,7 @@ fun CreateJobUi(
 
         CustomButton(
             onClick = {
-                // Handle job creation logic
+                // Handle data creation logic
                 onCreateJobUiEvent(
                     CreateJobUiEvent.OnCreateJobClick(
                         title = createJobState.title,
@@ -322,7 +286,7 @@ fun CreateJobUi(
                     createJobState.budget.toString().isNotBlank() &&
                     createJobState.location.isNotBlank() &&
                     createJobState.qualifications.toString().isNotBlank(),
-            text = "Create Job",
+            text = "Create data",
         )
     }
 }

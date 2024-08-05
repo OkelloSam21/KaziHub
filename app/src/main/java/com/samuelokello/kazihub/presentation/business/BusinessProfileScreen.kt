@@ -14,6 +14,6 @@ fun BusinessProfileScreen(userRole: UserRole) {
 }
 
 /**
- *  ensure job creation works and job biding works
+ *  ensure data creation works and data biding works
  *
  */
