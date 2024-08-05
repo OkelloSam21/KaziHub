@@ -139,7 +139,7 @@ dependencies {
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
     //swipe refresh
-//    implementation("com.google.accompanist:accompanist-swiperefresh: 0.34.0")
+    implementation("com.google.accompanist:accompanist-swiperefresh: 0.34.0")
 
     implementation("androidx.core:core-splashscreen:1.0.1")
 }

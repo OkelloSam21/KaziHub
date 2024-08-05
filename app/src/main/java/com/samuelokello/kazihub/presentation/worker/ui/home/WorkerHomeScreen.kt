@@ -102,7 +102,6 @@ fun WorkerHomeScreenContent(
                     state = pullRefreshState,
                     enabled = true
                 )
-//                .pu
         ) {
             AppBar { scope.launch { state.drawerState } }
 
