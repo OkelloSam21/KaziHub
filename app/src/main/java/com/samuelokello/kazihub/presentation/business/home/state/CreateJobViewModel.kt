@@ -1,16 +1,23 @@
-package com.samuelokello.kazihub.presentation.business.Home.state
+package com.samuelokello.kazihub.presentation.business.home.state
 
 import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.libraries.places.api.model.Place
 import com.samuelokello.kazihub.domain.model.job.category.CategoryResponse
 import com.samuelokello.kazihub.domain.model.job.create.CreateJobRequest
 import com.samuelokello.kazihub.domain.repositpry.JobRepository
-import com.samuelokello.kazihub.presentation.business.Home.components.CreateJobSheetState
+import com.samuelokello.kazihub.presentation.business.home.components.CreateJobUiEvent
+import com.samuelokello.kazihub.presentation.business.home.components.CreateJobUiState
+import com.samuelokello.kazihub.utils.LocationManager
 import com.samuelokello.kazihub.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -21,6 +28,7 @@ import javax.inject.Inject
 class CreateJobViewModel @Inject constructor(
     private val repository: JobRepository, // Injecting the JobRepository to interact with the data layer
     @ApplicationContext private val context: Context, // Injecting the application context
+    private val locationManager: LocationManager,
 ) : ViewModel(){
 
     init {
@@ -28,7 +36,7 @@ class CreateJobViewModel @Inject constructor(
     }
 
     // MutableStateFlow to hold the state of the Create data form
-    private val _createDataRequest = MutableStateFlow(CreateJobSheetState())
+    private val _createDataRequest = MutableStateFlow(CreateJobUiState())
     val createJobState = _createDataRequest.asStateFlow() // Exposing an immutable StateFlow for observing the state
 
     // MutableStateFlow to hold the list of data categories
@@ -38,8 +46,21 @@ class CreateJobViewModel @Inject constructor(
     private val _selectedCategory = MutableStateFlow<CategoryResponse?>(null)
     val selectedCategory = _selectedCategory.asStateFlow()
 
+    fun onJobEvent(event: CreateJobUiEvent) {
+        when (event) {
+            is CreateJobUiEvent.OnCreateJobClick -> onCreateJobClick()
+            is CreateJobUiEvent.OnBudgetChange -> onBudgetChange(event.budget)
+            is CreateJobUiEvent.OnDescriptionChange -> onDescriptionChange(event.description)
+            is CreateJobUiEvent.OnLocationChange -> onLocationChange(event.location)
+            is CreateJobUiEvent.OnQualificationsChange -> onQualificationsChange(event.qualifications)
+            is CreateJobUiEvent.OnTitleChange -> onTitleChange(event.title)
+            is CreateJobUiEvent.OnCategoryChange -> {}
+            is CreateJobUiEvent.OnSuggestionSelected -> onSuggestionSelected(event.suggestion)
+        }
+    }
+
     // Function to handle the Create data button click
-    fun onCreateJobClick() {
+    private fun onCreateJobClick() {
         viewModelScope.launch {
             // Extracting the form data from the state
             val title = _createDataRequest.value.title
@@ -84,37 +105,68 @@ class CreateJobViewModel @Inject constructor(
     }
 
     // Functions to handle changes in the form fields
-    fun onBudgetChange(budget: Int) {
+    private fun onBudgetChange(budget: Int) {
         _createDataRequest.update {
             it.copy(budget = budget)
         }
     }
 
-    fun onDescriptionChange(description: String) {
+    private fun onDescriptionChange(description: String) {
         _createDataRequest.update {
             it.copy(description = description)
         }
     }
 
-    fun onLocationChange(location: String) {
+    private fun onLocationChange(location: String) {
         _createDataRequest.update {
             it.copy(location = location)
         }
+
+        val searchJob = Job()
+        searchJob.cancelChildren()
+        viewModelScope.launch(Dispatchers.Main + searchJob) {
+            delay(300)
+            locationManager.fetchLocationSuggestions(
+                location,
+                onSuccess = { suggestions ->
+                    _createDataRequest.update {
+                        it.copy(locationSuggestion = suggestions)
+                    }
+                },
+                onError = {
+                    // Handle error
+                    _createDataRequest.update {
+                        it.copy(
+                            locationSuggestion = emptyList(),
+                        )
+                    }
+                }
+            )
+
+        }
     }
 
-    fun onQualificationsChange(qualifications: String) {
+    private fun onSuggestionSelected(place: Place) {
+        _createDataRequest.update {
+            it.copy(
+                location = place.name?.toString() ?: "",
+                selectedLocation = place)
+        }
+    }
+
+    private fun onQualificationsChange(qualifications: String) {
         _createDataRequest.update {
             it.copy(qualifications = listOf(qualifications))
         }
     }
 
-    fun onTitleChange(title: String) {
+    private fun onTitleChange(title: String) {
         _createDataRequest.update {
             it.copy(title = title)
         }
     }
 
-    fun onCategoryChange(category: CategoryResponse) {
+    private fun onCategoryChange(category: CategoryResponse) {
         _selectedCategory.value = category
         _createDataRequest.update {
             it.copy(categoryId = category.id!!)

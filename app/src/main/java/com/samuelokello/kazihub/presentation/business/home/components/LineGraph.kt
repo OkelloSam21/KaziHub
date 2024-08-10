@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.business.Home.components
+package com.samuelokello.kazihub.presentation.business.home.components
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Column

@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.business.Home.state
+package com.samuelokello.kazihub.presentation.business.home.state
 
 data class CreateJobState(
     val title: String = "",

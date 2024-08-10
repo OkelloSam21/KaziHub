@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.business.Home.state
+package com.samuelokello.kazihub.presentation.business.home.state
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

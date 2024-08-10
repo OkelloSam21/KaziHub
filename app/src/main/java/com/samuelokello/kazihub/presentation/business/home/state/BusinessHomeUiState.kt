@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.business.Home.state
+package com.samuelokello.kazihub.presentation.business.home.state
 
 import com.samuelokello.kazihub.domain.model.job.data
 

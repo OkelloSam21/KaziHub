@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.business.Home.components
+package com.samuelokello.kazihub.presentation.business.home.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -41,9 +41,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.samuelokello.kazihub.R
-import com.samuelokello.kazihub.domain.model.job.data
 import com.samuelokello.kazihub.domain.model.job.category.CategoryResponse
-import com.samuelokello.kazihub.presentation.business.Home.BusinessHomeUiEvents
+import com.samuelokello.kazihub.domain.model.job.data
+import com.samuelokello.kazihub.presentation.business.home.BusinessHomeUiEvents
 import com.samuelokello.kazihub.presentation.common.components.CustomButton
 import com.samuelokello.kazihub.presentation.common.components.LocationAutocompleteTextField
 import com.samuelokello.kazihub.presentation.common.components.NoJobsMessage
@@ -54,7 +54,7 @@ import com.samuelokello.kazihub.ui.theme.primaryLight
 @Composable
 fun BusinessHomeScreenContent(
     jobs: List<data> = emptyList(),
-    createJobState: CreateJobSheetState,
+    createJobState: CreateJobUiState,
     showSheet: Boolean = false,
     onSheetDismissRequest: () -> Unit,
     onBusinessUiEvent: (BusinessHomeUiEvents) -> Unit,
@@ -178,7 +178,7 @@ fun BusinessHomeScreenContent(
 
 @Composable
 fun CreateJobUi(
-    createJobState: CreateJobSheetState,
+    createJobState: CreateJobUiState,
     onCreateJobUiEvent: (CreateJobUiEvent) -> Unit,
     categories: List<CategoryResponse> = emptyList(),
     selectedCategory: CategoryResponse,
@@ -190,7 +190,7 @@ fun CreateJobUi(
             .padding(16.dp)
             .padding(bottom = 48.dp),
     ) {
-        Text(text = "Create data", style = MaterialTheme.typography.titleMedium)
+        Text(text = "Create Job", style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.height(8.dp))
 
         EditTextField(
@@ -238,8 +238,8 @@ fun CreateJobUi(
         LocationAutocompleteTextField(
             value = createJobState.location,
             onValueChange = { onCreateJobUiEvent(CreateJobUiEvent.OnLocationChange(it)) },
-            suggestions = emptyList(),
-            onSuggestionSelected = {},
+            suggestions = createJobState.locationSuggestion,
+            onSuggestionSelected = { onCreateJobUiEvent(CreateJobUiEvent.OnSuggestionSelected(it)) },
             placeholder = "Location",
             modifier = Modifier.fillMaxWidth(),
         )
