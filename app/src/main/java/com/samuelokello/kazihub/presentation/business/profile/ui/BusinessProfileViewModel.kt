@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.business
+package com.samuelokello.kazihub.presentation.business.profile.ui
 
 import android.util.Log
 import android.util.Patterns
@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileRequest
 import com.samuelokello.kazihub.domain.repositpry.BusinessRepository
-import com.samuelokello.kazihub.presentation.business.state.BusinessEvent
-import com.samuelokello.kazihub.presentation.business.state.BusinessProfileState
+import com.samuelokello.kazihub.presentation.business.home.event.BusinessEvent
+import com.samuelokello.kazihub.presentation.business.home.state.BusinessProfileState
 import com.samuelokello.kazihub.utils.LocationManager
 import com.samuelokello.kazihub.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel

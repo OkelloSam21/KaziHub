@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.business.home.components
+package com.samuelokello.kazihub.presentation.business.job.event
 
 import com.google.android.libraries.places.api.model.Place
 

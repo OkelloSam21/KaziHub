@@ -1,6 +1,7 @@
-package com.samuelokello.kazihub.presentation.business.home.components
+package com.samuelokello.kazihub.presentation.business.job.state
 
 import com.google.android.libraries.places.api.model.Place
+import com.samuelokello.kazihub.domain.model.job.fetchById.Category
 
 data class CreateJobUiState (
     val title: String = "",
@@ -9,7 +10,7 @@ data class CreateJobUiState (
     val location: String = "",
     val locationSuggestion : List<Place> = emptyList(),
     val selectedLocation : Place = Place.builder().build(),
-    val category: String = "",
+    val category: List<Category> = emptyList(),
     val qualifications: List<String> = emptyList(),
     val categoryId: Int = 0,
 )

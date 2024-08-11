@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.business
+package com.samuelokello.kazihub.presentation.business.profile.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text

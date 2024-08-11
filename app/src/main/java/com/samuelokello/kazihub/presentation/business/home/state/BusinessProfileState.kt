@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.business.state
+package com.samuelokello.kazihub.presentation.business.home.state
 
 import com.google.android.libraries.places.api.model.Place
 import com.samuelokello.kazihub.presentation.common.AuthState

@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.business.home.state
+package com.samuelokello.kazihub.presentation.business.home.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -6,6 +6,7 @@ import com.samuelokello.kazihub.data.model.profile.ProfileResponse
 import com.samuelokello.kazihub.domain.model.job.data
 import com.samuelokello.kazihub.domain.repositpry.JobRepository
 import com.samuelokello.kazihub.domain.uscase.GetCurrentUserUseCase
+import com.samuelokello.kazihub.presentation.business.home.event.BusinessHomeUiEvents
 import com.samuelokello.kazihub.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,6 +36,13 @@ class BusinessHomeViewModel @Inject constructor(
         getCurrentBusinessProfile()
     }
 
+    fun businessHomeEvent(event: BusinessHomeUiEvents) {
+        when (event) {
+            is BusinessHomeUiEvents.OnJobClick -> {}
+            is BusinessHomeUiEvents.OnDrawerClick -> {}
+            is BusinessHomeUiEvents.OnFABClick -> {}
+        }
+    }
 
     // Get current business profile
     private fun getCurrentBusinessProfile() {
