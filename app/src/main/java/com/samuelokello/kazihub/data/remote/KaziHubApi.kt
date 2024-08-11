@@ -7,6 +7,7 @@ import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileRequest
 import com.samuelokello.kazihub.domain.model.Bussiness.BusinessProfileResponse
 import com.samuelokello.kazihub.domain.model.job.JobResponse
 import com.samuelokello.kazihub.domain.model.job.category.CategoryResponse
+import com.samuelokello.kazihub.domain.model.job.category.FetchCategoryResponse
 import com.samuelokello.kazihub.domain.model.job.category.create.CreateCategoryRequest
 import com.samuelokello.kazihub.domain.model.job.category.create.CreateCategoryResponse
 import com.samuelokello.kazihub.domain.model.job.create.CreateJobRequest
@@ -135,7 +136,7 @@ interface KaziHubApi {
     suspend fun createJobCategory(@Body category: CreateCategoryRequest): CreateCategoryResponse
 
     @GET("jobs/category/list")
-    suspend fun getJobCategories(): CategoryResponse
+    suspend fun getJobCategories(): FetchCategoryResponse
 
     @GET("jobs/category/{category_id}")
     suspend fun getJobCategoryById(@Path("category_id") id: Int): CategoryResponse

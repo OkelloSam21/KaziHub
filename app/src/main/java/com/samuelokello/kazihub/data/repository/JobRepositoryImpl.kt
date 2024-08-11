@@ -4,6 +4,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.samuelokello.kazihub.data.remote.KaziHubApi
 import com.samuelokello.kazihub.domain.model.job.JobResponse
 import com.samuelokello.kazihub.domain.model.job.category.CategoryResponse
+import com.samuelokello.kazihub.domain.model.job.category.FetchCategoryResponse
 import com.samuelokello.kazihub.domain.model.job.category.create.CreateCategoryRequest
 import com.samuelokello.kazihub.domain.model.job.category.create.CreateCategoryResponse
 import com.samuelokello.kazihub.domain.model.job.create.CreateJobRequest
@@ -28,7 +29,7 @@ class JobRepositoryImpl @Inject constructor(
     override suspend fun fetchJobById(id: Int): Resource<JobDetailsResponse> =
         safeApiCall { api.getJobById(id) }
 
-    override suspend fun fetchJobCategory(): Resource<CategoryResponse> =
+    override suspend fun fetchJobCategory(): Resource<FetchCategoryResponse> =
         safeApiCall { api.getJobCategories()}
 
     override suspend fun fetchJobCategoryById(id: Int): Resource<CategoryResponse> =

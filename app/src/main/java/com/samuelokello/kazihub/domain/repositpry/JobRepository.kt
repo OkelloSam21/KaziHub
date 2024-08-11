@@ -3,6 +3,7 @@ package com.samuelokello.kazihub.domain.repositpry
 import com.google.android.gms.maps.model.LatLng
 import com.samuelokello.kazihub.domain.model.job.JobResponse
 import com.samuelokello.kazihub.domain.model.job.category.CategoryResponse
+import com.samuelokello.kazihub.domain.model.job.category.FetchCategoryResponse
 import com.samuelokello.kazihub.domain.model.job.category.create.CreateCategoryRequest
 import com.samuelokello.kazihub.domain.model.job.category.create.CreateCategoryResponse
 import com.samuelokello.kazihub.domain.model.job.create.CreateJobRequest
@@ -14,7 +15,7 @@ interface JobRepository {
     suspend fun fetchAllJobs(): Resource<JobResponse>
     suspend fun fetchRecentJobs(limit: Int): Resource<JobResponse>
     suspend fun fetchJobById(id: Int): Resource<JobDetailsResponse>
-    suspend fun fetchJobCategory(): Resource<CategoryResponse>
+    suspend fun fetchJobCategory(): Resource<FetchCategoryResponse>
     suspend fun fetchJobCategoryById(id: Int): Resource<CategoryResponse>
     suspend fun fetchJobsByCategory(categoryId: Int): Resource<JobResponse>
     suspend fun fetchJobsByLocation(latLng: LatLng): Resource<JobResponse>
