@@ -15,7 +15,7 @@ import com.google.android.libraries.places.api.model.Place
 import com.samuelokello.kazihub.presentation.shared.components.EditTextField
 
 @Composable
-fun LocationAutocompleteTextField(
+fun AutocompleteTextField(
     value: String,
     onValueChange: (String) -> Unit,
     suggestions: List<Place>,
