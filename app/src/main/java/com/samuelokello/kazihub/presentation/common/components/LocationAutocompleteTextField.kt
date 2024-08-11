@@ -1,54 +1,74 @@
 package com.samuelokello.kazihub.presentation.common.components
 
-import androidx.compose.foundation.layout.Column
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.google.android.libraries.places.api.model.AutocompletePrediction
+import androidx.compose.ui.unit.dp
+import com.google.android.libraries.places.api.model.Place
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocationAutocompleteTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    suggestions: List<AutocompletePrediction>,
-    onSuggestionSelected: (AutocompletePrediction) -> Unit,
+    suggestions: List<Place>,
+    onSuggestionSelected: (Place) -> Unit,
     placeholder: String,
     modifier: Modifier = Modifier
 ) {
-    val showDropdown = remember { mutableStateOf(true) }
-    Column(modifier = modifier) {
+    var expanded by remember { mutableStateOf(false) }
+    var selectedText by remember { mutableStateOf(value) }
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = it }
+    ) {
         OutlinedTextField(
-            value = value,
+            value = selectedText,
             onValueChange = {
+                selectedText = it
                 onValueChange(it)
-                showDropdown.value = true
-                            },
+                expanded = it.isNotEmpty() && suggestions.isNotEmpty()
+            },
             placeholder = { Text(text = placeholder) },
             trailingIcon = {
-                           Icons.Default.LocationOn
+                Icon(Icons.Default.LocationOn, contentDescription = "location")
             },
+            shape = RoundedCornerShape(10.dp),
             modifier = Modifier
+                .menuAnchor()  // Use menuAnchor for alignment with the dropdown menu
                 .fillMaxWidth()
+
         )
-        DropdownMenu(
-            expanded = showDropdown.value,
-            onDismissRequest = { showDropdown.value = false }
+
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
         ) {
             suggestions.forEach { prediction ->
-                DropdownMenuItem(onClick = {
-                    onSuggestionSelected(prediction)
-                    showDropdown.value = false
-                },
-                    text = { Text(prediction.getFullText(null).toString()) }
+                DropdownMenuItem(
+                    onClick = {
+                        selectedText = prediction.name?.toString() ?: ""
+                        onSuggestionSelected(prediction)
+                        expanded = false
+                    },
+                    text = { Text(prediction.name?.toString() ?: "") }
                 )
+                Log.e("LocationAutocompleteTextField", "suggestions: ${prediction.name}")
             }
         }
     }
