@@ -1,4 +1,4 @@
-package com.samuelokello.kazihub.presentation.business
+package com.samuelokello.kazihub.presentation.business.profile
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,8 +22,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.samuelokello.kazihub.presentation.business.state.BusinessEvent
-import com.samuelokello.kazihub.presentation.business.state.BusinessProfileState
+import com.samuelokello.kazihub.presentation.business.home.event.BusinessEvent
+import com.samuelokello.kazihub.presentation.business.home.state.BusinessProfileState
+import com.samuelokello.kazihub.presentation.business.profile.ui.BusinessProfileViewModel
 import com.samuelokello.kazihub.presentation.common.HandleError
 import com.samuelokello.kazihub.presentation.common.HandleLoading
 import com.samuelokello.kazihub.presentation.common.HandleSuccess
