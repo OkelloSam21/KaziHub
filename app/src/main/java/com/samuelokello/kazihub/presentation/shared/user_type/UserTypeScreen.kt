@@ -2,7 +2,7 @@ package com.samuelokello.kazihub.presentation.shared.user_type
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -21,6 +21,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -53,22 +55,20 @@ fun UserTypeContent(
         Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Column (
-            verticalArrangement = Arrangement.Top,
-        ){
+        Column {
             Image(
                 painter = painterResource(id = R.drawable.kazi_hub_logo),
-                contentDescription = "Kazi Hub Logo"
+                contentDescription = "Kazi Hub Logo",
+                contentScale = ContentScale.Crop
             )
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Column {
             Text(
                 text = "Select your user type",
-                style = MaterialTheme.typography.bodyLarge,
-//                .copy(fontSize = 18.sp, fontFamily = FontFamily(Font(R.font.poppins_bold))),
+                style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(top = 16.dp)
             )
         }
@@ -76,24 +76,43 @@ fun UserTypeContent(
         Spacer(modifier = Modifier.height(32.dp))
 
         Row (
-            Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
+            Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
         ){
-            UserTypeCard(
-                image = R.drawable.undraw_software_engineer_re_tnjc,
-                title = "I am a data Provider",
-                userRole = UserRole.BUSINESS,
-                onClick = {
-                    onClick(UserRole.BUSINESS)
-                }
-            )
-            Spacer(modifier = Modifier.width(32.dp))
-            UserTypeCard(
-                image = R.drawable.worker,
-                title = "I am a data Seeker",
-                userRole = UserRole.WORKER,
-                onClick = { onClick(UserRole.WORKER)}
-            )
+            Column {
+                UserTypeCard(
+                    image = R.drawable.undraw_software_engineer_re_tnjc,
+                    title = "I am a job Provider",
+                    userRole = UserRole.BUSINESS,
+                    onClick = {
+                        onClick(UserRole.BUSINESS)
+                    }
+                )
+                Text(
+                    text = "Business",
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.padding(horizontal = 64.dp)
+                )
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Column {
+                UserTypeCard(
+                    image = R.drawable.worker,
+                    title = "I am a job Seeker",
+                    userRole = UserRole.WORKER,
+                    onClick = { onClick(UserRole.WORKER)}
+                )
+                Text(
+                    text = "Worker",
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.padding(horizontal = 64.dp)
+                )
+            }
+
+
         }
     }
 }
@@ -106,14 +125,18 @@ fun UserTypeCard(
     onClick: (UserRole) -> Unit
 ) {
     Card (
-        modifier = Modifier
-            .padding(start = 8.dp)
-            .size(200.dp, 250.dp)
-            .clickable { onClick(userRole) }
-        .background(MaterialTheme.colorScheme.surface),
+        modifier =
+        Modifier.width(170.dp)
+            .height(180.dp)
+            .padding(horizontal = 8.dp, vertical = 8.dp)
+            .shadow(elevation = 12.dp, spotColor = Color(0x26BFBFD9), ambientColor = Color(0x26BFBFD9))
+            .shadow(elevation = 4.dp, spotColor = Color(0x1ABFBFD9), ambientColor = Color(0x1ABFBFD9))
+            .border(width = 0.5.dp, color = MaterialTheme.colorScheme.onSurfaceVariant, shape = RoundedCornerShape(size = 16.dp))
     ){
         Column (
-            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth().clickable(onClick = { onClick(userRole) }),
+            verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
+            horizontalAlignment = Alignment.CenterHorizontally
         ){
             Image(
                 painter = painterResource(id = image),
@@ -126,7 +149,7 @@ fun UserTypeCard(
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = title,
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier.padding(start = 16.dp)
             )
         }

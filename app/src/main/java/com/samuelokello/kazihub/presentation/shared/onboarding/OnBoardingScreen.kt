@@ -23,7 +23,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.R
 import com.samuelokello.kazihub.presentation.destinations.UserTYpeScreenDestination
@@ -59,7 +58,6 @@ fun OnBoardingContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-//                .weight(2f),
         ) {
             Image(
                 painter = painterResource(id = R.drawable.undraw_software_engineer_re_tnjc),
@@ -81,7 +79,7 @@ fun OnBoardingContent(
                 verticalArrangement = Arrangement.Center,
             ){
                 Text(
-                    text = "Find a Perfect data Match",
+                    text = "Find a Perfect Job Match",
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier
                 )
@@ -89,8 +87,8 @@ fun OnBoardingContent(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Finding your dream data is more easier and faster with Kazihub",
-                    style = MaterialTheme.typography.titleLarge.copy(color = Color.Gray),
+                    text = "Finding your dream job is more easier and faster with Kazihub",
+                    style = MaterialTheme.typography.titleMedium.copy(color = Color.Gray),
                     modifier = Modifier
                 )
             }
