@@ -73,7 +73,7 @@ fun JobCard(
                 Row {
                     Text(text = "ksh ${job.budget?: "Not Specified"}")
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = "Location : ${job.location?: "N/A"} ")
+                    Text(text = "Location : ${job.business?.location ?: "N/A"} ")
                 }
             }
         }
