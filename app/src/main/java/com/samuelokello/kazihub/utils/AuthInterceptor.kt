@@ -1,6 +1,8 @@
 package com.samuelokello.kazihub.utils
 
 
+import android.util.Log
+import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
@@ -41,35 +43,34 @@ class AuthInterceptor @Inject constructor(
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
-        val requestBuilder = originalRequest.newBuilder()
 
-        if (tokenManager.hasAccessToken()) {
-            requestBuilder.addHeader("Authorization", "Bearer ${tokenManager.getAccessToken()}")
-        }
-
-        val request = requestBuilder.build()
-        val response = chain.proceed(request)
-
-        // If the response is 401 Unauthorized, try to refresh the token
-        if (response.code == 401 && tokenManager.hasRefreshToken()) {
-            response.close()
-            val newAccessToken = refreshToken() // Implement this method to refresh the token
-            if (newAccessToken != null) {
+        // Check if the request needs authentication
+        if (!noAuthEndpoints.contains(originalRequest.url.encodedPath)) {
+            // Add the Authorization header with the Bearer token
+            if (tokenManager.hasAccessToken()) {
                 val newRequest = originalRequest.newBuilder()
-                    .header("Authorization", "Bearer $newAccessToken")
+                    .addHeader("Authorization", "Bearer ${tokenManager.getAccessToken()}")
                     .build()
                 return chain.proceed(newRequest)
+            } else {
+                Log.e("CreateJob" ,"Access token missing or invalid")
             }
         }
 
-        return response
+        return chain.proceed(originalRequest)
     }
 
+
     private fun refreshToken(): String? {
-        // Implement token refresh logic here
-        // This should make a network call to refresh the token
-        // Update TokenManager with the new tokens
-        // Return the new access token or null if refresh failed
+        val response = runBlocking {
+            tokenManager.getRefreshToken()
+        }
+//        return when (response) {
+////            is Resource.Success -> response.data?.data?.accessToken
+//
+//            else -> null
+//        }
         return null
     }
+
 }
