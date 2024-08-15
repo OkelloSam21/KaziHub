@@ -1,5 +1,6 @@
 package com.samuelokello.kazihub.utils
 
+import android.util.Log
 import javax.inject.Inject
 
 // TokenManager.kt
@@ -10,6 +11,8 @@ class TokenManager @Inject constructor() {
     fun setToken(access: String, refresh: String) {
         accessToken = access
         refreshToken = refresh
+        Log.d("TokenManager", "Access Token: $accessToken")
+        Log.d("TokenManager", "Refresh Token: $refreshToken")
     }
 
     fun getAccessToken(): String = accessToken
