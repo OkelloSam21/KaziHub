@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
@@ -168,6 +169,7 @@ fun JobSection(
                     job?.let {
                         JobCard(job = it) { onJobClick(it) }
                     }
+                    Spacer(modifier = Modifier.width(16.dp))
                 }
             }
         }
@@ -196,7 +198,7 @@ fun RecentPost(
         ) {
             Column {
                 Text(text = job.title ?: "")
-                Text(text = job.location ?: "")
+                Text(text = job.business?.location ?: "")
             }
             Text(text = "ksh ${job.budget}")
         }
