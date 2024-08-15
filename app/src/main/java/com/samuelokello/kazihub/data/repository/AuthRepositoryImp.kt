@@ -36,7 +36,10 @@ class AuthRepositoryImpl @Inject constructor(
 
 
     override suspend fun refreshToken(): Resource<SignInResponse> =
-        safeApiCall { api.refreshToken(tokenManager.getAccessToken()) }
+        safeApiCall {
+            api.refreshToken(tokenManager.getAccessToken())
+            api.refreshToken(tokenManager.getRefreshToken())
+        }
 
     override suspend fun signOut() {
         tokenManager.clearTokens()
