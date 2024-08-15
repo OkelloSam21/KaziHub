@@ -29,6 +29,7 @@ import com.samuelokello.kazihub.presentation.business.home.components.JobListIte
 import com.samuelokello.kazihub.presentation.business.home.components.LineGraph
 import com.samuelokello.kazihub.presentation.business.home.components.StatsCard
 import com.samuelokello.kazihub.presentation.business.home.event.BusinessHomeUiEvents
+import com.samuelokello.kazihub.presentation.business.home.state.BusinessHomeUiState
 import com.samuelokello.kazihub.presentation.common.components.NoJobsMessage
 import com.samuelokello.kazihub.ui.theme.primaryLight
 
