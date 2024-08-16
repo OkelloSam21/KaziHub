@@ -77,12 +77,15 @@ fun UserTypeContent(
 
         Row (
             Modifier
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .padding(horizontal = 8.dp, vertical = 8.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ){
-            Column {
+            Column (
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ){
                 UserTypeCard(
                     image = R.drawable.undraw_software_engineer_re_tnjc,
                     title = "I am a job Provider",
@@ -94,10 +97,10 @@ fun UserTypeContent(
                 Text(
                     text = "Business",
                     style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.padding(horizontal = 64.dp)
+                    modifier = Modifier
                 )
             }
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(8.dp))
             Column {
                 UserTypeCard(
                     image = R.drawable.worker,
