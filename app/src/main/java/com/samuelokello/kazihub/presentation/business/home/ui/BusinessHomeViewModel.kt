@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.samuelokello.kazihub.data.model.profile.ProfileResponse
 import com.samuelokello.kazihub.domain.model.job.data
+import com.samuelokello.kazihub.domain.model.proposal.proposalResponse.ProposalResponse
 import com.samuelokello.kazihub.domain.repositpry.JobRepository
+import com.samuelokello.kazihub.domain.repositpry.ProposalRepository
 import com.samuelokello.kazihub.domain.uscase.GetCurrentUserUseCase
 import com.samuelokello.kazihub.presentation.business.home.event.BusinessHomeUiEvents
 import com.samuelokello.kazihub.presentation.business.home.state.BusinessHomeUiState
@@ -21,6 +23,7 @@ import javax.inject.Inject
 class BusinessHomeViewModel @Inject constructor(
     val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val jobRepository: JobRepository,
+    private val proposalRepository: ProposalRepository
 ) : ViewModel() {
    private val _uiState = MutableStateFlow(BusinessHomeUiState())
     val uiState = _uiState.asStateFlow()
@@ -36,6 +39,9 @@ class BusinessHomeViewModel @Inject constructor(
 
     private val _error = MutableStateFlow<String?>(null)
     val error = _error.asStateFlow()
+
+    private val _proposal = MutableStateFlow<ProposalResponse?>(null)
+    val proposal = _proposal.asStateFlow()
 
     init {
         getCurrentBusinessProfile()
@@ -98,5 +104,7 @@ class BusinessHomeViewModel @Inject constructor(
     }
 
     // Other methods...
+
+
 }
 

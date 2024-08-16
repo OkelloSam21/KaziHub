@@ -32,6 +32,7 @@ import com.samuelokello.kazihub.presentation.business.home.ui.BusinessHomeScreen
 import com.samuelokello.kazihub.presentation.business.home.ui.BusinessHomeViewModel
 import com.samuelokello.kazihub.presentation.common.components.AppBar
 import com.samuelokello.kazihub.presentation.destinations.CreateJobUiDestination
+import com.samuelokello.kazihub.presentation.destinations.ProposalUiDestination
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,10 +80,9 @@ fun BusinessHomeScreen(
                     selected = false,
                     onClick = {
                         scope.launch { drawerState.close() }
-//                        navigator.navigate(ProposalsScreenDestination)
+                        navigator.navigate(ProposalUiDestination(1))
                     }
                 )
-                // Add more navigation items as needed
             }
         }
     ) {
