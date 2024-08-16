@@ -190,4 +190,9 @@ interface KaziHubApi {
         @Path("job_id") jobId: Int,
         @Body proposal: ProposalRequest
     ): CreateProposalResponse
+
+    @POST("/proposals/{proposal_id}")
+    suspend fun getProposalById(
+        @Path("proposal_id") proposalId: Int,
+    ): ProposalResponse
 }
