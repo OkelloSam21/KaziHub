@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material3.Badge
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.samuelokello.kazihub.R
+import com.samuelokello.kazihub.presentation.destinations.ProposalUiDestination
 
 @Composable
 fun NavigationDrawer(
@@ -49,14 +51,25 @@ fun NavigationDrawer(
             label = "Home",
             onClick = { onItemClick("Home") }
         )
-        NavigationItem(
-            icon = Icons.Default.List,
-            label = "Proposals",
-            onClick = { 
-//                navigator.navigate(ProposalsScreenDestination)
-                onItemClick("Proposals")
+
+        Row {
+            NavigationItem(
+                icon = Icons.Default.List,
+                label = "Proposals",
+                onClick = {
+                navigator.navigate(ProposalUiDestination(1))
+                    onItemClick("Proposals")
+                }
+            )
+            Badge(
+                modifier = Modifier.padding(start = 8.dp),
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ){
+                Text(text = "2")
             }
-        )
+        }
+
         // Add more navigation items as needed
     }
 }

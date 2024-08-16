@@ -21,4 +21,10 @@ class ProposalRepositoryImpl @Inject constructor(private val api: KaziHubApi): P
             api.getProposals()
         }
     }
+
+    override suspend fun getProposalById(id: Int): Resource<ProposalResponse> {
+        return safeApiCall {
+            api.getProposalById(id)
+        }
+    }
 }

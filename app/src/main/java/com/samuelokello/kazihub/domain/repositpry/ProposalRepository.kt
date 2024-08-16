@@ -9,4 +9,6 @@ interface ProposalRepository {
     suspend fun createProposal(id: Int, request: ProposalRequest): Resource<CreateProposalResponse>
 
     suspend fun getProposals(): Resource<ProposalResponse>
+
+    suspend fun getProposalById(id: Int): Resource<ProposalResponse>
 }
