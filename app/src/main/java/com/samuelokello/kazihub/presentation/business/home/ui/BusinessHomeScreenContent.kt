@@ -36,7 +36,6 @@ import com.samuelokello.kazihub.presentation.business.home.event.BusinessHomeUiE
 import com.samuelokello.kazihub.presentation.common.components.NoJobsMessage
 import com.samuelokello.kazihub.ui.theme.primaryLight
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BusinessHomeScreenContent(
     jobs: List<data> = emptyList(),
@@ -54,13 +53,10 @@ fun BusinessHomeScreenContent(
                 contentColor = Color.White,
                 containerColor = primaryLight,
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Create data")
+                Icon(Icons.Default.Add, contentDescription = "Create proposal")
             }
         },
     ) { paddingValues ->
-
-        val scrollState = rememberScrollState()
-
         Column(
             modifier =
             Modifier
@@ -68,11 +64,6 @@ fun BusinessHomeScreenContent(
                 .padding(horizontal = 20.dp)
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
-//                .scrollable(
-//                    state = scrollState ,
-//                    enabled = true,
-//                    orientation = Orientation.Vertical
-//                ),
         ) {
 
             Column {
