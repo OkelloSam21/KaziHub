@@ -1,5 +1,6 @@
 package com.samuelokello.kazihub.presentation.business
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -7,9 +8,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Surface
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
@@ -17,9 +19,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.samuelokello.kazihub.domain.model.proposal.proposalResponse.ProposalResponseItem
+import com.samuelokello.kazihub.domain.model.proposal.proposalResponse.ProposalData
 import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,47 +40,66 @@ import com.samuelokello.kazihub.ui.theme.KaziHubTheme
 @Composable
 fun ProposalUi(
     proposalId: Int,
-    viewmodel: ProposalViewmodel = hiltViewModel(),
+    viewModel: ProposalViewModel = hiltViewModel(),
     navigator: DestinationsNavigator
 ) {
-    val state = viewmodel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(proposalId) {
+        viewModel.fetchProposalById(proposalId)
+        Log.d("ProposalUi", "LaunchedEffect: $proposalId")
+    }
 
     KaziHubTheme {
         Surface {
-            if (state.value.isLoading) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                }
-            } else {
-                Column (Modifier.fillMaxSize()){
-                    CenterAlignedTopAppBar(
-                        title = { Text(text = "Proposals") },
-                        navigationIcon = {
-                            IconButton(onClick = { navigator.navigateUp() }) {
-                                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+            Column(Modifier.fillMaxSize()) {
+                CenterAlignedTopAppBar(
+                    title = { Text(text = "Proposal") },
+                    navigationIcon = {
+                        IconButton(onClick = { navigator.popBackStack() }) {
+                            Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                        }
+                    }
+                )
+
+                when {
+                    state.isLoading -> {
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                        }
+                    }
+                    state.error != null -> {
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            Text(
+                                "Error: ${state.error}",
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
+                    }
+                    state.proposals.isEmpty() -> {
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            Text(
+                                "No proposal found.",
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
+                    }
+                    else -> {
+                        LazyColumn {
+                            items(state.proposals) { proposal ->
+                                ProposalItem(proposal)
                             }
                         }
-                    )
-                    state.value.proposals.forEach { proposal ->
-                        ProposalItem(
-                            proposal = proposal,
-                            onAccept = {  },
-                            onReject = {  }
-                        )
                     }
                 }
             }
         }
     }
-
-
 }
 
 @Composable
 fun ProposalItem(
-    proposal: ProposalResponseItem,
-    onAccept: () -> Unit,
-    onReject: () -> Unit,
+    proposal: ProposalData,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -86,15 +110,18 @@ fun ProposalItem(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Column {
-            Text(text = "Title: ${proposal.job.title}", style = MaterialTheme.typography.bodyLarge)
-            Text(text = "Description: ${proposal.job.description}", style = MaterialTheme.typography.bodyMedium)
-            Text(text = "Budget: ${proposal.job.budget}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "Amount: ${proposal.amount}", style = MaterialTheme.typography.bodyLarge)
+            Text(
+                text = "Status: ${proposal.status.value}",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            // Add more Text composables to display other proposal details as needed
         }
         Row {
-            Button(onClick = onAccept, modifier = Modifier.padding(end = 8.dp)) {
+            Button(onClick = { /* Handle accept logic */ }, modifier = Modifier.padding(end = 8.dp)) {
                 Text(text = "Accept")
             }
-            Button(onClick = onReject) {
+            Button(onClick = { /* Handle reject logic */ }) {
                 Text(text = "Reject")
             }
         }
