@@ -1,11 +1,9 @@
 package com.samuelokello.kazihub.presentation.shared.home.presentation
 
+import BusinessHomeScreen
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.samuelokello.kazihub.presentation.business.Home.BusinessHomeScreen
-import com.samuelokello.kazihub.presentation.shared.auth.AuthViewModel
 import com.samuelokello.kazihub.presentation.worker.ui.home.WorkerHomeScreen
 import com.samuelokello.kazihub.utils.UserRole
 
@@ -18,10 +16,9 @@ import com.samuelokello.kazihub.utils.UserRole
 fun HomeScreen(
     userType: UserRole,
     navigator: DestinationsNavigator,
-    authViewModel: AuthViewModel = hiltViewModel()
 ) {
     when (userType) {
-        UserRole.BUSINESS -> BusinessHomeScreen()
+        UserRole.BUSINESS -> BusinessHomeScreen(navigator = navigator)
         UserRole.WORKER -> WorkerHomeScreen(navigator = navigator)
     }
 }
