@@ -142,7 +142,7 @@ interface KaziHubApi {
     suspend fun getJobCategoryById(@Path("category_id") id: Int): CategoryResponse
 
     // Jobs
-    @POST("jobs/create")
+    @POST("/jobs/create")
     suspend fun createJob(@Body job: CreateJobRequest): CreateJobsResponse
 
     @GET("jobs/list")
@@ -191,7 +191,7 @@ interface KaziHubApi {
         @Body proposal: ProposalRequest
     ): CreateProposalResponse
 
-    @POST("/proposals/{proposal_id}")
+    @GET("/proposals/{proposal_id}")
     suspend fun getProposalById(
         @Path("proposal_id") proposalId: Int,
     ): ProposalResponse
