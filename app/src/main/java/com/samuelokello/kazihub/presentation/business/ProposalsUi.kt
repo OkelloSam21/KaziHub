@@ -25,6 +25,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -57,7 +60,10 @@ fun ProposalUi(
                     title = { Text(text = "Proposal") },
                     navigationIcon = {
                         IconButton(onClick = { navigator.popBackStack() }) {
-                            Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = null
+                            )
                         }
                     }
                 )
@@ -68,6 +74,7 @@ fun ProposalUi(
                             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                         }
                     }
+
                     state.error != null -> {
                         Box(modifier = Modifier.fillMaxSize()) {
                             Text(
@@ -76,6 +83,7 @@ fun ProposalUi(
                             )
                         }
                     }
+
                     state.proposals.isEmpty() -> {
                         Box(modifier = Modifier.fillMaxSize()) {
                             Text(
@@ -84,6 +92,7 @@ fun ProposalUi(
                             )
                         }
                     }
+
                     else -> {
                         LazyColumn {
                             items(state.proposals) { proposal ->
@@ -118,11 +127,30 @@ fun ProposalItem(
             // Add more Text composables to display other proposal details as needed
         }
         Row {
-            Button(onClick = { /* Handle accept logic */ }, modifier = Modifier.padding(end = 8.dp)) {
-                Text(text = "Accept")
+            var accepted by rememberSaveable { mutableStateOf(false) }
+            var reject by rememberSaveable { mutableStateOf(false) }
+            Button(
+                onClick = {
+                    accepted = true
+                },
+                enabled = !reject,
+                modifier = Modifier.padding(end = 8.dp)
+            ) {
+                if (accepted) {
+                    Text(text = "Accepted")
+                } else {
+                    Text(text = "Accept")
+                }
             }
-            Button(onClick = { /* Handle reject logic */ }) {
-                Text(text = "Reject")
+            Button(
+                onClick = { reject = true },
+                enabled = !accepted
+            ) {
+                if (reject) {
+                    Text(text = "Rejected")
+                } else {
+                    Text(text = "Reject")
+                }
             }
         }
     }
